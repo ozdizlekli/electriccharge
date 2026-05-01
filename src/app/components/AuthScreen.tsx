@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Zap, Eye, EyeOff, Mail, Lock, User, Phone, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Zap, Eye, EyeOff, Mail, Lock, User, Phone, ShieldCheck } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -7,23 +7,77 @@ import { Card, CardContent } from './ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { toast } from 'sonner';
 
-interface AuthScreenProps {
-  onAuthenticated: (user: { name: string; email: string; role: 'driver' | 'station_owner' | 'admin' }) => void;
+export type UserRole = 'driver' | 'station_owner' | 'admin';
+
+export interface AuthUser {
+  name: string;
+  email: string;
+  role: UserRole;
 }
 
+interface AuthScreenProps {
+  onAuthenticated: (user: AuthUser) => void;
+}
+
+// ── localStorage helpers ─────────────────────────────────────────────────────
+
+const LS_USERS_KEY = 'esarj_registered_users';
+
+interface StoredUser extends AuthUser {
+  password: string;
+  phone: string;
+}
+
+function getStoredUsers(): StoredUser[] {
+  try {
+    const raw = localStorage.getItem(LS_USERS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveStoredUsers(users: StoredUser[]) {
+  localStorage.setItem(LS_USERS_KEY, JSON.stringify(users));
+}
+
+// Seed demo accounts if not already present
+function ensureDemoAccounts() {
+  const existing = getStoredUsers();
+  const demoAccounts: StoredUser[] = [
+    { name: 'Hatice Çevik', email: 'driver@demo.com', password: '123456', phone: '+90 532 454 98 75', role: 'driver' },
+    { name: 'Ahmet Yılmaz', email: 'owner@demo.com', password: '123456', phone: '+90 532 111 22 33', role: 'station_owner' },
+    { name: 'Admin Kullanıcı', email: 'admin@demo.com', password: '123456', phone: '+90 532 999 00 11', role: 'admin' },
+  ];
+  let changed = false;
+  for (const demo of demoAccounts) {
+    if (!existing.find(u => u.email === demo.email)) {
+      existing.push(demo);
+      changed = true;
+    }
+  }
+  if (changed) saveStoredUsers(existing);
+}
+
+// ── Component ────────────────────────────────────────────────────────────────
+
 export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
+  ensureDemoAccounts();
+
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [registerForm, setRegisterForm] = useState({
-    name: '', 
-    email: '', 
-    phone: '', 
-    password: '', 
-    confirmPassword: '', 
-    role: 'driver' as 'driver' | 'station_owner' | 'admin'
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
+    confirmPassword: '',
+    role: 'driver' as UserRole,
   });
 
+  // ── Login ──────────────────────────────────────────────────────────────────
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!loginForm.email || !loginForm.password) {
@@ -31,22 +85,23 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
       return;
     }
     setIsLoading(true);
-    await new Promise(r => setTimeout(r, 1200));
-    setIsLoading(false);
+    await new Promise(r => setTimeout(r, 900));
 
-    // Rol tabanlı giriş simülasyonu
-    if (loginForm.email.includes('admin')) {
-      onAuthenticated({ name: 'Sistem Yöneticisi', email: loginForm.email, role: 'admin' });
-      toast.success('Yönetici paneline yönlendiriliyorsunuz...');
-    } else if (loginForm.email.includes('owner')) {
-      onAuthenticated({ name: 'İstasyon Sahibi', email: loginForm.email, role: 'station_owner' });
-      toast.success('İstasyon yönetim paneline yönlendiriliyorsunuz...');
+    const users = getStoredUsers();
+    const found = users.find(
+      u => u.email.toLowerCase() === loginForm.email.toLowerCase() && u.password === loginForm.password,
+    );
+
+    if (found) {
+      toast.success(`Hoş geldiniz, ${found.name}!`);
+      onAuthenticated({ name: found.name, email: found.email, role: found.role });
     } else {
-      onAuthenticated({ name: 'Sürücü Kullanıcı', email: loginForm.email, role: 'driver' });
-      toast.success('Hoş geldiniz!');
+      toast.error('E-posta veya şifre hatalı.');
+      setIsLoading(false);
     }
   };
 
+  // ── Register ───────────────────────────────────────────────────────────────
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!registerForm.name || !registerForm.email || !registerForm.password) {
@@ -57,27 +112,52 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
       toast.error('Şifreler eşleşmiyor');
       return;
     }
+    if (registerForm.password.length < 6) {
+      toast.error('Şifre en az 6 karakter olmalı');
+      return;
+    }
+
+    const users = getStoredUsers();
+    if (users.find(u => u.email.toLowerCase() === registerForm.email.toLowerCase())) {
+      toast.error('Bu e-posta zaten kayıtlı');
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
-    await new Promise(r => setTimeout(r, 1500));
-    setIsLoading(false);
-    onAuthenticated({ name: registerForm.name, email: registerForm.email, role: registerForm.role });
+    await new Promise(r => setTimeout(r, 1200));
+
+    const newUser: StoredUser = {
+      name: registerForm.name,
+      email: registerForm.email,
+      phone: registerForm.phone,
+      password: registerForm.password,
+      role: registerForm.role,
+    };
+    users.push(newUser);
+    saveStoredUsers(users);
+
     toast.success('Hesabınız başarıyla oluşturuldu!');
+    onAuthenticated({ name: newUser.name, email: newUser.email, role: newUser.role });
   };
 
-  // Hızlı test için Misafir Girişi Admin yetkisiyle güncellendi
+  // ── Guest (Admin) ──────────────────────────────────────────────────────────
   const handleGuestLogin = () => {
     onAuthenticated({ name: 'Yönetici (Misafir)', email: 'admin@esarj.com', role: 'admin' });
     toast.info('Yönetici yetkisiyle devam ediyorsunuz');
   };
 
+  // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 p-4">
+      {/* Background blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-green-500/10 rounded-full blur-3xl" />
       </div>
 
       <div className="w-full max-w-md relative">
+        {/* Logo */}
         <div className="flex flex-col items-center mb-8">
           <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-green-500 rounded-2xl flex items-center justify-center mb-4 shadow-2xl shadow-blue-500/30">
             <Zap className="w-9 h-9 text-white" />
@@ -90,23 +170,52 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
           <CardContent className="p-6">
             <Tabs defaultValue="login">
               <TabsList className="w-full bg-white/10 border-white/20 mb-6">
-                <TabsTrigger value="login" className="flex-1 text-white data-[state=active]:bg-white/20">Giriş Yap</TabsTrigger>
-                <TabsTrigger value="register" className="flex-1 text-white data-[state=active]:bg-white/20">Kayıt Ol</TabsTrigger>
+                <TabsTrigger value="login" className="flex-1 text-white data-[state=active]:bg-white/20">
+                  Giriş Yap
+                </TabsTrigger>
+                <TabsTrigger value="register" className="flex-1 text-white data-[state=active]:bg-white/20">
+                  Kayıt Ol
+                </TabsTrigger>
               </TabsList>
 
-              {/* GİRİŞ FORMU */}
+              {/* ── LOGIN ── */}
               <TabsContent value="login">
                 <form onSubmit={handleLogin} className="space-y-4">
+                  {/* Demo hint */}
+                  <Card className="bg-blue-900/30 border-blue-400/20">
+                    <CardContent className="p-3">
+                      <p className="text-xs font-semibold text-blue-200 mb-1.5">Demo Hesaplar (şifre: 123456)</p>
+                      <div className="space-y-1">
+                        {[
+                          { email: 'driver@demo.com', label: 'Sürücü' },
+                          { email: 'owner@demo.com', label: 'Sahibi' },
+                          { email: 'admin@demo.com', label: 'Admin' },
+                        ].map(acc => (
+                          <button
+                            key={acc.email}
+                            type="button"
+                            onClick={() => setLoginForm({ email: acc.email, password: '123456' })}
+                            className="w-full flex items-center justify-between text-xs text-blue-200 hover:bg-blue-800/30 rounded px-2 py-1 transition-colors"
+                          >
+                            <span>{acc.email}</span>
+                            <span className="text-blue-400 border border-blue-400/40 rounded px-1.5 py-0.5">{acc.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+
                   <div className="space-y-2">
                     <Label className="text-white/80 text-sm">E-posta</Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
                       <Input
                         type="email"
-                        placeholder="admin@email.com"
+                        placeholder="ornek@mail.com"
                         value={loginForm.email}
                         onChange={e => setLoginForm({ ...loginForm, email: e.target.value })}
                         className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/30"
+                        required
                       />
                     </div>
                   </div>
@@ -121,38 +230,46 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
                         value={loginForm.password}
                         onChange={e => setLoginForm({ ...loginForm, password: e.target.value })}
                         className="pl-10 pr-10 bg-white/10 border-white/20 text-white"
+                        required
                       />
-                      <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40">
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40"
+                      >
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
                     </div>
                   </div>
 
-                  <Button type="submit" className="w-full bg-gradient-to-r from-blue-500 to-green-500 text-white font-semibold">
-                    {isLoading ? "Giriş yapılıyor..." : "Giriş Yap"}
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full bg-gradient-to-r from-blue-500 to-green-500 text-white font-semibold border-0"
+                  >
+                    {isLoading ? (
+                      <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />Giriş yapılıyor...</>
+                    ) : 'Giriş Yap'}
                   </Button>
-
-                  <div className="text-xs text-white/40 text-center space-y-1 pt-1 italic">
-                    <p>Admin Test: <span className="text-white/60">admin@email.com</span></p>
-                  </div>
                 </form>
               </TabsContent>
 
-              {/* KAYIT FORMU */}
+              {/* ── REGISTER ── */}
               <TabsContent value="register">
                 <form onSubmit={handleRegister} className="space-y-4">
+                  {/* Role picker */}
                   <div className="space-y-2">
                     <Label className="text-white/80 text-sm">Hesap Türü</Label>
                     <div className="grid grid-cols-3 gap-2">
-                      {[
+                      {([
                         { value: 'driver', label: '🚗 Sürücü' },
                         { value: 'station_owner', label: '⚡ Sahibi' },
-                        { value: 'admin', label: '🛡️ Admin' }
-                      ].map(opt => (
+                        { value: 'admin', label: '🛡️ Admin' },
+                      ] as { value: UserRole; label: string }[]).map(opt => (
                         <button
                           key={opt.value}
                           type="button"
-                          onClick={() => setRegisterForm({ ...registerForm, role: opt.value as any })}
+                          onClick={() => setRegisterForm({ ...registerForm, role: opt.value })}
                           className={`p-2 rounded-lg border text-[10px] font-bold transition-all ${
                             registerForm.role === opt.value
                               ? 'bg-blue-500/40 border-blue-400 text-white shadow-lg'
@@ -168,12 +285,13 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
                   <div className="space-y-2">
                     <Label className="text-white/80 text-sm">Ad Soyad</Label>
                     <div className="relative">
-                       <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
-                       <Input
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                      <Input
                         placeholder="Ad Soyad"
                         value={registerForm.name}
                         onChange={e => setRegisterForm({ ...registerForm, name: e.target.value })}
                         className="pl-10 bg-white/10 border-white/20 text-white"
+                        required
                       />
                     </div>
                   </div>
@@ -181,27 +299,34 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
                       <Label className="text-white/60 text-[10px]">E-posta</Label>
-                      <Input
-                        type="email"
-                        placeholder="E-posta"
-                        value={registerForm.email}
-                        onChange={e => setRegisterForm({ ...registerForm, email: e.target.value })}
-                        className="bg-white/10 border-white/20 text-white text-xs"
-                      />
+                      <div className="relative">
+                        <Mail className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40" />
+                        <Input
+                          type="email"
+                          placeholder="E-posta"
+                          value={registerForm.email}
+                          onChange={e => setRegisterForm({ ...registerForm, email: e.target.value })}
+                          className="pl-8 bg-white/10 border-white/20 text-white text-xs"
+                          required
+                        />
+                      </div>
                     </div>
                     <div className="space-y-1">
                       <Label className="text-white/60 text-[10px]">Telefon</Label>
-                      <Input
-                        placeholder="Telefon"
-                        value={registerForm.phone}
-                        onChange={e => setRegisterForm({ ...registerForm, phone: e.target.value })}
-                        className="bg-white/10 border-white/20 text-white text-xs"
-                      />
+                      <div className="relative">
+                        <Phone className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40" />
+                        <Input
+                          placeholder="+90 5XX"
+                          value={registerForm.phone}
+                          onChange={e => setRegisterForm({ ...registerForm, phone: e.target.value })}
+                          className="pl-8 bg-white/10 border-white/20 text-white text-xs"
+                        />
+                      </div>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                     <div className="space-y-1">
+                    <div className="space-y-1">
                       <Label className="text-white/60 text-[10px]">Şifre</Label>
                       <Input
                         type="password"
@@ -209,37 +334,56 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
                         value={registerForm.password}
                         onChange={e => setRegisterForm({ ...registerForm, password: e.target.value })}
                         className="bg-white/10 border-white/20 text-white text-xs"
+                        required
                       />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-white/60 text-[10px]">Şifre Tekrar</Label>
+                      <Label className="text-white/60 text-[10px]">Tekrar</Label>
                       <Input
                         type="password"
                         placeholder="••••••••"
                         value={registerForm.confirmPassword}
                         onChange={e => setRegisterForm({ ...registerForm, confirmPassword: e.target.value })}
                         className="bg-white/10 border-white/20 text-white text-xs"
+                        required
                       />
                     </div>
                   </div>
 
-                  <Button type="submit" className="w-full bg-gradient-to-r from-blue-500 to-green-500 text-white font-semibold mt-2">
-                    {isLoading ? "Hesap oluşturuluyor..." : "Kayıt Ol"}
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full bg-gradient-to-r from-blue-500 to-green-500 text-white font-semibold border-0 mt-2"
+                  >
+                    {isLoading ? (
+                      <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />Hesap oluşturuluyor...</>
+                    ) : 'Kayıt Ol'}
                   </Button>
                 </form>
               </TabsContent>
             </Tabs>
 
+            {/* Divider */}
             <div className="relative my-4">
-              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/10" /></div>
-              <div className="relative text-center"><span className="bg-transparent px-2 text-white/30 text-xs uppercase tracking-widest">veya</span></div>
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-white/10" />
+              </div>
+              <div className="relative text-center">
+                <span className="bg-transparent px-2 text-white/30 text-xs uppercase tracking-widest">veya</span>
+              </div>
             </div>
 
-            <Button variant="outline" className="w-full bg-white/5 border-white/20 text-white/70 hover:text-white" onClick={handleGuestLogin}>
-               <ShieldCheck className="w-4 h-4 mr-2" /> Misafir (Admin Test)
+            <Button
+              variant="outline"
+              className="w-full bg-white/5 border-white/20 text-white/70 hover:text-white"
+              onClick={handleGuestLogin}
+            >
+              <ShieldCheck className="w-4 h-4 mr-2" />
+              Misafir (Admin Test)
             </Button>
           </CardContent>
         </Card>
+
         <p className="text-center text-white/20 text-[10px] mt-4">
           256-bit SSL şifreleme • Tüm hakları saklıdır
         </p>
