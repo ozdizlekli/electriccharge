@@ -21,12 +21,12 @@ interface PaymentModalProps {
   onComplete: () => void;
 }
 
-export function PaymentModal({ 
-  amount, 
-  station, 
-  reservationDetails, 
-  onClose, 
-  onComplete 
+export function PaymentModal({
+  amount,
+  station,
+  reservationDetails,
+  onClose,
+  onComplete,
 }: PaymentModalProps) {
   const [selectedPayment, setSelectedPayment] = useState(mockPaymentMethods[0].id);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -34,8 +34,6 @@ export function PaymentModal({
 
   const handlePayment = () => {
     setIsProcessing(true);
-    
-    // Simulate payment processing
     setTimeout(() => {
       setIsProcessing(false);
       onComplete();
@@ -48,8 +46,9 @@ export function PaymentModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-[70] flex items-end md:items-center justify-center p-0 md:p-4">
-      <div className="bg-white w-full md:max-w-lg md:rounded-lg max-h-[90vh] overflow-hidden flex flex-col">
+    /* z-[10005] — absolute topmost layer, above ReservationModal (z-[9999]) and MapView */
+    <div className="fixed inset-0 bg-black/60 z-[10005] flex items-end md:items-center justify-center p-0 md:p-4">
+      <div className="bg-white w-full md:max-w-lg md:rounded-lg max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
         {/* Header */}
         <div className="p-4 border-b flex items-center justify-between">
           <h3 className="font-semibold text-lg flex items-center gap-2">
@@ -101,11 +100,10 @@ export function PaymentModal({
           {/* Payment Methods */}
           <div className="space-y-3">
             <Label className="text-base">Ödeme Yöntemi</Label>
-            
             <RadioGroup value={selectedPayment} onValueChange={setSelectedPayment}>
               {mockPaymentMethods.map((method) => (
-                <Card 
-                  key={method.id} 
+                <Card
+                  key={method.id}
                   className={`cursor-pointer transition-all ${
                     selectedPayment === method.id ? 'border-blue-500 bg-blue-50' : 'hover:bg-gray-50'
                   }`}
@@ -144,13 +142,8 @@ export function PaymentModal({
               ))}
             </RadioGroup>
 
-            {/* Add New Card Option */}
             {!showNewCard && (
-              <Button 
-                variant="outline" 
-                className="w-full"
-                onClick={() => setShowNewCard(true)}
-              >
+              <Button variant="outline" className="w-full" onClick={() => setShowNewCard(true)}>
                 <CreditCard className="w-4 h-4 mr-2" />
                 Yeni Kart Ekle
               </Button>
@@ -161,50 +154,27 @@ export function PaymentModal({
                 <CardContent className="p-4 space-y-3">
                   <div className="flex items-center justify-between mb-2">
                     <Label>Yeni Kart Bilgileri</Label>
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => setShowNewCard(false)}
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => setShowNewCard(false)}>
                       İptal
                     </Button>
                   </div>
-                  
                   <div className="space-y-2">
                     <Label htmlFor="cardNumber" className="text-sm">Kart Numarası</Label>
-                    <Input 
-                      id="cardNumber" 
-                      placeholder="1234 5678 9012 3456"
-                      maxLength={19}
-                    />
+                    <Input id="cardNumber" placeholder="1234 5678 9012 3456" maxLength={19} />
                   </div>
-
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-2">
                       <Label htmlFor="expiry" className="text-sm">Son Kullanma</Label>
-                      <Input 
-                        id="expiry" 
-                        placeholder="AA/YY"
-                        maxLength={5}
-                      />
+                      <Input id="expiry" placeholder="AA/YY" maxLength={5} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="cvv" className="text-sm">CVV</Label>
-                      <Input 
-                        id="cvv" 
-                        type="password"
-                        placeholder="123"
-                        maxLength={3}
-                      />
+                      <Input id="cvv" type="password" placeholder="123" maxLength={3} />
                     </div>
                   </div>
-
                   <div className="space-y-2">
                     <Label htmlFor="cardHolder" className="text-sm">Kart Üzerindeki İsim</Label>
-                    <Input 
-                      id="cardHolder" 
-                      placeholder="AD SOYAD"
-                    />
+                    <Input id="cardHolder" placeholder="AD SOYAD" />
                   </div>
                 </CardContent>
               </Card>
@@ -216,8 +186,8 @@ export function PaymentModal({
             <CardContent className="p-3 flex items-start gap-2">
               <Lock className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
               <div className="text-xs text-green-800">
-                Ödeme bilgileriniz 256-bit SSL şifreleme ile korunmaktadır. 
-                Kart bilgileriniz güvenli bir şekilde saklanır ve asla üçüncü şahıslarla paylaşılmaz.
+                Ödeme bilgileriniz 256-bit SSL şifreleme ile korunmaktadır. Kart bilgileriniz güvenli bir
+                şekilde saklanır ve asla üçüncü şahıslarla paylaşılmaz.
               </div>
             </CardContent>
           </Card>
@@ -225,12 +195,7 @@ export function PaymentModal({
 
         {/* Footer */}
         <div className="p-4 border-t bg-gray-50">
-          <Button 
-            className="w-full" 
-            size="lg"
-            onClick={handlePayment}
-            disabled={isProcessing}
-          >
+          <Button className="w-full" size="lg" onClick={handlePayment} disabled={isProcessing}>
             {isProcessing ? (
               <>
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />

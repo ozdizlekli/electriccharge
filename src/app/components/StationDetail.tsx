@@ -7,7 +7,7 @@ import { Card, CardContent } from './ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { ReservationModal } from './ReservationModal';
 import { LiveChargingSimulation } from './LiveChargingSimulation';
-import { AIDamageReport } from './AIDamageReport';
+import { AIDamageReport, AIDamageSimulation } from './AIDamageSimulation';
 import { CommunityReviews } from './CommunityReviews';
 
 interface StationDetailProps {
@@ -438,7 +438,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
       )}
 
       {showAIDamage && (
-        <AIDamageReport
+        <AIDamageSimulation
           station={station}
           onClose={() => setShowAIDamage(false)}
         />
