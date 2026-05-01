@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { X, CreditCard, Lock, Check } from 'lucide-react';
 import { Station, ChargingPoint } from '../types/station';
 import { Button } from './ui/button';

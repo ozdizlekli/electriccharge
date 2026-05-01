@@ -1,4 +1,3 @@
-
 import { X, Calendar, Clock, MapPin, CreditCard, Star, Settings, User, LogOut, Award, Heart, Bell, Receipt, Plus, Edit } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
@@ -40,18 +39,16 @@ export function UserProfile({ onClose }: UserProfileProps) {
     promotions: false,
     updates: true
   });
-  
+
   const upcomingReservations = reservations.filter(r => r.status === 'upcoming');
   const completedReservations = reservations.filter(r => r.status === 'completed');
-  
+
   const totalSpent = completedReservations.reduce((sum, r) => sum + r.price, 0);
   const totalSessions = completedReservations.length;
 
   const handleLogout = () => {
     toast.success('Başarıyla çıkış yapıldı');
-    setTimeout(() => {
-      onClose();
-    }, 1000);
+    setTimeout(() => { onClose(); }, 1000);
   };
 
   const handleSavePersonalInfo = () => {
@@ -83,9 +80,9 @@ export function UserProfile({ onClose }: UserProfileProps) {
 
   return (
     <>
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-end md:items-center justify-center p-0 md:p-4">
+    {/* FIXED: z-[9999] to render above Leaflet map */}
+    <div className="fixed inset-0 bg-black/50 z-[9999] flex items-end md:items-center justify-center p-0 md:p-4">
       <div className="bg-white w-full md:max-w-2xl md:rounded-lg max-h-[95vh] overflow-hidden flex flex-col">
-        {/* Header */}
         <div className="p-4 border-b">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-lg">Profilim</h3>
@@ -93,8 +90,6 @@ export function UserProfile({ onClose }: UserProfileProps) {
               <X className="w-4 h-4" />
             </Button>
           </div>
-
-          {/* User Info */}
           <div className="flex items-center gap-4">
             <Avatar className="w-16 h-16">
               <AvatarFallback className="bg-blue-100 text-blue-700 text-xl">AY</AvatarFallback>
@@ -110,8 +105,6 @@ export function UserProfile({ onClose }: UserProfileProps) {
               </div>
             </div>
           </div>
-
-          {/* Quick Stats */}
           <div className="grid grid-cols-3 gap-3 mt-4">
             <Card className="bg-blue-50">
               <CardContent className="p-3 text-center">
@@ -134,23 +127,15 @@ export function UserProfile({ onClose }: UserProfileProps) {
           </div>
         </div>
 
-        {/* Content */}
         <div className="flex-1 overflow-y-auto">
           <Tabs defaultValue="reservations" className="w-full">
             <TabsList className="w-full justify-start border-b rounded-none h-auto p-0">
-              <TabsTrigger value="reservations" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600">
-                Rezervasyonlar
-              </TabsTrigger>
-              <TabsTrigger value="payments" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600">
-                Ödeme Yöntemleri
-              </TabsTrigger>
-              <TabsTrigger value="settings" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600">
-                Ayarlar
-              </TabsTrigger>
+              <TabsTrigger value="reservations" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600">Rezervasyonlar</TabsTrigger>
+              <TabsTrigger value="payments" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600">Ödeme Yöntemleri</TabsTrigger>
+              <TabsTrigger value="settings" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600">Ayarlar</TabsTrigger>
             </TabsList>
 
             <TabsContent value="reservations" className="p-4 space-y-4">
-              {/* Upcoming */}
               {upcomingReservations.length > 0 && (
                 <div className="space-y-3">
                   <h4 className="font-semibold text-sm text-muted-foreground">Yaklaşan Rezervasyonlar</h4>
@@ -175,30 +160,14 @@ export function UserProfile({ onClose }: UserProfileProps) {
                           <span className="font-semibold">{reservation.price} ₺</span>
                         </div>
                         <div className="flex gap-2 mt-3">
-                          <Button 
-                            size="sm" 
-                            variant="outline" 
-                            className="flex-1"
-                            onClick={() => handleViewReservationDetails(reservation)}
-                          >
-                            Detaylar
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant="outline" 
-                            className="flex-1 text-red-600 hover:text-red-700"
-                            onClick={() => handleCancelReservation(reservation.id)}
-                          >
-                            İptal Et
-                          </Button>
+                          <Button size="sm" variant="outline" className="flex-1" onClick={() => handleViewReservationDetails(reservation)}>Detaylar</Button>
+                          <Button size="sm" variant="outline" className="flex-1 text-red-600 hover:text-red-700" onClick={() => handleCancelReservation(reservation.id)}>İptal Et</Button>
                         </div>
                       </CardContent>
                     </Card>
                   ))}
                 </div>
               )}
-
-              {/* Completed */}
               <div className="space-y-3">
                 <h4 className="font-semibold text-sm text-muted-foreground">Geçmiş Rezervasyonlar</h4>
                 {completedReservations.map((reservation) => (
@@ -227,15 +196,11 @@ export function UserProfile({ onClose }: UserProfileProps) {
             <TabsContent value="payments" className="p-4 space-y-4">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="font-semibold">Kayıtlı Kartlarım</h4>
-                <Button 
-                  size="sm"
-                  onClick={handleAddCard}
-                >
+                <Button size="sm" onClick={handleAddCard}>
                   <CreditCard className="w-3 h-3 mr-2" />
                   Yeni Kart Ekle
                 </Button>
               </div>
-
               {mockPaymentMethods.map((method) => (
                 <Card key={method.id}>
                   <CardContent className="p-4">
@@ -246,28 +211,14 @@ export function UserProfile({ onClose }: UserProfileProps) {
                         </div>
                         <div>
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="font-medium">
-                              {method.type === 'credit' ? 'Kredi Kartı' : 'Banka Kartı'}
-                            </span>
-                            {method.isDefault && (
-                              <Badge variant="secondary" className="text-xs">Varsayılan</Badge>
-                            )}
+                            <span className="font-medium">{method.type === 'credit' ? 'Kredi Kartı' : 'Banka Kartı'}</span>
+                            {method.isDefault && <Badge variant="secondary" className="text-xs">Varsayılan</Badge>}
                           </div>
-                          <div className="text-sm text-muted-foreground">
-                            •••• •••• •••• {method.cardNumber}
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            {method.cardHolder} • {method.expiryDate}
-                          </div>
+                          <div className="text-sm text-muted-foreground">•••• •••• •••• {method.cardNumber}</div>
+                          <div className="text-xs text-muted-foreground">{method.cardHolder} • {method.expiryDate}</div>
                         </div>
                       </div>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        onClick={() => handleEditCard(method)}
-                      >
-                        Düzenle
-                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => handleEditCard(method)}>Düzenle</Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -275,7 +226,6 @@ export function UserProfile({ onClose }: UserProfileProps) {
             </TabsContent>
 
             <TabsContent value="settings" className="p-4 space-y-3">
-              {/* Kişisel Bilgiler */}
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between mb-3">
@@ -286,57 +236,30 @@ export function UserProfile({ onClose }: UserProfileProps) {
                         <div className="text-xs text-muted-foreground">İsim, e-posta, telefon</div>
                       </div>
                     </div>
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => setEditingPersonalInfo(!editingPersonalInfo)}
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => setEditingPersonalInfo(!editingPersonalInfo)}>
                       {editingPersonalInfo ? 'İptal' : 'Düzenle'}
                     </Button>
                   </div>
-                  
                   {editingPersonalInfo && (
                     <div className="space-y-3 mt-4">
                       <div className="space-y-2">
                         <Label htmlFor="name">Ad Soyad</Label>
-                        <Input 
-                          id="name"
-                          value={personalInfo.name}
-                          onChange={(e) => setPersonalInfo({...personalInfo, name: e.target.value})}
-                        />
+                        <Input id="name" value={personalInfo.name} onChange={(e) => setPersonalInfo({...personalInfo, name: e.target.value})} />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="email">E-posta</Label>
-                        <Input 
-                          id="email"
-                          type="email"
-                          value={personalInfo.email}
-                          onChange={(e) => setPersonalInfo({...personalInfo, email: e.target.value})}
-                        />
+                        <Input id="email" type="email" value={personalInfo.email} onChange={(e) => setPersonalInfo({...personalInfo, email: e.target.value})} />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="phone">Telefon</Label>
-                        <Input 
-                          id="phone"
-                          value={personalInfo.phone}
-                          onChange={(e) => setPersonalInfo({...personalInfo, phone: e.target.value})}
-                        />
+                        <Input id="phone" value={personalInfo.phone} onChange={(e) => setPersonalInfo({...personalInfo, phone: e.target.value})} />
                       </div>
-                      <Button 
-                        className="w-full"
-                        onClick={handleSavePersonalInfo}
-                      >
-                        Kaydet
-                      </Button>
+                      <Button className="w-full" onClick={handleSavePersonalInfo}>Kaydet</Button>
                     </div>
                   )}
                 </CardContent>
               </Card>
-
-              <Card 
-                className="cursor-pointer hover:bg-gray-50"
-                onClick={() => setShowFavorites(true)}
-              >
+              <Card className="cursor-pointer hover:bg-gray-50" onClick={() => setShowFavorites(true)}>
                 <CardContent className="p-4 flex items-center gap-3">
                   <MapPin className="w-5 h-5 text-muted-foreground" />
                   <div className="flex-1">
@@ -345,11 +268,7 @@ export function UserProfile({ onClose }: UserProfileProps) {
                   </div>
                 </CardContent>
               </Card>
-
-              <Card 
-                className="cursor-pointer hover:bg-gray-50"
-                onClick={() => setShowNotifications(true)}
-              >
+              <Card className="cursor-pointer hover:bg-gray-50" onClick={() => setShowNotifications(true)}>
                 <CardContent className="p-4 flex items-center gap-3">
                   <Bell className="w-5 h-5 text-muted-foreground" />
                   <div className="flex-1">
@@ -358,11 +277,7 @@ export function UserProfile({ onClose }: UserProfileProps) {
                   </div>
                 </CardContent>
               </Card>
-
-              <Card 
-                className="cursor-pointer hover:bg-gray-50"
-                onClick={() => setShowInvoices(true)}
-              >
+              <Card className="cursor-pointer hover:bg-gray-50" onClick={() => setShowInvoices(true)}>
                 <CardContent className="p-4 flex items-center gap-3">
                   <CreditCard className="w-5 h-5 text-muted-foreground" />
                   <div className="flex-1">
@@ -371,14 +286,8 @@ export function UserProfile({ onClose }: UserProfileProps) {
                   </div>
                 </CardContent>
               </Card>
-
               <Separator className="my-4" />
-
-              <Button 
-                variant="outline" 
-                className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
-                onClick={handleLogout}
-              >
+              <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50" onClick={handleLogout}>
                 <LogOut className="w-4 h-4 mr-2" />
                 Çıkış Yap
               </Button>
@@ -387,47 +296,26 @@ export function UserProfile({ onClose }: UserProfileProps) {
         </div>
       </div>
     </div>
-    
-    {/* Reservation Detail Modal */}
+
     {showReservationDetail && selectedReservation && (
-      <div className="fixed inset-0 bg-black/50 z-[60] flex items-end md:items-center justify-center p-0 md:p-4">
+      <div className="fixed inset-0 bg-black/50 z-[10000] flex items-end md:items-center justify-center p-0 md:p-4">
         <div className="bg-white w-full md:max-w-lg md:rounded-lg overflow-hidden">
           <div className="p-4 border-b flex items-center justify-between">
             <h3 className="font-semibold text-lg">Rezervasyon Detayları</h3>
-            <Button variant="ghost" size="icon" onClick={() => setShowReservationDetail(false)}>
-              <X className="w-4 h-4" />
-            </Button>
+            <Button variant="ghost" size="icon" onClick={() => setShowReservationDetail(false)}><X className="w-4 h-4" /></Button>
           </div>
           <div className="p-4 space-y-4">
             <Card>
               <CardContent className="p-4">
                 <h4 className="font-semibold mb-3">{selectedReservation.stationName}</h4>
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Tarih</span>
-                    <span className="font-medium">{selectedReservation.startTime.toLocaleDateString('tr-TR')}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Başlangıç Saati</span>
-                    <span className="font-medium">{selectedReservation.startTime.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Bitiş Saati</span>
-                    <span className="font-medium">{selectedReservation.endTime.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Süre</span>
-                    <span className="font-medium">{selectedReservation.estimatedDuration} dakika</span>
-                  </div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Tarih</span><span className="font-medium">{selectedReservation.startTime.toLocaleDateString('tr-TR')}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Başlangıç Saati</span><span className="font-medium">{selectedReservation.startTime.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Bitiş Saati</span><span className="font-medium">{selectedReservation.endTime.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Süre</span><span className="font-medium">{selectedReservation.estimatedDuration} dakika</span></div>
                   <Separator />
-                  <div className="flex justify-between font-semibold">
-                    <span>Toplam Tutar</span>
-                    <span className="text-green-600">{selectedReservation.price} ₺</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Ödeme Durumu</span>
-                    <Badge variant="outline" className="bg-green-50">Ödendi</Badge>
-                  </div>
+                  <div className="flex justify-between font-semibold"><span>Toplam Tutar</span><span className="text-green-600">{selectedReservation.price} ₺</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Ödeme Durumu</span><Badge variant="outline" className="bg-green-50">Ödendi</Badge></div>
                 </div>
               </CardContent>
             </Card>
@@ -436,55 +324,34 @@ export function UserProfile({ onClose }: UserProfileProps) {
       </div>
     )}
 
-    {/* Card Modal (Add/Edit) */}
     {showCardModal && (
-      <div className="fixed inset-0 bg-black/50 z-[60] flex items-end md:items-center justify-center p-0 md:p-4">
+      <div className="fixed inset-0 bg-black/50 z-[10000] flex items-end md:items-center justify-center p-0 md:p-4">
         <div className="bg-white w-full md:max-w-lg md:rounded-lg overflow-hidden">
           <div className="p-4 border-b flex items-center justify-between">
             <h3 className="font-semibold text-lg">{cardModalMode === 'add' ? 'Yeni Kart Ekle' : 'Kartı Düzenle'}</h3>
-            <Button variant="ghost" size="icon" onClick={() => setShowCardModal(false)}>
-              <X className="w-4 h-4" />
-            </Button>
+            <Button variant="ghost" size="icon" onClick={() => setShowCardModal(false)}><X className="w-4 h-4" /></Button>
           </div>
           <div className="p-4 space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="cardNumber">Kart Numarası</Label>
-              <Input id="cardNumber" placeholder="1234 5678 9012 3456" defaultValue={selectedCard ? `•••• •••• •••• ${selectedCard.cardNumber}` : ''} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="cardName">Kart Üzerindeki İsim</Label>
-              <Input id="cardName" placeholder="AD SOYAD" defaultValue={selectedCard?.cardHolder || ''} />
-            </div>
+            <div className="space-y-2"><Label>Kart Numarası</Label><Input placeholder="1234 5678 9012 3456" defaultValue={selectedCard ? `•••• •••• •••• ${selectedCard.cardNumber}` : ''} /></div>
+            <div className="space-y-2"><Label>Kart Üzerindeki İsim</Label><Input placeholder="AD SOYAD" defaultValue={selectedCard?.cardHolder || ''} /></div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="expiry">Son Kullanma Tarihi</Label>
-                <Input id="expiry" placeholder="MM/YY" defaultValue={selectedCard?.expiryDate || ''} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="cvv">CVV</Label>
-                <Input id="cvv" type="password" placeholder="123" maxLength={3} />
-              </div>
+              <div className="space-y-2"><Label>Son Kullanma</Label><Input placeholder="MM/YY" defaultValue={selectedCard?.expiryDate || ''} /></div>
+              <div className="space-y-2"><Label>CVV</Label><Input type="password" placeholder="123" maxLength={3} /></div>
             </div>
-            <Button className="w-full" onClick={() => {
-              toast.success(cardModalMode === 'add' ? 'Kart başarıyla eklendi' : 'Kart bilgileri güncellendi');
-              setShowCardModal(false);
-            }}>
-              {cardModalMode === 'add' ? 'Kartı Ekle' : 'Değişiklikleri Kaydet'}
+            <Button className="w-full" onClick={() => { toast.success(cardModalMode === 'add' ? 'Kart eklendi' : 'Kart güncellendi'); setShowCardModal(false); }}>
+              {cardModalMode === 'add' ? 'Kartı Ekle' : 'Kaydet'}
             </Button>
           </div>
         </div>
       </div>
-   )}
+    )}
 
-    {/* Favorites Modal */}
     {showFavorites && (
-      <div className="fixed inset-0 bg-black/50 z-[60] flex items-end md:items-center justify-center p-0 md:p-4">
+      <div className="fixed inset-0 bg-black/50 z-[10000] flex items-end md:items-center justify-center p-0 md:p-4">
         <div className="bg-white w-full md:max-w-lg md:rounded-lg max-h-[80vh] overflow-hidden flex flex-col">
           <div className="p-4 border-b flex items-center justify-between">
             <h3 className="font-semibold text-lg">Favori İstasyonlar</h3>
-            <Button variant="ghost" size="icon" onClick={() => setShowFavorites(false)}>
-              <X className="w-4 h-4" />
-            </Button>
+            <Button variant="ghost" size="icon" onClick={() => setShowFavorites(false)}><X className="w-4 h-4" /></Button>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {favoriteStations.map((station) => (
@@ -498,19 +365,11 @@ export function UserProfile({ onClose }: UserProfileProps) {
                       </div>
                       <div className="text-sm text-muted-foreground mb-2">{station.address}</div>
                       <div className="flex items-center gap-3 text-sm">
-                        <div className="flex items-center gap-1">
-                          <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                          <span>{station.rating}</span>
-                        </div>
+                        <div className="flex items-center gap-1"><Star className="w-3 h-3 fill-yellow-400 text-yellow-400" /><span>{station.rating}</span></div>
                         <span className="text-muted-foreground">{station.distance} km</span>
                       </div>
                     </div>
-                    <Button variant="ghost" size="sm" onClick={() => {
-                      setFavoriteStations(prev => prev.filter(s => s.id !== station.id));
-                      toast.success('Favorilerden kaldırıldı');
-                    }}>
-                      Kaldır
-                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => { setFavoriteStations(prev => prev.filter(s => s.id !== station.id)); toast.success('Favorilerden kaldırıldı'); }}>Kaldır</Button>
                   </div>
                 </CardContent>
               </Card>
@@ -518,75 +377,46 @@ export function UserProfile({ onClose }: UserProfileProps) {
           </div>
         </div>
       </div>
-   )}
+    )}
 
-    {/* Notifications Modal */}
     {showNotifications && (
-      <div className="fixed inset-0 bg-black/50 z-[60] flex items-end md:items-center justify-center p-0 md:p-4">
+      <div className="fixed inset-0 bg-black/50 z-[10000] flex items-end md:items-center justify-center p-0 md:p-4">
         <div className="bg-white w-full md:max-w-lg md:rounded-lg overflow-hidden">
           <div className="p-4 border-b flex items-center justify-between">
             <h3 className="font-semibold text-lg">Bildirim Ayarları</h3>
-            <Button variant="ghost" size="icon" onClick={() => setShowNotifications(false)}>
-              <X className="w-4 h-4" />
-            </Button>
+            <Button variant="ghost" size="icon" onClick={() => setShowNotifications(false)}><X className="w-4 h-4" /></Button>
           </div>
           <div className="p-4 space-y-4">
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <div className="font-medium">Rezervasyon Bildirimleri</div>
-                    <div className="text-sm text-muted-foreground">Rezervasyonlarınızla ilgili bildirimler</div>
-                  </div>
-                  <Switch 
-                    checked={notificationSettings.reservations}
-                    onCheckedChange={(checked) => setNotificationSettings({...notificationSettings, reservations: checked})}
-                  />
+                  <div><div className="font-medium">Rezervasyon Bildirimleri</div><div className="text-sm text-muted-foreground">Rezervasyonlarınızla ilgili bildirimler</div></div>
+                  <Switch checked={notificationSettings.reservations} onCheckedChange={(c) => setNotificationSettings({...notificationSettings, reservations: c})} />
                 </div>
                 <Separator className="my-3" />
                 <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <div className="font-medium">Kampanya Bildirimleri</div>
-                    <div className="text-sm text-muted-foreground">İndirim ve kampanyalar hakkında</div>
-                  </div>
-                  <Switch 
-                    checked={notificationSettings.promotions}
-                    onCheckedChange={(checked) => setNotificationSettings({...notificationSettings, promotions: checked})}
-                  />
+                  <div><div className="font-medium">Kampanya Bildirimleri</div><div className="text-sm text-muted-foreground">İndirim ve kampanyalar</div></div>
+                  <Switch checked={notificationSettings.promotions} onCheckedChange={(c) => setNotificationSettings({...notificationSettings, promotions: c})} />
                 </div>
                 <Separator className="my-3" />
                 <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium">Uygulama Güncellemeleri</div>
-                    <div className="text-sm text-muted-foreground">Yeni özellikler ve güncellemeler</div>
-                  </div>
-                  <Switch 
-                    checked={notificationSettings.updates}
-                    onCheckedChange={(checked) => setNotificationSettings({...notificationSettings, updates: checked})}
-                  />
+                  <div><div className="font-medium">Uygulama Güncellemeleri</div><div className="text-sm text-muted-foreground">Yeni özellikler</div></div>
+                  <Switch checked={notificationSettings.updates} onCheckedChange={(c) => setNotificationSettings({...notificationSettings, updates: c})} />
                 </div>
               </CardContent>
             </Card>
-            <Button className="w-full" onClick={() => {
-              toast.success('Bildirim ayarları kaydedildi');
-              setShowNotifications(false);
-            }}>
-              Kaydet
-            </Button>
+            <Button className="w-full" onClick={() => { toast.success('Kaydedildi'); setShowNotifications(false); }}>Kaydet</Button>
           </div>
         </div>
       </div>
-   )}
+    )}
 
-    {/* Invoices Modal */}
     {showInvoices && (
-      <div className="fixed inset-0 bg-black/50 z-[60] flex items-end md:items-center justify-center p-0 md:p-4">
+      <div className="fixed inset-0 bg-black/50 z-[10000] flex items-end md:items-center justify-center p-0 md:p-4">
         <div className="bg-white w-full md:max-w-lg md:rounded-lg max-h-[80vh] overflow-hidden flex flex-col">
           <div className="p-4 border-b flex items-center justify-between">
             <h3 className="font-semibold text-lg">Faturalar</h3>
-            <Button variant="ghost" size="icon" onClick={() => setShowInvoices(false)}>
-              <X className="w-4 h-4" />
-            </Button>
+            <Button variant="ghost" size="icon" onClick={() => setShowInvoices(false)}><X className="w-4 h-4" /></Button>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {completedReservations.map((reservation) => (
@@ -595,9 +425,7 @@ export function UserProfile({ onClose }: UserProfileProps) {
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="flex-1">
                       <h4 className="font-semibold mb-1">{reservation.stationName}</h4>
-                      <div className="text-sm text-muted-foreground">
-                        {reservation.startTime.toLocaleDateString('tr-TR')}
-                      </div>
+                      <div className="text-sm text-muted-foreground">{reservation.startTime.toLocaleDateString('tr-TR')}</div>
                     </div>
                     <div className="text-right">
                       <div className="font-semibold">{reservation.price} ₺</div>

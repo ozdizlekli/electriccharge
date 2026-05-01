@@ -15,6 +15,9 @@ import { Badge } from './components/ui/badge';
 import { Toaster } from './components/ui/sonner';
 import { toast } from 'sonner';
 
+import { StationOwnerDashboard } from './components/StationOwnerDashboard';
+import { AdminDashboard } from './components/AdminDashboard'; // Eklenen Import
+
 const API_KEY = '1957a548-ad93-4efb-9ce3-18dc075f91a6';
 
 // YENİ EKLENEN KULLANICI ARAYÜZÜ
@@ -38,6 +41,11 @@ export default function App() {
   const [showStationDetail, setShowStationDetail] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  
+  // Dashboard State'leri
+  const [showOwnerDashboard, setShowOwnerDashboard] = useState(false);
+  const [showAdminDashboard, setShowAdminDashboard] = useState(false);
+  
   const [filters, setFilters] = useState({
     maxDistance: 50,
     onlyAvailable: false,
@@ -248,6 +256,21 @@ export default function App() {
                 {currentUser.role === 'admin' && <Shield className="w-3 h-3 mr-1" />}
                 {roleConfig[currentUser.role].label}
               </Badge>
+              
+              {/* İstasyon Sahibi Butonu */}
+              {currentUser.role === 'station_owner' && (
+                <Button variant="outline" size="sm" onClick={() => setShowOwnerDashboard(true)} className="ml-2 hidden md:flex">
+                  İstasyon Paneli
+                </Button>
+              )}
+
+              {/* Admin Butonu */}
+              {currentUser.role === 'admin' && (
+                <Button variant="default" size="sm" onClick={() => setShowAdminDashboard(true)} className="ml-2 hidden md:flex bg-red-600 hover:bg-red-700 text-white border-0">
+                  Admin Paneli
+                </Button>
+              )}
+
               <Button variant="ghost" size="icon" onClick={() => setShowProfile(true)}>
                 <User className="w-5 h-5" />
               </Button>
@@ -376,11 +399,27 @@ export default function App() {
         )}
       </main>
 
+      {/* MODALLAR */}
       {showStationDetail && selectedStationData && (
         <StationDetail station={selectedStationData} onClose={() => setShowStationDetail(false)} />
       )}
-      {showFilters && <FilterPanel filters={filters} onFiltersChange={setFilters} onClose={() => setShowFilters(false)} />}
-      {showProfile && <UserProfile onClose={() => setShowProfile(false)} />}
+      
+      {showFilters && (
+        <FilterPanel filters={filters} onFiltersChange={setFilters} onClose={() => setShowFilters(false)} />
+      )}
+      
+      {showProfile && (
+        <UserProfile onClose={() => setShowProfile(false)} />
+      )}
+      
+      {showOwnerDashboard && (
+        <StationOwnerDashboard onClose={() => setShowOwnerDashboard(false)} />
+      )}
+      
+      {/* Yeni Eklenen Admin Dashboard Çağrısı */}
+      {showAdminDashboard && (
+        <AdminDashboard onClose={() => setShowAdminDashboard(false)} />
+      )}
 
       <Button
         size="lg"

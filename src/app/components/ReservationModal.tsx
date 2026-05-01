@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { X, Calendar, Clock, Zap, CreditCard, AlertCircle } from 'lucide-react';
 import { Station, ChargingPoint } from '../types/station';
 import { Button } from './ui/button';
@@ -25,15 +25,15 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
 
   const isOccupied = chargingPoint.status === 'occupied';
   const availableFromMinutes = isOccupied ? chargingPoint.currentUser?.remainingMinutes || 0 : 0;
-  
+
   const calculatePrice = () => {
     const durationHours = parseInt(duration) / 60;
-    const estimatedKwh = chargingPoint.power * durationHours * 0.8; // 80% efficiency
+    const estimatedKwh = chargingPoint.power * durationHours * 0.8;
     return (estimatedKwh * chargingPoint.price).toFixed(2);
   };
 
   const generateTimeSlots = () => {
-    const slots = [];
+    const slots: string[] = [];
     const now = new Date();
     const currentMinutes = now.getHours() * 60 + now.getMinutes();
     const startMinutes = isOccupied ? currentMinutes + availableFromMinutes : currentMinutes;
@@ -62,7 +62,7 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/50 z-[60] flex items-end md:items-center justify-center p-0 md:p-4">
+      <div className="fixed inset-0 bg-black/50 z-[9999] flex items-end md:items-center justify-center p-0 md:p-4">
         <div className="bg-white w-full md:max-w-lg md:rounded-lg max-h-[90vh] overflow-hidden flex flex-col">
           {/* Header */}
           <div className="p-4 border-b flex items-center justify-between">
@@ -129,7 +129,7 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
                 <SelectTrigger>
                   <SelectValue placeholder="Saat seçin" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="z-[10000]">
                   {generateTimeSlots().map((time) => (
                     <SelectItem key={time} value={time}>
                       {time}
@@ -147,7 +147,7 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="z-[10000]">
                   <SelectItem value="30">30 dakika</SelectItem>
                   <SelectItem value="45">45 dakika</SelectItem>
                   <SelectItem value="60">1 saat</SelectItem>
@@ -191,8 +191,8 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
 
           {/* Footer */}
           <div className="p-4 border-t bg-gray-50">
-            <Button 
-              className="w-full" 
+            <Button
+              className="w-full"
               size="lg"
               onClick={handleReservation}
             >
