@@ -1,0 +1,9 @@
+/* 1. Fontu Google'ın hızlı sunucularından (CDN) projeye dahil ediyoruz */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* 2. Tüm uygulamanın gövdesine (body) bu fontu zorunlu kılıyoruz */
+body {
+  font-family: 'Inter', sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
