@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState } from 'react';
 import { X, Calendar, Clock, Zap, CreditCard, AlertCircle } from 'lucide-react';
 import { Station, ChargingPoint } from '../types/station';
@@ -34,7 +33,7 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
   };
 
   const generateTimeSlots = () => {
-    const slots: string[] = [];
+    const slots = [];
     const now = new Date();
     const currentMinutes = now.getHours() * 60 + now.getMinutes();
     const startMinutes = isOccupied ? currentMinutes + availableFromMinutes : currentMinutes;
@@ -63,7 +62,7 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/50 z-[1100] flex items-end md:items-center justify-center p-0 md:p-4">
+      <div className="fixed inset-0 bg-black/50 z-[60] flex items-end md:items-center justify-center p-0 md:p-4">
         <div className="bg-white w-full md:max-w-lg md:rounded-lg max-h-[90vh] overflow-hidden flex flex-col">
           {/* Header */}
           <div className="p-4 border-b flex items-center justify-between">

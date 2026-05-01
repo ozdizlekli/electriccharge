@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { X, CreditCard, Lock, Check } from 'lucide-react';
 import { Station, ChargingPoint } from '../types/station';
 import { Button } from './ui/button';
@@ -48,7 +48,7 @@ export function PaymentModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-[1200] flex items-end md:items-center justify-center p-0 md:p-4">
+    <div className="fixed inset-0 bg-black/50 z-[70] flex items-end md:items-center justify-center p-0 md:p-4">
       <div className="bg-white w-full md:max-w-lg md:rounded-lg max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="p-4 border-b flex items-center justify-between">

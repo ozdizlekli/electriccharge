@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+
 import { X, Calendar, Clock, MapPin, CreditCard, Star, Settings, User, LogOut, Award, Heart, Bell, Receipt, Plus, Edit } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
@@ -12,6 +12,7 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Reservation, PaymentMethod } from '../types/station';
 import { Switch } from './ui/switch';
+import React, { useState } from 'react';
 
 interface UserProfileProps {
   onClose: () => void;
@@ -20,9 +21,9 @@ interface UserProfileProps {
 export function UserProfile({ onClose }: UserProfileProps) {
   const [editingPersonalInfo, setEditingPersonalInfo] = useState(false);
   const [personalInfo, setPersonalInfo] = useState({
-    name: 'Hatice Çevik',
-    email: 'hatice.cevik@gmail.com',
-    phone: '+90 532 454 98 75'
+    name: 'Ahmet Yılmaz',
+    email: 'ahmet.yilmaz@email.com',
+    phone: '+90 532 123 4567'
   });
   const [reservations, setReservations] = useState<Reservation[]>(mockReservations);
   const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(null);
@@ -82,8 +83,7 @@ export function UserProfile({ onClose }: UserProfileProps) {
 
   return (
     <>
-    {/* ANA PROFİL MODALI (z-[1500] yapıldı) */}
-    <div className="fixed inset-0 bg-black/50 z-[1500] flex items-end md:items-center justify-center p-0 md:p-4">
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-end md:items-center justify-center p-0 md:p-4">
       <div className="bg-white w-full md:max-w-2xl md:rounded-lg max-h-[95vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="p-4 border-b">
@@ -97,7 +97,7 @@ export function UserProfile({ onClose }: UserProfileProps) {
           {/* User Info */}
           <div className="flex items-center gap-4">
             <Avatar className="w-16 h-16">
-              <AvatarFallback className="bg-blue-100 text-blue-700 text-xl">HÇ</AvatarFallback>
+              <AvatarFallback className="bg-blue-100 text-blue-700 text-xl">AY</AvatarFallback>
             </Avatar>
             <div className="flex-1">
               <h4 className="font-semibold text-lg">{personalInfo.name}</h4>
@@ -388,11 +388,9 @@ export function UserProfile({ onClose }: UserProfileProps) {
       </div>
     </div>
     
-    {/* ALT PENCERELER (z-[1600] yapıldı, profilin üstüne çıksınlar diye) */}
-
     {/* Reservation Detail Modal */}
     {showReservationDetail && selectedReservation && (
-      <div className="fixed inset-0 bg-black/50 z-[1600] flex items-end md:items-center justify-center p-0 md:p-4">
+      <div className="fixed inset-0 bg-black/50 z-[60] flex items-end md:items-center justify-center p-0 md:p-4">
         <div className="bg-white w-full md:max-w-lg md:rounded-lg overflow-hidden">
           <div className="p-4 border-b flex items-center justify-between">
             <h3 className="font-semibold text-lg">Rezervasyon Detayları</h3>
@@ -440,7 +438,7 @@ export function UserProfile({ onClose }: UserProfileProps) {
 
     {/* Card Modal (Add/Edit) */}
     {showCardModal && (
-      <div className="fixed inset-0 bg-black/50 z-[1600] flex items-end md:items-center justify-center p-0 md:p-4">
+      <div className="fixed inset-0 bg-black/50 z-[60] flex items-end md:items-center justify-center p-0 md:p-4">
         <div className="bg-white w-full md:max-w-lg md:rounded-lg overflow-hidden">
           <div className="p-4 border-b flex items-center justify-between">
             <h3 className="font-semibold text-lg">{cardModalMode === 'add' ? 'Yeni Kart Ekle' : 'Kartı Düzenle'}</h3>
@@ -476,11 +474,11 @@ export function UserProfile({ onClose }: UserProfileProps) {
           </div>
         </div>
       </div>
-    )}
+   )}
 
     {/* Favorites Modal */}
     {showFavorites && (
-      <div className="fixed inset-0 bg-black/50 z-[1600] flex items-end md:items-center justify-center p-0 md:p-4">
+      <div className="fixed inset-0 bg-black/50 z-[60] flex items-end md:items-center justify-center p-0 md:p-4">
         <div className="bg-white w-full md:max-w-lg md:rounded-lg max-h-[80vh] overflow-hidden flex flex-col">
           <div className="p-4 border-b flex items-center justify-between">
             <h3 className="font-semibold text-lg">Favori İstasyonlar</h3>
@@ -520,11 +518,11 @@ export function UserProfile({ onClose }: UserProfileProps) {
           </div>
         </div>
       </div>
-    )}
+   )}
 
     {/* Notifications Modal */}
     {showNotifications && (
-      <div className="fixed inset-0 bg-black/50 z-[1600] flex items-end md:items-center justify-center p-0 md:p-4">
+      <div className="fixed inset-0 bg-black/50 z-[60] flex items-end md:items-center justify-center p-0 md:p-4">
         <div className="bg-white w-full md:max-w-lg md:rounded-lg overflow-hidden">
           <div className="p-4 border-b flex items-center justify-between">
             <h3 className="font-semibold text-lg">Bildirim Ayarları</h3>
@@ -578,11 +576,11 @@ export function UserProfile({ onClose }: UserProfileProps) {
           </div>
         </div>
       </div>
-    )}
+   )}
 
     {/* Invoices Modal */}
     {showInvoices && (
-      <div className="fixed inset-0 bg-black/50 z-[1600] flex items-end md:items-center justify-center p-0 md:p-4">
+      <div className="fixed inset-0 bg-black/50 z-[60] flex items-end md:items-center justify-center p-0 md:p-4">
         <div className="bg-white w-full md:max-w-lg md:rounded-lg max-h-[80vh] overflow-hidden flex flex-col">
           <div className="p-4 border-b flex items-center justify-between">
             <h3 className="font-semibold text-lg">Faturalar</h3>

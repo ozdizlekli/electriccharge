@@ -1,4 +1,3 @@
-import React from 'react';
 import { SlidersHorizontal, X } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
@@ -48,7 +47,7 @@ export function FilterPanel({ onClose, filters, onFiltersChange }: FilterPanelPr
   };
 
   return (
-<div className="fixed inset-0 bg-black/50 z-[1000] flex items-end md:items-center justify-center p-0 md:p-4">
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-end md:items-center justify-center p-0 md:p-4">
       <div className="bg-white w-full md:max-w-md md:rounded-lg max-h-[85vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="p-4 border-b flex items-center justify-between">

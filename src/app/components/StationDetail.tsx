@@ -1,12 +1,14 @@
-import React from 'react';
-import { useState } from 'react';
-import { X, MapPin, Star, Clock, Zap, Info, Calendar, CreditCard } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, MapPin, Star, Clock, Zap, Info, CreditCard, AlertTriangle, MessageSquare, Play } from 'lucide-react';
 import { Station, ChargingPoint } from '../types/station';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Card, CardContent } from './ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { ReservationModal } from './ReservationModal';
+import { LiveChargingSimulation } from './LiveChargingSimulation';
+import { AIDamageReport } from './AIDamageReport';
+import { CommunityReviews } from './CommunityReviews';
 
 interface StationDetailProps {
   station: Station;
@@ -16,6 +18,10 @@ interface StationDetailProps {
 export function StationDetail({ station, onClose }: StationDetailProps) {
   const [selectedPoint, setSelectedPoint] = useState<ChargingPoint | null>(null);
   const [showReservation, setShowReservation] = useState(false);
+  const [showLiveCharging, setShowLiveCharging] = useState(false);
+  const [showAIDamage, setShowAIDamage] = useState(false);
+  const [showCommunity, setShowCommunity] = useState(false);
+  const [liveChargingPoint, setLiveChargingPoint] = useState<ChargingPoint | null>(null);
 
   const availablePoints = station.chargingPoints.filter(cp => cp.status === 'available').length;
 
@@ -24,20 +30,23 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
     setShowReservation(true);
   };
 
+  const handleStartCharging = (point: ChargingPoint) => {
+    setLiveChargingPoint(point);
+    setShowLiveCharging(true);
+  };
+
   return (
     <>
       <div className="fixed inset-0 bg-black/50 z-[1000] flex items-end md:items-center justify-center p-0 md:p-4">
         <div className="bg-white w-full md:max-w-3xl md:rounded-lg max-h-[95vh] overflow-hidden flex flex-col">
           {/* Header */}
           <div className="relative">
-          <img 
-  src={station.images && station.images.length > 0 ? station.images[0] : 'https://images.unsplash.com/photo-1593941707882-a5bba14938cb?q=80&w=800&auto=format&fit=crop'} 
-  alt={station.name}
-  className="w-full h-48 object-cover bg-slate-100"
-  onError={(e) => {
-    e.currentTarget.src = 'https://images.unsplash.com/photo-1593941707882-a5bba14938cb?q=80&w=800&auto=format&fit=crop';
-  }}
-/>
+            <img 
+              src={station.images && station.images.length > 0 ? station.images[0] : 'https://images.unsplash.com/photo-1593941707882-a5bba14938cb?q=80&w=800&auto=format&fit=crop'} 
+              alt={station.name}
+              className="w-full h-48 object-cover bg-slate-100"
+              onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1593941707882-a5bba14938cb?q=80&w=800&auto=format&fit=crop'; }}
+            />
             <Button 
               variant="secondary" 
               size="icon"
@@ -51,7 +60,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
           {/* Content */}
           <div className="flex-1 overflow-y-auto p-6">
             {/* Title Section */}
-            <div className="mb-6">
+            <div className="mb-4">
               <div className="flex items-start justify-between gap-4 mb-2">
                 <div>
                   <h2 className="text-2xl font-semibold mb-1">{station.name}</h2>
@@ -76,8 +85,46 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
               </div>
             </div>
 
+            {/* Quick Action Buttons - NEW FEATURES */}
+            <div className="grid grid-cols-3 gap-2 mb-5">
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex flex-col h-auto py-3 gap-1 border-blue-200 text-blue-700 hover:bg-blue-50"
+                onClick={() => setShowCommunity(true)}
+              >
+                <MessageSquare className="w-5 h-5" />
+                <span className="text-xs font-medium">Topluluk</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex flex-col h-auto py-3 gap-1 border-orange-200 text-orange-700 hover:bg-orange-50"
+                onClick={() => setShowAIDamage(true)}
+              >
+                <AlertTriangle className="w-5 h-5" />
+                <span className="text-xs font-medium">Hasar Bildir</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex flex-col h-auto py-3 gap-1 border-green-200 text-green-700 hover:bg-green-50"
+                onClick={() => {
+                  const availablePoint = station.chargingPoints.find(cp => cp.status === 'available');
+                  if (availablePoint) {
+                    handleStartCharging(availablePoint);
+                  } else {
+                     alert("Şu an müsait şarj noktası bulunmuyor.");
+                  }
+                }}
+              >
+                <Play className="w-5 h-5" />
+                <span className="text-xs font-medium">Şarj Başlat</span>
+              </Button>
+            </div>
+
             {/* Availability Status */}
-            <Card className="mb-6 bg-gradient-to-r from-blue-50 to-green-50">
+            <Card className="mb-5 bg-gradient-to-r from-blue-50 to-green-50">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -131,12 +178,18 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
                             </div>
                           )}
                         </div>
-                        <div className="text-right">
-                          <div className="font-semibold text-lg mb-1">{point.price} ₺/kWh</div>
+                        <div className="text-right space-y-2">
+                          <div className="font-semibold text-lg">{point.price} ₺/kWh</div>
                           {point.status === 'available' && (
-                            <Button size="sm" onClick={() => handleReserve(point)}>
-                              Rezervasyon Yap
-                            </Button>
+                            <div className="flex flex-col gap-1">
+                              <Button size="sm" onClick={() => handleReserve(point)}>
+                                Rezervasyon
+                              </Button>
+                              <Button size="sm" variant="outline" className="border-green-300 text-green-700 hover:bg-green-50" onClick={() => handleStartCharging(point)}>
+                                <Play className="w-3 h-3 mr-1" />
+                                Şarj Et
+                              </Button>
+                            </div>
                           )}
                           {point.status === 'occupied' && point.currentUser && point.currentUser.remainingMinutes <= 60 && (
                             <Button size="sm" variant="outline" onClick={() => handleReserve(point)}>
@@ -195,7 +248,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
                     <h4 className="font-semibold mb-3">Ödeme Yöntemleri</h4>
                     <div className="flex items-center gap-2 text-sm">
                       <CreditCard className="w-4 h-4 text-muted-foreground" />
-                      <span>Kredi Kartı, Banka Kartı, Dijital Cüzdan</span>
+                      <span>Kredi Kartı, Banka Kartı, Dijital Cüzdan, QR Kod</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -209,10 +262,29 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
         <ReservationModal
           station={station}
           chargingPoint={selectedPoint}
-          onClose={() => {
-            setShowReservation(false);
-            setSelectedPoint(null);
-          }}
+          onClose={() => { setShowReservation(false); setSelectedPoint(null); }}
+        />
+      )}
+
+      {showLiveCharging && liveChargingPoint && (
+        <LiveChargingSimulation
+          station={station}
+          chargingPoint={liveChargingPoint}
+          onClose={() => { setShowLiveCharging(false); setLiveChargingPoint(null); }}
+        />
+      )}
+
+      {showAIDamage && (
+        <AIDamageReport
+          station={station}
+          onClose={() => setShowAIDamage(false)}
+        />
+      )}
+
+      {showCommunity && (
+        <CommunityReviews
+          station={station}
+          onClose={() => setShowCommunity(false)}
         />
       )}
     </>

@@ -27,15 +27,11 @@ export function StationCard({ station, onViewDetails, onNavigate }: StationCardP
         <div className="flex gap-4">
           {/* Station Image */}
           <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
-          <img 
-  src={station.images && station.images.length > 0 ? station.images[0] : 'https://images.unsplash.com/photo-1563906267088-b029e7101114?q=80&w=200&auto=format&fit=crop'} 
-  alt={station.name}
-  className="w-full h-full object-cover bg-slate-100"
-  onError={(e) => {
-    // Hata durumunda jenerik bir şarj ikonu resmi basar
-    e.currentTarget.src = 'https://images.unsplash.com/photo-1563906267088-b029e7101114?q=80&w=200&auto=format&fit=crop';
-  }}
-/>
+            <img 
+              src={station.images[0]} 
+              alt={station.name}
+              className="w-full h-full object-cover"
+            />
           </div>
 
           {/* Station Info */}

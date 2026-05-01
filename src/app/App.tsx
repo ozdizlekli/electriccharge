@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import 'leaflet/dist/leaflet.css';
-import { Search, SlidersHorizontal, User, Map, List, Navigation } from 'lucide-react';
+import { Search, SlidersHorizontal, User, Map, List, Navigation, LogOut, Shield, Zap } from 'lucide-react';
 import { Station, ChargingPoint } from './types/station'; 
 import { StationCard } from './components/StationCard';
 import { MapView } from './components/MapView';
 import { StationDetail } from './components/StationDetail';
 import { FilterPanel } from './components/FilterPanel';
 import { UserProfile } from './components/UserProfile';
+// YENİ EKLENEN AUTH SCREEN
+import { AuthScreen } from './components/AuthScreen';
 import { Button } from './components/ui/button';
 import { Input } from './components/ui/input';
 import { Badge } from './components/ui/badge';
@@ -15,7 +17,17 @@ import { toast } from 'sonner';
 
 const API_KEY = '1957a548-ad93-4efb-9ce3-18dc075f91a6';
 
+// YENİ EKLENEN KULLANICI ARAYÜZÜ
+interface AuthUser {
+  name: string;
+  email: string;
+  role: 'driver' | 'station_owner' | 'admin';
+}
+
 export default function App() {
+  // KULLANICI DURUMU STATE'İ
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+
   const [stations, setStations] = useState<Station[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
@@ -34,14 +46,15 @@ export default function App() {
     connectorTypes: [] as string[]
   });
 
+  // KULLANICI KONUMUNU ALMA
   useEffect(() => {
+    // KULLANICI GİRİŞ YAPMAMIŞSA İŞLEMİ BEKLET
+    if (!currentUser) return;
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          });
+          setUserLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
         },
         (error) => {
           console.error('Konum alınamadı', error);
@@ -53,8 +66,9 @@ export default function App() {
     } else {
       setUserLocation({ lat: 38.4237, lng: 27.1428 });
     }
-  }, []);
+  }, [currentUser]);
 
+  // API'DEN VERİ ÇEKME
   useEffect(() => {
     if (!userLocation) return; 
 
@@ -71,7 +85,6 @@ export default function App() {
 
         const formattedStations: Station[] = rawData.map((item: any) => {
           
-          // Operatör İsmi Simülasyonu (Sallama Kısmı)
           const localBrands = ['ZES', 'Eşarj', 'Voltrun', 'SharZ', 'Trugo', 'Aytemiz'];
           const brandFromApi = item.OperatorInfo?.Title;
           const randomBrand = localBrands[Math.floor(Math.random() * localBrands.length)];
@@ -105,7 +118,6 @@ export default function App() {
           return {
             id: item.ID.toString(),
             name: item.AddressInfo?.Title || 'Şarj İstasyonu',
-            // Az önce yukarıda hazırladığımız finalBrand değişkenini buraya veriyoruz:
             brand: finalBrand,
             address: item.AddressInfo?.AddressLine1 || 'Adres bilgisi yok',
             city: item.AddressInfo?.Town || '',
@@ -166,9 +178,7 @@ export default function App() {
     });
   }, [stations, searchQuery, filters]);
 
-  const handleStationSelect = (stationId: string) => {
-    setSelectedStation(stationId);
-  };
+  const handleStationSelect = (stationId: string) => setSelectedStation(stationId);
 
   const handleViewDetails = (stationId: string) => {
     setSelectedStation(stationId);
@@ -185,9 +195,7 @@ export default function App() {
 
   const handleMarkerClick = (stationId: string) => {
     handleStationSelect(stationId);
-    setTimeout(() => {
-      handleViewDetails(stationId);
-    }, 300);
+    setTimeout(() => handleViewDetails(stationId), 300);
   };
 
   const selectedStationData = stations.find(s => s.id === selectedStation);
@@ -203,6 +211,22 @@ export default function App() {
     filters.connectorTypes.length +
     (filters.maxDistance < 50 ? 1 : 0);
 
+  const roleConfig = {
+    driver: { label: 'Sürücü', color: 'bg-blue-100 text-blue-700' },
+    station_owner: { label: 'İstasyon Sahibi', color: 'bg-purple-100 text-purple-700' },
+    admin: { label: 'Admin', color: 'bg-red-100 text-red-700' }
+  };
+
+  // KULLANICI GİRİŞ YAPMAMIŞSA SADECE AUTH (GİRİŞ) EKRANINI GÖSTER
+  if (!currentUser) {
+    return (
+      <>
+        <Toaster />
+        <AuthScreen onAuthenticated={setCurrentUser} />
+      </>
+    );
+  }
+
   return (
     <div className="h-screen flex flex-col bg-gray-50">
       <Toaster />
@@ -211,18 +235,24 @@ export default function App() {
           <div className="flex items-center gap-4 mb-3">
             <div className="flex items-center gap-2">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-green-500 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
+                <Zap className="w-6 h-6 text-white" />
               </div>
               <div>
                 <h1 className="font-bold text-xl">eŞarj</h1>
                 <p className="text-xs text-muted-foreground">Elektrikli Araç Şarj İstasyonları</p>
               </div>
             </div>
-            <div className="ml-auto">
+            <div className="ml-auto flex items-center gap-2">
+              {/* Role badge */}
+              <Badge className={`hidden sm:flex ${roleConfig[currentUser.role].color} border-0 text-xs`}>
+                {currentUser.role === 'admin' && <Shield className="w-3 h-3 mr-1" />}
+                {roleConfig[currentUser.role].label}
+              </Badge>
               <Button variant="ghost" size="icon" onClick={() => setShowProfile(true)}>
                 <User className="w-5 h-5" />
+              </Button>
+              <Button variant="ghost" size="icon" onClick={() => { setCurrentUser(null); toast.success('Çıkış yapıldı'); }}>
+                <LogOut className="w-4 h-4" />
               </Button>
             </div>
           </div>
@@ -292,20 +322,63 @@ export default function App() {
               {filteredStations.map((station) => (
                 <StationCard key={station.id} station={station} onViewDetails={handleViewDetails} onNavigate={handleNavigate} />
               ))}
+              {!isLoading && filteredStations.length === 0 && (
+                <div className="text-center py-12 text-muted-foreground">
+                  <p>Bu bölgede veya filtrelerinize uygun istasyon bulunamadı</p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="mt-4"
+                    onClick={() => setFilters({
+                      maxDistance: 50,
+                      onlyAvailable: false,
+                      brands: [],
+                      minPower: 0,
+                      connectorTypes: []
+                    })}
+                  >
+                    Filtreleri Sıfırla
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         ) : (
           <div className="h-full overflow-y-auto p-4 relative">
+             {isLoading && (
+                  <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/50 backdrop-blur-sm">
+                    <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+               )}
             <div className="max-w-4xl mx-auto space-y-3">
               {filteredStations.map((station) => (
                 <StationCard key={station.id} station={station} onViewDetails={handleViewDetails} onNavigate={handleNavigate} />
               ))}
+              {!isLoading && filteredStations.length === 0 && (
+                <div className="text-center py-12 text-muted-foreground">
+                  <p className="mb-4">Filtrelerinize uygun istasyon bulunamadı</p>
+                  <Button 
+                    variant="outline"
+                    onClick={() => setFilters({
+                      maxDistance: 50,
+                      onlyAvailable: false,
+                      brands: [],
+                      minPower: 0,
+                      connectorTypes: []
+                    })}
+                  >
+                    Filtreleri Sıfırla
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         )}
       </main>
 
-      {showStationDetail && selectedStationData && <StationDetail station={selectedStationData} onClose={() => setShowStationDetail(false)} />}
+      {showStationDetail && selectedStationData && (
+        <StationDetail station={selectedStationData} onClose={() => setShowStationDetail(false)} />
+      )}
       {showFilters && <FilterPanel filters={filters} onFiltersChange={setFilters} onClose={() => setShowFilters(false)} />}
       {showProfile && <UserProfile onClose={() => setShowProfile(false)} />}
 
