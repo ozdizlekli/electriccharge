@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { X, Calendar, Clock, Zap, CreditCard, AlertCircle } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { X, Calendar, Clock, Zap, CreditCard, AlertCircle, TrendingUp, Leaf } from 'lucide-react';
 import { Station, ChargingPoint } from '../types/station';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Badge } from './ui/badge';
 import { PaymentModal } from './PaymentModal';
 import { toast } from 'sonner';
 
@@ -13,6 +14,26 @@ interface ReservationModalProps {
   station: Station;
   chargingPoint: ChargingPoint;
   onClose: () => void;
+}
+
+// Peak hours: 17:00–20:00
+const PEAK_START = 17;
+const PEAK_END = 20;
+const SURGE_MULTIPLIER = 1.15;
+const ECO_MULTIPLIER = 0.90;
+
+function getPricingTier(timeStr: string): 'peak' | 'eco' | 'normal' {
+  if (!timeStr) {
+    const h = new Date().getHours();
+    if (h >= PEAK_START && h < PEAK_END) return 'peak';
+    if (h >= 22 || h < 7) return 'eco';
+    return 'normal';
+  }
+  const [hourStr] = timeStr.split(':');
+  const h = parseInt(hourStr, 10);
+  if (h >= PEAK_START && h < PEAK_END) return 'peak';
+  if (h >= 22 || h < 7) return 'eco';
+  return 'normal';
 }
 
 export function ReservationModal({ station, chargingPoint, onClose }: ReservationModalProps) {
@@ -26,10 +47,19 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
   const isOccupied = chargingPoint.status === 'occupied';
   const availableFromMinutes = isOccupied ? chargingPoint.currentUser?.remainingMinutes || 0 : 0;
 
+  const pricingTier = useMemo(() => getPricingTier(selectedTime), [selectedTime]);
+
+  const effectivePrice = useMemo(() => {
+    const base = chargingPoint.price;
+    if (pricingTier === 'peak') return parseFloat((base * SURGE_MULTIPLIER).toFixed(2));
+    if (pricingTier === 'eco') return parseFloat((base * ECO_MULTIPLIER).toFixed(2));
+    return base;
+  }, [chargingPoint.price, pricingTier]);
+
   const calculatePrice = () => {
     const durationHours = parseInt(duration) / 60;
     const estimatedKwh = chargingPoint.power * durationHours * 0.8;
-    return (estimatedKwh * chargingPoint.price).toFixed(2);
+    return (estimatedKwh * effectivePrice).toFixed(2);
   };
 
   const generateTimeSlots = () => {
@@ -47,6 +77,16 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
     return slots;
   };
 
+  const timeSlots = generateTimeSlots();
+
+  const getSlotLabel = (time: string) => {
+    const [hourStr] = time.split(':');
+    const h = parseInt(hourStr, 10);
+    if (h >= PEAK_START && h < PEAK_END) return `${time} 🔴 Yoğun`;
+    if (h >= 22 || h < 7) return `${time} 🟢 Eco`;
+    return time;
+  };
+
   const handleReservation = () => {
     if (!selectedTime) {
       toast.error('Lütfen bir saat seçin');
@@ -60,11 +100,47 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
     onClose();
   };
 
+  const PricingBadge = () => {
+    if (pricingTier === 'peak') {
+      return (
+        <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl">
+          <TrendingUp className="w-4 h-4 text-red-600 flex-shrink-0" />
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold text-red-800">Yüksek Talep Dalgası</span>
+              <Badge className="bg-red-100 text-red-700 border-red-200 border text-xs">+%15</Badge>
+            </div>
+            <p className="text-xs text-red-600 mt-0.5">Yoğun saat (17:00–20:00). Taban fiyata %15 ek uygulanıyor.</p>
+          </div>
+        </div>
+      );
+    }
+    if (pricingTier === 'eco') {
+      return (
+        <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-xl">
+          <Leaf className="w-4 h-4 text-green-600 flex-shrink-0" />
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold text-green-800">Eco İndirim</span>
+              <Badge className="bg-green-100 text-green-700 border-green-200 border text-xs">-%10</Badge>
+            </div>
+            <p className="text-xs text-green-600 mt-0.5">Gece saatleri indirimi aktif. Taban fiyata %10 indirim uygulanıyor.</p>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-100 rounded-xl">
+        <Zap className="w-4 h-4 text-blue-500 flex-shrink-0" />
+        <p className="text-xs text-blue-700">Normal tarife geçerli. Yoğun saatlerde fiyatlar artabilir.</p>
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="fixed inset-0 bg-black/50 z-[9999] flex items-end md:items-center justify-center p-0 md:p-4">
         <div className="bg-white w-full md:max-w-lg md:rounded-lg max-h-[90vh] overflow-hidden flex flex-col">
-          {/* Header */}
           <div className="p-4 border-b flex items-center justify-between">
             <h3 className="font-semibold text-lg">Rezervasyon Yap</h3>
             <Button variant="ghost" size="icon" onClick={onClose}>
@@ -72,9 +148,7 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
             </Button>
           </div>
 
-          {/* Content */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {/* Station Info */}
             <Card className="bg-blue-50">
               <CardContent className="p-4">
                 <div className="font-semibold mb-1">{station.name}</div>
@@ -88,7 +162,6 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
               </CardContent>
             </Card>
 
-            {/* Availability Warning */}
             {isOccupied && (
               <Card className="bg-orange-50 border-orange-200">
                 <CardContent className="p-3 flex items-start gap-2">
@@ -96,14 +169,13 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
                   <div className="text-sm">
                     <div className="font-medium text-orange-900">Bu nokta şu anda dolu</div>
                     <div className="text-orange-700">
-                      Yaklaşık {availableFromMinutes} dakika sonra boşalacak. Rezervasyonunuz bu süreden sonra başlayacak.
+                      Yaklaşık {availableFromMinutes} dakika sonra boşalacak.
                     </div>
                   </div>
                 </CardContent>
               </Card>
             )}
 
-            {/* Date Selection */}
             <div className="space-y-2">
               <Label htmlFor="date" className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
@@ -119,30 +191,32 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
               />
             </div>
 
-            {/* Time Selection */}
             <div className="space-y-2">
-              <Label htmlFor="time" className="flex items-center gap-2">
+              <Label className="flex items-center gap-2">
                 <Clock className="w-4 h-4" />
                 Saat
+                <span className="text-xs text-muted-foreground ml-auto">🔴 Yoğun  🟢 Eco</span>
               </Label>
               <Select value={selectedTime} onValueChange={setSelectedTime}>
                 <SelectTrigger>
                   <SelectValue placeholder="Saat seçin" />
                 </SelectTrigger>
                 <SelectContent className="z-[10000]">
-                  {generateTimeSlots().map((time) => (
+                  {timeSlots.map((time) => (
                     <SelectItem key={time} value={time}>
-                      {time}
-                      {isOccupied && time === generateTimeSlots()[0] && ' (En erken)'}
+                      {getSlotLabel(time)}
+                      {isOccupied && time === timeSlots[0] && ' (En erken)'}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
 
-            {/* Duration Selection */}
+            {/* Dynamic pricing badge */}
+            <PricingBadge />
+
             <div className="space-y-2">
-              <Label htmlFor="duration">Tahmini Şarj Süresi</Label>
+              <Label>Tahmini Şarj Süresi</Label>
               <Select value={duration} onValueChange={setDuration}>
                 <SelectTrigger>
                   <SelectValue />
@@ -158,12 +232,26 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
               </Select>
             </div>
 
-            {/* Price Summary */}
-            <Card className="bg-gradient-to-r from-green-50 to-blue-50">
+            <Card className={`bg-gradient-to-r ${
+              pricingTier === 'peak' ? 'from-red-50 to-orange-50' :
+              pricingTier === 'eco' ? 'from-green-50 to-emerald-50' :
+              'from-green-50 to-blue-50'
+            }`}>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Birim Fiyat</span>
-                  <span className="font-medium">{chargingPoint.price} ₺/kWh</span>
+                  <span className="text-sm text-muted-foreground">Taban Fiyat</span>
+                  <span className="font-medium line-through text-muted-foreground text-sm">
+                    {pricingTier !== 'normal' ? `${chargingPoint.price} ₺/kWh` : ''}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-muted-foreground">Geçerli Fiyat</span>
+                  <span className={`font-semibold ${
+                    pricingTier === 'peak' ? 'text-red-600' :
+                    pricingTier === 'eco' ? 'text-green-600' : 'text-gray-700'
+                  }`}>
+                    {effectivePrice} ₺/kWh
+                  </span>
                 </div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-muted-foreground">Tahmini Enerji</span>
@@ -176,26 +264,19 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
                   <span className="text-xl font-bold text-green-600">{calculatePrice()} ₺</span>
                 </div>
                 <div className="text-xs text-muted-foreground mt-2">
-                  * Gerçek tutar, kullanılan enerji miktarına göre değişebilir
+                  * Gerçek tutar kullanılan enerji miktarına göre değişebilir
                 </div>
               </CardContent>
             </Card>
 
-            {/* Terms */}
             <div className="text-xs text-muted-foreground space-y-1">
               <p>• Rezervasyonunuz başlangıç saatinden itibaren 15 dakika geçerlidir.</p>
-              <p>• 15 dakika içinde başlamazsanız rezervasyon iptal olur.</p>
               <p>• İptal işlemleri başlangıç saatinden 1 saat öncesine kadar ücretsizdir.</p>
             </div>
           </div>
 
-          {/* Footer */}
           <div className="p-4 border-t bg-gray-50">
-            <Button
-              className="w-full"
-              size="lg"
-              onClick={handleReservation}
-            >
+            <Button className="w-full" size="lg" onClick={handleReservation}>
               <CreditCard className="w-4 h-4 mr-2" />
               Ödeme Yap ve Rezerve Et
             </Button>
@@ -211,7 +292,7 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
             date: selectedDate,
             time: selectedTime,
             duration: parseInt(duration),
-            chargingPoint: chargingPoint
+            chargingPoint: { ...chargingPoint, price: effectivePrice },
           }}
           onClose={() => setShowPayment(false)}
           onComplete={handlePaymentComplete}

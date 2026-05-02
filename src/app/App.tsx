@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import 'leaflet/dist/leaflet.css';
-import { Search, SlidersHorizontal, User, Map, List, Navigation, LogOut, Shield, Zap } from 'lucide-react';
+import { Search, SlidersHorizontal, User, Map, List, Navigation, LogOut, Shield, Zap, Route } from 'lucide-react';
 import { Station, ChargingPoint } from './types/station';
 import { StationCard } from './components/StationCard';
 import { MapView } from './components/MapView';
@@ -15,6 +15,7 @@ import { Toaster } from './components/ui/sonner';
 import { toast } from 'sonner';
 import { StationOwnerDashboard } from './components/StationOwnerDashboard';
 import { AdminDashboard } from './components/AdminDashboard';
+import { TripPlanner } from './components/TripPlanner'; // <-- Akıllı Rota Planlayıcı eklendi
 
 const API_KEY = '1957a548-ad93-4efb-9ce3-18dc075f91a6';
 
@@ -57,6 +58,7 @@ export default function App() {
   const [showProfile, setShowProfile] = useState(false);
   const [showOwnerDashboard, setShowOwnerDashboard] = useState(false);
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
+  const [showTripPlanner, setShowTripPlanner] = useState(false); // <-- Rota Planlayıcı State'i
 
   const [filters, setFilters] = useState({
     maxDistance: 50,
@@ -126,7 +128,6 @@ export default function App() {
             });
           }
 
-          // Use stable, reliable Unsplash image URL based on station numeric ID
           const stationImage = getStationImage(item.ID);
 
           return {
@@ -305,17 +306,28 @@ export default function App() {
               <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
               <span className="font-medium">{totalAvailable} müsait nokta</span>
             </div>
-            <div className="text-muted-foreground">
+            <div className="text-muted-foreground hidden sm:block">
               {isLoading ? "Aranıyor..." : `${filteredStations.length} istasyon bulundu`}
             </div>
             <div className="ml-auto flex gap-2">
+              {/* Akıllı Rota Planlayıcı Butonu Eklendi */}
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                onClick={() => setShowTripPlanner(true)} 
+                className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border-indigo-200 hidden sm:flex"
+              >
+                <Route className="w-4 h-4 mr-2" />
+                Rota Planla
+              </Button>
+              
               <Button variant={viewMode === 'map' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('map')}>
-                <Map className="w-4 h-4 mr-1" />
-                Harita
+                <Map className="w-4 h-4 sm:mr-1" />
+                <span className="hidden sm:inline">Harita</span>
               </Button>
               <Button variant={viewMode === 'list' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('list')}>
-                <List className="w-4 h-4 mr-1" />
-                Liste
+                <List className="w-4 h-4 sm:mr-1" />
+                <span className="hidden sm:inline">Liste</span>
               </Button>
             </div>
           </div>
@@ -379,6 +391,7 @@ export default function App() {
         )}
       </main>
 
+      {/* MODALLAR */}
       {showStationDetail && selectedStationData && (
         <StationDetail station={selectedStationData} onClose={() => setShowStationDetail(false)} />
       )}
@@ -388,18 +401,29 @@ export default function App() {
       {showProfile && <UserProfile onClose={() => setShowProfile(false)} />}
       {showOwnerDashboard && <StationOwnerDashboard onClose={() => setShowOwnerDashboard(false)} />}
       {showAdminDashboard && <AdminDashboard onClose={() => setShowAdminDashboard(false)} />}
+      {showTripPlanner && <TripPlanner onClose={() => setShowTripPlanner(false)} stations={filteredStations} />}
 
-      <Button
-        size="lg"
-        className="fixed bottom-6 right-6 rounded-full shadow-lg md:hidden z-50"
-        onClick={() => {
-          const nearestStation = filteredStations[0];
-          if (nearestStation) handleViewDetails(nearestStation.id);
-        }}
-      >
-        <Navigation className="w-5 h-5 mr-2" />
-        En Yakın İstasyon
-      </Button>
+      {/* MOBİL HIZLI İŞLEM BUTONLARI */}
+      <div className="fixed bottom-6 right-6 flex flex-col gap-3 md:hidden z-50">
+        <Button
+          size="icon"
+          variant="secondary"
+          className="rounded-full shadow-lg bg-indigo-50 text-indigo-700 h-12 w-12"
+          onClick={() => setShowTripPlanner(true)}
+        >
+          <Route className="w-5 h-5" />
+        </Button>
+        <Button
+          size="icon"
+          className="rounded-full shadow-lg h-12 w-12"
+          onClick={() => {
+            const nearestStation = filteredStations[0];
+            if (nearestStation) handleViewDetails(nearestStation.id);
+          }}
+        >
+          <Navigation className="w-5 h-5" />
+        </Button>
+      </div>
     </div>
   );
 }
