@@ -115,11 +115,12 @@ export function AdminDashboard({ onClose }: Props) {
   const [stationSearch, setStationSearch] = useState('');
   const [userActionMenu, setUserActionMenu] = useState<string | null>(null);
 
-  useEffect(() => { saveLS(LS_USERS,    users);    }, [users]);
+  // ── Persist users to localStorage whenever they change ────────────────────
+  useEffect(() => { saveLS(LS_USERS, users); }, [users]);
   useEffect(() => { saveLS(LS_STATIONS, stations); }, [stations]);
 
-  const pendingStations  = stations.filter(s => s.status === 'pending_approval').length;
-  const openAiReports    = aiReports.filter(r => r.status === 'open').length;
+  const pendingStations   = stations.filter(s => s.status === 'pending_approval').length;
+  const openAiReports     = aiReports.filter(r => r.status === 'open').length;
   const criticalAiReports = aiReports.filter(r => r.severity === 'critical' && r.status === 'open').length;
 
   const filteredUsers    = users.filter(u =>
@@ -131,27 +132,46 @@ export function AdminDashboard({ onClose }: Props) {
 
   // ── User actions ──────────────────────────────────────────────────────────
 
+  // FIX: use functional updater so the closure always sees fresh state,
+  // and close the menu *after* state is applied.
   const changeUserRole = useCallback((id: string, role: UserRole) => {
-    setUsers(p => p.map(u => u.id === id ? { ...u, role } : u));
+    setUsers(prev => {
+      const next = prev.map(u => u.id === id ? { ...u, role } : u);
+      saveLS(LS_USERS, next); // immediately persist
+      return next;
+    });
     toast.success(`Kullanıcı rolü "${roleLabels[role]}" olarak güncellendi`);
     setUserActionMenu(null);
   }, []);
 
   const toggleUserStatus = useCallback((id: string) => {
-    setUsers(p => p.map(u => {
-      if (u.id !== id) return u;
-      const next: UserStatus = u.status === 'active' ? 'suspended' : 'active';
-      toast.success(`Kullanıcı ${next === 'active' ? 'aktif edildi' : 'askıya alındı'}`);
-      return { ...u, status: next };
-    }));
+    setUsers(prev => {
+      const next = prev.map(u => {
+        if (u.id !== id) return u;
+        const newStatus: UserStatus = u.status === 'active' ? 'suspended' : 'active';
+        toast.success(`Kullanıcı ${newStatus === 'active' ? 'aktif edildi' : 'askıya alındı'}`);
+        return { ...u, status: newStatus };
+      });
+      saveLS(LS_USERS, next);
+      return next;
+    });
     setUserActionMenu(null);
   }, []);
 
   // ── Station actions ───────────────────────────────────────────────────────
 
-  const approveStation   = (id: string) => { setStations(p => p.map(s => s.id === id ? { ...s, status: 'active' as StationStatus } : s)); toast.success('İstasyon onaylandı'); };
-  const suspendStation   = (id: string) => { setStations(p => p.map(s => s.id === id ? { ...s, status: 'suspended' as StationStatus } : s)); toast.success('İstasyon askıya alındı'); };
-  const reactivateStation = (id: string) => { setStations(p => p.map(s => s.id === id ? { ...s, status: 'active' as StationStatus } : s)); toast.success('İstasyon aktif edildi'); };
+  const updateStation = useCallback((id: string, status: StationStatus, msg: string) => {
+    setStations(prev => {
+      const next = prev.map(s => s.id === id ? { ...s, status } : s);
+      saveLS(LS_STATIONS, next);
+      return next;
+    });
+    toast.success(msg);
+  }, []);
+
+  const approveStation    = (id: string) => updateStation(id, 'active',           'İstasyon onaylandı');
+  const suspendStation    = (id: string) => updateStation(id, 'suspended',        'İstasyon askıya alındı');
+  const reactivateStation = (id: string) => updateStation(id, 'active',           'İstasyon aktif edildi');
 
   // ── AI report actions ─────────────────────────────────────────────────────
 
@@ -175,8 +195,12 @@ export function AdminDashboard({ onClose }: Props) {
   };
 
   const resetAll = () => {
-    setUsers(DEFAULT_USERS);
-    setStations(DEFAULT_STATIONS);
+    const freshUsers    = DEFAULT_USERS;
+    const freshStations = DEFAULT_STATIONS;
+    setUsers(freshUsers);
+    setStations(freshStations);
+    saveLS(LS_USERS,    freshUsers);
+    saveLS(LS_STATIONS, freshStations);
     toast.info('Kullanıcı ve istasyon verileri sıfırlandı');
   };
 
@@ -291,7 +315,7 @@ export function AdminDashboard({ onClose }: Props) {
 
               <div className="space-y-2">
                 {filteredUsers.map(user => (
-                  <Card key={user.id} className={`transition-all ${user.status === 'suspended' ? 'opacity-60' : ''}`}>
+                  <Card key={user.id} className={`transition-all duration-200 ${user.status === 'suspended' ? 'opacity-60' : ''}`}>
                     <CardContent className="p-4">
                       <div className="flex items-center gap-3">
                         <Avatar className="w-10 h-10 flex-shrink-0">
@@ -302,7 +326,10 @@ export function AdminDashboard({ onClose }: Props) {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="font-semibold text-sm">{user.name}</span>
-                            <Badge className={`text-xs border-0 ${roleColors[user.role]}`}>{roleLabels[user.role]}</Badge>
+                            {/* Role badge — updates immediately when role changes */}
+                            <Badge className={`text-xs border-0 transition-colors duration-200 ${roleColors[user.role]}`}>
+                              {roleLabels[user.role]}
+                            </Badge>
                             <Badge className={`text-xs border-0 ${userStatusColors[user.status]}`}>
                               {user.status === 'active' ? 'Aktif' : user.status === 'suspended' ? 'Askıya Alındı' : 'Beklemede'}
                             </Badge>
@@ -324,16 +351,20 @@ export function AdminDashboard({ onClose }: Props) {
                             <div className="absolute right-0 top-full mt-1 bg-white border rounded-lg shadow-xl z-20 py-1 min-w-[190px]">
                               <div className="px-3 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Rol Değiştir</div>
                               {(['driver', 'station_owner', 'admin'] as UserRole[]).map(role => (
-                                <button key={role} onClick={() => changeUserRole(user.id, role)}
-                                  className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 ${user.role === role ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}>
-                                  {user.role === role && <CheckCircle className="w-3.5 h-3.5 text-blue-600" />}
-                                  {user.role !== role && <div className="w-3.5 h-3.5" />}
+                                <button
+                                  key={role}
+                                  onClick={() => changeUserRole(user.id, role)}
+                                  className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 transition-colors ${user.role === role ? 'text-blue-600 font-semibold bg-blue-50' : 'text-gray-700'}`}
+                                >
+                                  {user.role === role
+                                    ? <CheckCircle className="w-3.5 h-3.5 text-blue-600" />
+                                    : <div className="w-3.5 h-3.5" />}
                                   {roleLabels[role]}
                                 </button>
                               ))}
                               <Separator className="my-1" />
                               <button onClick={() => toggleUserStatus(user.id)}
-                                className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-gray-50 ${user.status === 'active' ? 'text-red-600' : 'text-green-600'}`}>
+                                className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-gray-50 transition-colors ${user.status === 'active' ? 'text-red-600' : 'text-green-600'}`}>
                                 {user.status === 'active'
                                   ? <><UserX className="w-3.5 h-3.5" /> Askıya Al</>
                                   : <><UserCheck className="w-3.5 h-3.5" /> Aktif Et</>}
@@ -376,7 +407,7 @@ export function AdminDashboard({ onClose }: Props) {
 
               <div className="space-y-2">
                 {filteredStations.map(station => (
-                  <Card key={station.id} className={`transition-all ${station.status === 'pending_approval' ? 'border-orange-300 bg-orange-50/30' : station.status === 'suspended' ? 'opacity-60' : ''}`}>
+                  <Card key={station.id} className={`transition-all duration-200 ${station.status === 'pending_approval' ? 'border-orange-300 bg-orange-50/30' : station.status === 'suspended' ? 'opacity-60' : ''}`}>
                     <CardContent className="p-4">
                       <div className="flex items-start gap-3">
                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${station.status === 'pending_approval' ? 'bg-orange-100' : station.status === 'suspended' ? 'bg-red-100' : 'bg-green-100'}`}>
@@ -474,14 +505,13 @@ export function AdminDashboard({ onClose }: Props) {
                   {aiReports.map(report => (
                     <Card
                       key={report.id}
-                      className={`transition-all ${
+                      className={`transition-all duration-200 ${
                         report.severity === 'critical' ? 'border-red-300 bg-red-50/20' :
                         report.severity === 'high'     ? 'border-orange-200' : ''
                       } ${report.status === 'resolved' ? 'opacity-60' : ''}`}
                     >
                       <CardContent className="p-4">
                         <div className="flex items-start gap-3">
-                          {/* Icon */}
                           <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
                             report.severity === 'critical' ? 'bg-red-100' :
                             report.severity === 'high'     ? 'bg-orange-100' :
@@ -494,7 +524,6 @@ export function AdminDashboard({ onClose }: Props) {
                             }`} />
                           </div>
 
-                          {/* Content */}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap mb-1">
                               <span className="font-semibold text-sm">{report.damageType}</span>
@@ -507,9 +536,7 @@ export function AdminDashboard({ onClose }: Props) {
                               {report.status === 'resolved' && <Badge className="text-xs bg-green-100 text-green-700 border-0">Çözüldü</Badge>}
                             </div>
 
-                            <p className="text-xs text-muted-foreground mb-1">
-                              📍 {report.stationName}
-                            </p>
+                            <p className="text-xs text-muted-foreground mb-1">📍 {report.stationName}</p>
                             <p className="text-xs text-gray-700 mb-1 line-clamp-2">{report.description}</p>
                             <p className="text-xs text-blue-700 italic mb-2 line-clamp-1">{report.recommendation}</p>
 
@@ -522,7 +549,6 @@ export function AdminDashboard({ onClose }: Props) {
                             </div>
                           </div>
 
-                          {/* Actions */}
                           {report.status !== 'resolved' && (
                             <div className="flex flex-col gap-1.5 flex-shrink-0">
                               {report.status === 'open' && (
@@ -550,7 +576,11 @@ export function AdminDashboard({ onClose }: Props) {
         {/* Footer */}
         <div className="border-t px-5 py-3 bg-gray-50 flex items-center justify-between text-xs text-muted-foreground flex-shrink-0">
           <span>eŞarj Admin · Değişiklikler otomatik kaydediliyor</span>
-          <Button variant="ghost" size="sm" className="text-xs h-7 gap-1" onClick={() => { setUsers(loadLS(LS_USERS, DEFAULT_USERS)); setStations(loadLS(LS_STATIONS, DEFAULT_STATIONS)); toast.info('Veriler yenilendi'); }}>
+          <Button variant="ghost" size="sm" className="text-xs h-7 gap-1" onClick={() => {
+            setUsers(loadLS(LS_USERS, DEFAULT_USERS));
+            setStations(loadLS(LS_STATIONS, DEFAULT_STATIONS));
+            toast.info('Veriler yenilendi');
+          }}>
             <RefreshCw className="w-3 h-3" /> Yenile
           </Button>
         </div>

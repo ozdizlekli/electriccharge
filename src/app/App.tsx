@@ -1,26 +1,42 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { Search, SlidersHorizontal, User, Map, List, Navigation, LogOut, Shield, Zap } from 'lucide-react';
-import { Station, ChargingPoint } from './types/station'; 
+import { Station, ChargingPoint } from './types/station';
 import { StationCard } from './components/StationCard';
 import { MapView } from './components/MapView';
 import { StationDetail } from './components/StationDetail';
 import { FilterPanel } from './components/FilterPanel';
 import { UserProfile } from './components/UserProfile';
-// YENİ EKLENEN AUTH SCREEN
 import { AuthScreen } from './components/AuthScreen';
 import { Button } from './components/ui/button';
 import { Input } from './components/ui/input';
 import { Badge } from './components/ui/badge';
 import { Toaster } from './components/ui/sonner';
 import { toast } from 'sonner';
-
 import { StationOwnerDashboard } from './components/StationOwnerDashboard';
-import { AdminDashboard } from './components/AdminDashboard'; // Eklenen Import
+import { AdminDashboard } from './components/AdminDashboard';
 
 const API_KEY = '1957a548-ad93-4efb-9ce3-18dc075f91a6';
 
-// YENİ EKLENEN KULLANICI ARAYÜZÜ
+// Reliable, stable Unsplash photo IDs for EV / charging station imagery
+const EV_PHOTO_IDS = [
+  'photo-1593941707882-a5bba14938cb',
+  'photo-1617704548623-340376564e68',
+  'photo-1558618666-fcd25c85cd64',
+  'photo-1560179707-f14e90ef3623',
+  'photo-1585208798174-6cedd86e019a',
+  'photo-1623126908029-58cb08a2b272',
+  'photo-1621264448270-9ef00e88a935',
+  'photo-1572120360610-d971b9d7767c',
+  'photo-1494976388531-d1058494cdd8',
+  'photo-1592198084033-aade902d1aae',
+];
+
+function getStationImage(id: number): string {
+  const photoId = EV_PHOTO_IDS[id % EV_PHOTO_IDS.length];
+  return `https://images.unsplash.com/${photoId}?auto=format&fit=crop&w=800&q=80`;
+}
+
 interface AuthUser {
   name: string;
   email: string;
@@ -28,9 +44,7 @@ interface AuthUser {
 }
 
 export default function App() {
-  // KULLANICI DURUMU STATE'İ
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
-
   const [stations, setStations] = useState<Station[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
@@ -41,11 +55,9 @@ export default function App() {
   const [showStationDetail, setShowStationDetail] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
-  
-  // Dashboard State'leri
   const [showOwnerDashboard, setShowOwnerDashboard] = useState(false);
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
-  
+
   const [filters, setFilters] = useState({
     maxDistance: 50,
     onlyAvailable: false,
@@ -54,19 +66,15 @@ export default function App() {
     connectorTypes: [] as string[]
   });
 
-  // KULLANICI KONUMUNU ALMA
   useEffect(() => {
-    // KULLANICI GİRİŞ YAPMAMIŞSA İŞLEMİ BEKLET
     if (!currentUser) return;
-
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setUserLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
         },
-        (error) => {
-          console.error('Konum alınamadı', error);
-          setUserLocation({ lat: 38.4237, lng: 27.1428 }); 
+        () => {
+          setUserLocation({ lat: 38.4237, lng: 27.1428 });
           toast.error("Konum alınamadı, varsayılan konum kullanılıyor.");
         },
         { enableHighAccuracy: false, maximumAge: 10000, timeout: 15000 }
@@ -76,9 +84,8 @@ export default function App() {
     }
   }, [currentUser]);
 
-  // API'DEN VERİ ÇEKME
   useEffect(() => {
-    if (!userLocation) return; 
+    if (!userLocation) return;
 
     const fetchStations = async () => {
       setIsLoading(true);
@@ -88,40 +95,39 @@ export default function App() {
         );
 
         if (!response.ok) throw new Error('API Hatası');
-        
         const rawData = await response.json();
 
+        const localBrands = ['ZES', 'Eşarj', 'Voltrun', 'SharZ', 'Trugo', 'Aytemiz'];
+
         const formattedStations: Station[] = rawData.map((item: any) => {
-          
-          const localBrands = ['ZES', 'Eşarj', 'Voltrun', 'SharZ', 'Trugo', 'Aytemiz'];
           const brandFromApi = item.OperatorInfo?.Title;
           const randomBrand = localBrands[Math.floor(Math.random() * localBrands.length)];
-          const finalBrand = (brandFromApi && brandFromApi !== "Unknown Operator" && brandFromApi !== "(Unknown Operator)") 
-                             ? brandFromApi 
-                             : randomBrand;
+          const finalBrand = (brandFromApi && brandFromApi !== "Unknown Operator" && brandFromApi !== "(Unknown Operator)")
+            ? brandFromApi
+            : randomBrand;
 
-          const chargingPoints: ChargingPoint[] = (item.Connections || []).map((conn: any, cpIndex: number) => {
-            const isActuallyAvailable = Math.random() > 0.3;
-            return {
-              id: `cp_${item.ID}_${cpIndex}`,
-              type: conn.PowerKW > 22 ? 'DC' : 'AC',
-              power: conn.PowerKW || (conn.LevelID === 3 ? 50 : 22),
-              connector: conn.ConnectionType?.Title || 'Bilinmiyor',
-              status: isActuallyAvailable ? 'available' : 'occupied', 
-              price: conn.PowerKW > 22 ? 12.5 : 8.5 
-            };
-          });
+          const chargingPoints: ChargingPoint[] = (item.Connections || []).map((conn: any, cpIndex: number) => ({
+            id: `cp_${item.ID}_${cpIndex}`,
+            type: conn.PowerKW > 22 ? 'DC' : 'AC',
+            power: conn.PowerKW || (conn.LevelID === 3 ? 50 : 22),
+            connector: conn.ConnectionType?.Title || 'Bilinmiyor',
+            status: Math.random() > 0.3 ? 'available' : 'occupied',
+            price: conn.PowerKW > 22 ? 12.5 : 8.5
+          }));
 
-          if(chargingPoints.length === 0) {
-             chargingPoints.push({
-                id: `cp_${item.ID}_default`,
-                type: 'AC',
-                power: 22,
-                connector: 'Type 2',
-                status: Math.random() > 0.3 ? 'available' : 'occupied',
-                price: 8.5
-             });
+          if (chargingPoints.length === 0) {
+            chargingPoints.push({
+              id: `cp_${item.ID}_default`,
+              type: 'AC',
+              power: 22,
+              connector: 'Type 2',
+              status: Math.random() > 0.3 ? 'available' : 'occupied',
+              price: 8.5
+            });
           }
+
+          // Use stable, reliable Unsplash image URL based on station numeric ID
+          const stationImage = getStationImage(item.ID);
 
           return {
             id: item.ID.toString(),
@@ -134,12 +140,12 @@ export default function App() {
               lng: item.AddressInfo?.Longitude
             },
             distance: item.AddressInfo?.Distance ? parseFloat(item.AddressInfo.Distance.toFixed(1)) : 0,
-            chargingPoints: chargingPoints,
-            amenities: ['WiFi', 'Park', 'Kahve'], 
+            chargingPoints,
+            amenities: ['WiFi', 'Park', 'Kahve'],
             rating: item.DataQualityLevel || 4,
             totalReviews: Math.floor(Math.random() * 50) + 10,
-            images: [`https://images.unsplash.com/photo-1593941707882-a5bba14938cb?auto=format&fit=crop&w=800&q=80&sig=${item.ID}`],
-            isOpen24Hours: true, 
+            images: [stationImage],
+            isOpen24Hours: true,
           };
         });
 
@@ -153,13 +159,13 @@ export default function App() {
     };
 
     fetchStations();
-  }, [userLocation]); 
+  }, [userLocation]);
 
   const filteredStations = useMemo(() => {
     return stations.filter(station => {
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
-        const matchesSearch = 
+        const matchesSearch =
           station.name.toLowerCase().includes(query) ||
           station.address.toLowerCase().includes(query) ||
           station.brand.toLowerCase().includes(query) ||
@@ -177,7 +183,7 @@ export default function App() {
         if (maxPower < filters.minPower) return false;
       }
       if (filters.connectorTypes.length > 0) {
-        const hasConnector = station.chargingPoints.some(cp => 
+        const hasConnector = station.chargingPoints.some(cp =>
           filters.connectorTypes.includes(cp.connector)
         );
         if (!hasConnector) return false;
@@ -196,8 +202,7 @@ export default function App() {
   const handleNavigate = (stationId: string) => {
     const station = stations.find(s => s.id === stationId);
     if (station) {
-      const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${station.location.lat},${station.location.lng}`;
-      window.open(mapsUrl, '_blank');
+      window.open(`https://www.google.com/maps/dir/?api=1&destination=${station.location.lat},${station.location.lng}`, '_blank');
     }
   };
 
@@ -208,11 +213,10 @@ export default function App() {
 
   const selectedStationData = stations.find(s => s.id === selectedStation);
   const totalAvailable = filteredStations.reduce(
-    (sum, station) => sum + station.chargingPoints.filter(cp => cp.status === 'available').length,
-    0
+    (sum, station) => sum + station.chargingPoints.filter(cp => cp.status === 'available').length, 0
   );
 
-  const activeFilterCount = 
+  const activeFilterCount =
     (filters.onlyAvailable ? 1 : 0) +
     filters.brands.length +
     (filters.minPower > 0 ? 1 : 0) +
@@ -225,7 +229,6 @@ export default function App() {
     admin: { label: 'Admin', color: 'bg-red-100 text-red-700' }
   };
 
-  // KULLANICI GİRİŞ YAPMAMIŞSA SADECE AUTH (GİRİŞ) EKRANINI GÖSTER
   if (!currentUser) {
     return (
       <>
@@ -242,7 +245,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-4 mb-3">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-green-500 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-green-500 rounded-lg flex items-center justify-center shadow-sm">
                 <Zap className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -251,20 +254,17 @@ export default function App() {
               </div>
             </div>
             <div className="ml-auto flex items-center gap-2">
-              {/* Role badge */}
               <Badge className={`hidden sm:flex ${roleConfig[currentUser.role].color} border-0 text-xs`}>
                 {currentUser.role === 'admin' && <Shield className="w-3 h-3 mr-1" />}
                 {roleConfig[currentUser.role].label}
               </Badge>
-              
-              {/* İstasyon Sahibi Butonu */}
+
               {currentUser.role === 'station_owner' && (
                 <Button variant="outline" size="sm" onClick={() => setShowOwnerDashboard(true)} className="ml-2 hidden md:flex">
                   İstasyon Paneli
                 </Button>
               )}
 
-              {/* Admin Butonu */}
               {currentUser.role === 'admin' && (
                 <Button variant="default" size="sm" onClick={() => setShowAdminDashboard(true)} className="ml-2 hidden md:flex bg-red-600 hover:bg-red-700 text-white border-0">
                   Admin Paneli
@@ -302,7 +302,7 @@ export default function App() {
 
           <div className="flex items-center gap-4 mt-3 text-sm">
             <div className="flex items-center gap-1">
-              <div className="w-2 h-2 rounded-full bg-green-500" />
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
               <span className="font-medium">{totalAvailable} müsait nokta</span>
             </div>
             <div className="text-muted-foreground">
@@ -326,14 +326,14 @@ export default function App() {
         {viewMode === 'map' ? (
           <div className="h-full flex flex-col md:flex-row">
             <div className="flex-1 p-4 relative">
-               {isLoading && (
-                  <div className="absolute inset-0 z-[500] flex items-center justify-center bg-white/50 backdrop-blur-sm rounded-lg">
-                    <div className="flex flex-col items-center">
-                      <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                      <p className="mt-4 font-medium text-blue-800">Çevrenizdeki istasyonlar aranıyor...</p>
-                    </div>
+              {isLoading && (
+                <div className="absolute inset-0 z-[500] flex items-center justify-center bg-white/70 backdrop-blur-sm rounded-lg">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                    <p className="font-medium text-blue-800 text-sm">Çevrenizdeki istasyonlar aranıyor...</p>
                   </div>
-               )}
+                </div>
+              )}
               <MapView stations={filteredStations} selectedStation={selectedStation} onStationSelect={handleMarkerClick} />
             </div>
 
@@ -347,19 +347,8 @@ export default function App() {
               ))}
               {!isLoading && filteredStations.length === 0 && (
                 <div className="text-center py-12 text-muted-foreground">
-                  <p>Bu bölgede veya filtrelerinize uygun istasyon bulunamadı</p>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="mt-4"
-                    onClick={() => setFilters({
-                      maxDistance: 50,
-                      onlyAvailable: false,
-                      brands: [],
-                      minPower: 0,
-                      connectorTypes: []
-                    })}
-                  >
+                  <p className="text-sm">Bu bölgede istasyon bulunamadı</p>
+                  <Button variant="outline" size="sm" className="mt-4" onClick={() => setFilters({ maxDistance: 50, onlyAvailable: false, brands: [], minPower: 0, connectorTypes: [] })}>
                     Filtreleri Sıfırla
                   </Button>
                 </div>
@@ -368,28 +357,19 @@ export default function App() {
           </div>
         ) : (
           <div className="h-full overflow-y-auto p-4 relative">
-             {isLoading && (
-                  <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/50 backdrop-blur-sm">
-                    <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                  </div>
-               )}
+            {isLoading && (
+              <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-sm">
+                <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+              </div>
+            )}
             <div className="max-w-4xl mx-auto space-y-3">
               {filteredStations.map((station) => (
                 <StationCard key={station.id} station={station} onViewDetails={handleViewDetails} onNavigate={handleNavigate} />
               ))}
               {!isLoading && filteredStations.length === 0 && (
                 <div className="text-center py-12 text-muted-foreground">
-                  <p className="mb-4">Filtrelerinize uygun istasyon bulunamadı</p>
-                  <Button 
-                    variant="outline"
-                    onClick={() => setFilters({
-                      maxDistance: 50,
-                      onlyAvailable: false,
-                      brands: [],
-                      minPower: 0,
-                      connectorTypes: []
-                    })}
-                  >
+                  <p className="mb-4 text-sm">Filtrelerinize uygun istasyon bulunamadı</p>
+                  <Button variant="outline" onClick={() => setFilters({ maxDistance: 50, onlyAvailable: false, brands: [], minPower: 0, connectorTypes: [] })}>
                     Filtreleri Sıfırla
                   </Button>
                 </div>
@@ -399,27 +379,15 @@ export default function App() {
         )}
       </main>
 
-      {/* MODALLAR */}
       {showStationDetail && selectedStationData && (
         <StationDetail station={selectedStationData} onClose={() => setShowStationDetail(false)} />
       )}
-      
       {showFilters && (
         <FilterPanel filters={filters} onFiltersChange={setFilters} onClose={() => setShowFilters(false)} />
       )}
-      
-      {showProfile && (
-        <UserProfile onClose={() => setShowProfile(false)} />
-      )}
-      
-      {showOwnerDashboard && (
-        <StationOwnerDashboard onClose={() => setShowOwnerDashboard(false)} />
-      )}
-      
-      {/* Yeni Eklenen Admin Dashboard Çağrısı */}
-      {showAdminDashboard && (
-        <AdminDashboard onClose={() => setShowAdminDashboard(false)} />
-      )}
+      {showProfile && <UserProfile onClose={() => setShowProfile(false)} />}
+      {showOwnerDashboard && <StationOwnerDashboard onClose={() => setShowOwnerDashboard(false)} />}
+      {showAdminDashboard && <AdminDashboard onClose={() => setShowAdminDashboard(false)} />}
 
       <Button
         size="lg"
