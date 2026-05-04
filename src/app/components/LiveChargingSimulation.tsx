@@ -115,14 +115,14 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
 
   return (
     <div className="fixed inset-0 bg-black/70 z-[1150] flex items-end md:items-center justify-center p-0 md:p-4">
-      <div className="bg-white w-full md:max-w-md md:rounded-2xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl">
+      <div className="bg-zinc-900 w-full md:max-w-md md:rounded-2xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl">
 
         {/* Header */}
         <div className={`px-5 py-4 flex items-center justify-between flex-shrink-0 transition-colors ${
           phase === 'charging' ? 'bg-green-600 text-white' :
-          phase === 'completed' ? 'bg-blue-600 text-white' :
+          phase === 'completed' ? 'bg-emerald-400 text-zinc-950' :
           phase === 'error' ? 'bg-red-600 text-white' :
-          'bg-gray-900 text-white'
+          'bg-zinc-900 text-zinc-100'
         }`}>
           <div className="flex items-center gap-2">
             <Zap className="w-5 h-5" />
@@ -142,7 +142,7 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="text-white hover:bg-white/20"
+            className="text-white hover:bg-zinc-700/50"
             disabled={phase === 'charging'}
           >
             <X className="w-4 h-4" />
@@ -156,7 +156,7 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
           {phase === 'qr' && (
             <div className="p-6 flex flex-col items-center gap-6">
               <div className="text-center">
-                <p className="text-sm text-muted-foreground">Şarj noktasındaki QR kodu okutun</p>
+                <p className="text-sm text-zinc-400">Şarj noktasındaki QR kodu okutun</p>
                 <Badge variant="outline" className="mt-2">
                   {chargingPoint.type} • {chargingPoint.power} kW • {chargingPoint.connector}
                 </Badge>
@@ -164,7 +164,7 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
 
               {/* QR Code visual */}
               <div className="relative">
-                <div className={`w-52 h-52 border-4 rounded-2xl flex items-center justify-center transition-all ${qrScanned ? 'border-green-500 bg-green-50' : 'border-gray-200 bg-gray-50'}`}>
+                <div className={`w-52 h-52 border-4 rounded-2xl flex items-center justify-center transition-all ${qrScanned ? 'border-emerald-400 bg-zinc-800/40' : 'border-zinc-800 bg-zinc-950'}`}>
                   {!qrScanned ? (
                     <div className="space-y-1 p-2">
                       {/* Fake QR pattern */}
@@ -177,7 +177,7 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
                             return (
                               <div
                                 key={col}
-                                className={`w-5 h-5 rounded-sm ${isCorner || (isFinder && !isCorner) ? 'bg-gray-900' : randomFill ? 'bg-gray-900' : 'bg-white border border-gray-100'}`}
+                                className={`w-5 h-5 rounded-sm ${isCorner || (isFinder && !isCorner) ? 'bg-gray-900' : randomFill ? 'bg-gray-900' : 'bg-zinc-100 border border-zinc-300'}`}
                               />
                             );
                           })}
@@ -202,18 +202,18 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
               </div>
 
               <div className="w-full space-y-3">
-                <Card className="bg-blue-50 border-blue-100">
+                <Card className="bg-zinc-800/40 border-blue-100">
                   <CardContent className="p-3 text-sm space-y-1">
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Birim Fiyat</span>
+                      <span className="text-zinc-400">Birim Fiyat</span>
                       <span className="font-medium">{chargingPoint.price} ₺/kWh</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Maks. Güç</span>
+                      <span className="text-zinc-400">Maks. Güç</span>
                       <span className="font-medium">{chargingPoint.power} kW</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Hedef Doluluk</span>
+                      <span className="text-zinc-400">Hedef Doluluk</span>
                       <span className="font-medium">%{targetPct}</span>
                     </div>
                   </CardContent>
@@ -231,22 +231,22 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
           {phase === 'connecting' && (
             <div className="p-8 flex flex-col items-center gap-6 text-center">
               <div className="relative w-24 h-24">
-                <div className="absolute inset-0 rounded-full border-4 border-gray-100" />
+                <div className="absolute inset-0 rounded-full border-4 border-zinc-800" />
                 <div className="absolute inset-0 rounded-full border-4 border-t-blue-500 animate-spin" />
                 <Zap className="absolute inset-0 m-auto w-8 h-8 text-blue-500" />
               </div>
               <div>
                 <p className="font-semibold text-lg">Konnektör Kilitleniyor</p>
-                <p className="text-sm text-muted-foreground mt-1">WebSocket bağlantısı kuruluyor...</p>
+                <p className="text-sm text-zinc-400 mt-1">WebSocket bağlantısı kuruluyor...</p>
               </div>
               <div className="w-full space-y-2">
                 {['QR doğrulandı ✓', 'Ödeme onaylandı ✓', 'Konnektör kilitleniyor...'].map((step, i) => (
                   <div key={i} className="flex items-center gap-2 text-sm">
-                    <div className={`w-4 h-4 rounded-full flex items-center justify-center ${i < 2 ? 'bg-green-500' : 'bg-blue-100'}`}>
+                    <div className={`w-4 h-4 rounded-full flex items-center justify-center ${i < 2 ? 'bg-green-500' : 'bg-zinc-800'}`}>
                       {i < 2 && <CheckCircle className="w-3 h-3 text-white" />}
-                      {i === 2 && <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />}
+                      {i === 2 && <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />}
                     </div>
-                    <span className={i < 2 ? 'text-green-700' : 'text-blue-600 font-medium'}>{step}</span>
+                    <span className={i < 2 ? 'text-green-700' : 'text-emerald-400 font-medium'}>{step}</span>
                   </div>
                 ))}
               </div>
@@ -288,7 +288,7 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
                     <div className="text-4xl font-bold" style={{ color: batteryColor }}>
                       %{Math.round(batteryPct)}
                     </div>
-                    <div className="text-xs text-muted-foreground mt-1">
+                    <div className="text-xs text-zinc-400 mt-1">
                       {phase === 'paused' ? '⏸ Duraklatıldı' : '⚡ Şarj Oluyor'}
                     </div>
                   </div>
@@ -299,30 +299,30 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
               <div className="grid grid-cols-2 gap-3">
                 <Card>
                   <CardContent className="p-3 text-center">
-                    <div className="text-xs text-muted-foreground mb-1">Anlık Güç</div>
+                    <div className="text-xs text-zinc-400 mb-1">Anlık Güç</div>
                     <div className="text-xl font-bold text-green-600">{currentKw.toFixed(1)}</div>
-                    <div className="text-xs text-muted-foreground">kW</div>
+                    <div className="text-xs text-zinc-400">kW</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-3 text-center">
-                    <div className="text-xs text-muted-foreground mb-1">Toplam Enerji</div>
-                    <div className="text-xl font-bold text-blue-600">{totalKwh.toFixed(2)}</div>
-                    <div className="text-xs text-muted-foreground">kWh</div>
+                    <div className="text-xs text-zinc-400 mb-1">Toplam Enerji</div>
+                    <div className="text-xl font-bold text-emerald-400">{totalKwh.toFixed(2)}</div>
+                    <div className="text-xs text-zinc-400">kWh</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-3 text-center">
-                    <div className="text-xs text-muted-foreground mb-1">Geçen Süre</div>
-                    <div className="text-xl font-bold text-gray-700">{formatTime(elapsedSecs)}</div>
-                    <div className="text-xs text-muted-foreground">ss:dd</div>
+                    <div className="text-xs text-zinc-400 mb-1">Geçen Süre</div>
+                    <div className="text-xl font-bold text-zinc-300">{formatTime(elapsedSecs)}</div>
+                    <div className="text-xs text-zinc-400">ss:dd</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-3 text-center">
-                    <div className="text-xs text-muted-foreground mb-1">Kalan Süre</div>
+                    <div className="text-xs text-zinc-400 mb-1">Kalan Süre</div>
                     <div className="text-xl font-bold text-purple-600">{remainingMins}</div>
-                    <div className="text-xs text-muted-foreground">dakika</div>
+                    <div className="text-xs text-zinc-400">dakika</div>
                   </CardContent>
                 </Card>
               </div>
@@ -331,12 +331,12 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
               <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
                 <CardContent className="p-4 flex items-center justify-between">
                   <div>
-                    <div className="text-xs text-muted-foreground">Anlık Tutar</div>
+                    <div className="text-xs text-zinc-400">Anlık Tutar</div>
                     <div className="text-2xl font-bold text-green-700">{cost.toFixed(2)} ₺</div>
                   </div>
                   <div className="text-right">
-                    <div className="text-xs text-muted-foreground">Kalan (%{Math.round(targetPct - batteryPct)})</div>
-                    <div className="text-sm font-medium text-gray-600">
+                    <div className="text-xs text-zinc-400">Kalan (%{Math.round(targetPct - batteryPct)})</div>
+                    <div className="text-sm font-medium text-zinc-400">
                       ≈ {((targetPct - batteryPct) * (chargingPoint.power / 100) * chargingPoint.price * 0.8).toFixed(2)} ₺
                     </div>
                   </div>
@@ -345,11 +345,11 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
 
               {/* Live power bar */}
               <div>
-                <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                <div className="flex justify-between text-xs text-zinc-400 mb-1">
                   <span>Şarj Hızı</span>
                   <span>{currentKw.toFixed(1)} / {chargingPoint.power} kW</span>
                 </div>
-                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-green-400 to-green-600 rounded-full transition-all duration-1000"
                     style={{ width: `${(currentKw / chargingPoint.power) * 100}%` }}
@@ -376,7 +376,7 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
                 </Button>
               </div>
 
-              <p className="text-xs text-muted-foreground text-center">
+              <p className="text-xs text-zinc-400 text-center">
                 Konnektörü şarj tamamlanmadan çıkarmayın.
               </p>
             </div>
@@ -391,43 +391,43 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
                 </div>
                 <div className="text-center">
                   <h3 className="text-xl font-bold text-green-700">Şarj Tamamlandı!</h3>
-                  <p className="text-sm text-muted-foreground mt-1">Konnektörü güvenle çıkarabilirsiniz.</p>
+                  <p className="text-sm text-zinc-400 mt-1">Konnektörü güvenle çıkarabilirsiniz.</p>
                 </div>
               </div>
 
               {/* Invoice */}
-              <Card className="border-2 border-dashed border-gray-200">
+              <Card className="border-2 border-dashed border-zinc-800">
                 <CardContent className="p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <CreditCard className="w-4 h-4 text-blue-600" />
+                      <CreditCard className="w-4 h-4 text-emerald-400" />
                       <span className="font-semibold text-sm">Fatura</span>
                     </div>
-                    <span className="text-xs text-muted-foreground font-mono">{invoiceId}</span>
+                    <span className="text-xs text-zinc-400 font-mono">{invoiceId}</span>
                   </div>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">İstasyon</span>
+                      <span className="text-zinc-400">İstasyon</span>
                       <span className="font-medium text-right max-w-[180px] truncate">{station.name}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Şarj Noktası</span>
+                      <span className="text-zinc-400">Şarj Noktası</span>
                       <span className="font-medium">{chargingPoint.type} {chargingPoint.power}kW</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Süre</span>
+                      <span className="text-zinc-400">Süre</span>
                       <span className="font-medium">{formatTime(elapsedSecs)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Enerji</span>
+                      <span className="text-zinc-400">Enerji</span>
                       <span className="font-medium">{totalKwh.toFixed(3)} kWh</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Başlangıç - Bitiş</span>
+                      <span className="text-zinc-400">Başlangıç - Bitiş</span>
                       <span className="font-medium">%22 → %{Math.round(batteryPct)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Birim Fiyat</span>
+                      <span className="text-zinc-400">Birim Fiyat</span>
                       <span className="font-medium">{chargingPoint.price} ₺/kWh</span>
                     </div>
                     <div className="border-t pt-2 flex justify-between font-bold">
@@ -435,7 +435,7 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
                       <span className="text-green-700 text-lg">{cost.toFixed(2)} ₺</span>
                     </div>
                     <div className="flex justify-between text-xs">
-                      <span className="text-muted-foreground">Ödeme</span>
+                      <span className="text-zinc-400">Ödeme</span>
                       <span className="text-green-600 flex items-center gap-1">
                         <CheckCircle className="w-3 h-3" /> Otomatik Ödendi
                       </span>
@@ -447,14 +447,14 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
               <div className="grid grid-cols-2 gap-3">
                 <Card className="text-center">
                   <CardContent className="py-3 px-2">
-                    <div className="text-2xl font-bold text-blue-600">%{Math.round(batteryPct - 22)}</div>
-                    <div className="text-xs text-muted-foreground">Kazanılan Şarj</div>
+                    <div className="text-2xl font-bold text-emerald-400">%{Math.round(batteryPct - 22)}</div>
+                    <div className="text-xs text-zinc-400">Kazanılan Şarj</div>
                   </CardContent>
                 </Card>
                 <Card className="text-center">
                   <CardContent className="py-3 px-2">
                     <div className="text-2xl font-bold text-green-600">{(totalKwh * 0.5).toFixed(1)}g</div>
-                    <div className="text-xs text-muted-foreground">CO₂ Tasarrufu</div>
+                    <div className="text-xs text-zinc-400">CO₂ Tasarrufu</div>
                   </CardContent>
                 </Card>
               </div>
@@ -481,7 +481,7 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
               <AlertTriangle className="w-16 h-16 text-red-400" />
               <div>
                 <p className="font-semibold text-lg">Bağlantı Hatası</p>
-                <p className="text-sm text-muted-foreground mt-1">Konnektör kilitlenemedi. Lütfen tekrar deneyin.</p>
+                <p className="text-sm text-zinc-400 mt-1">Konnektör kilitlenemedi. Lütfen tekrar deneyin.</p>
               </div>
               <Button onClick={() => setPhase('qr')}>Tekrar Dene</Button>
             </div>

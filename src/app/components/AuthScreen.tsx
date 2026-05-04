@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Zap, Eye, EyeOff, Mail, Lock, User, Phone, ShieldCheck } from 'lucide-react';
+import { Zap, Eye, EyeOff, Mail, Lock, User, Phone } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -41,29 +41,9 @@ function saveStoredUsers(users: StoredUser[]) {
   localStorage.setItem(LS_USERS_KEY, JSON.stringify(users));
 }
 
-// Seed demo accounts if not already present
-function ensureDemoAccounts() {
-  const existing = getStoredUsers();
-  const demoAccounts: StoredUser[] = [
-    { name: 'Hatice Çevik', email: 'driver@demo.com', password: '123456', phone: '+90 532 454 98 75', role: 'driver' },
-    { name: 'Ahmet Yılmaz', email: 'owner@demo.com', password: '123456', phone: '+90 532 111 22 33', role: 'station_owner' },
-    { name: 'Admin Kullanıcı', email: 'admin@demo.com', password: '123456', phone: '+90 532 999 00 11', role: 'admin' },
-  ];
-  let changed = false;
-  for (const demo of demoAccounts) {
-    if (!existing.find(u => u.email === demo.email)) {
-      existing.push(demo);
-      changed = true;
-    }
-  }
-  if (changed) saveStoredUsers(existing);
-}
-
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
-  ensureDemoAccounts();
-
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -141,39 +121,33 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
     onAuthenticated({ name: newUser.name, email: newUser.email, role: newUser.role });
   };
 
-  // ── Guest (Admin) ──────────────────────────────────────────────────────────
-  const handleGuestLogin = () => {
-    onAuthenticated({ name: 'Yönetici (Misafir)', email: 'admin@esarj.com', role: 'admin' });
-    toast.info('Yönetici yetkisiyle devam ediyorsunuz');
-  };
-
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-zinc-950 p-4">
       {/* Background blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-400/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-green-500/10 rounded-full blur-3xl" />
       </div>
 
       <div className="w-full max-w-md relative">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-green-500 rounded-2xl flex items-center justify-center mb-4 shadow-2xl shadow-blue-500/30">
-            <Zap className="w-9 h-9 text-white" />
+          <div className="w-16 h-16 bg-zinc-900 border border-zinc-800 rounded-2xl flex items-center justify-center mb-4">
+            <Zap className="w-9 h-9 text-emerald-400" />
           </div>
-          <h1 className="text-3xl font-bold text-white">eŞarj</h1>
-          <p className="text-blue-200/70 text-sm mt-1">AI-Powered EV Charging Platform</p>
+          <h1 className="text-3xl font-bold text-zinc-100">EV Hub</h1>
+          <p className="text-zinc-400 text-sm mt-1">AI-Powered EV Charging Platform</p>
         </div>
 
-        <Card className="bg-white/10 backdrop-blur-xl border-white/20 shadow-2xl overflow-hidden">
+        <Card className="bg-zinc-900 border border-zinc-800 shadow-2xl overflow-hidden">
           <CardContent className="p-6">
             <Tabs defaultValue="login">
-              <TabsList className="w-full bg-white/10 border-white/20 mb-6">
-                <TabsTrigger value="login" className="flex-1 text-white data-[state=active]:bg-white/20">
+              <TabsList className="w-full bg-zinc-800/40 border-zinc-700 mb-6">
+                <TabsTrigger value="login" className="flex-1 text-white data-[state=active]:bg-zinc-700/50">
                   Giriş Yap
                 </TabsTrigger>
-                <TabsTrigger value="register" className="flex-1 text-white data-[state=active]:bg-white/20">
+                <TabsTrigger value="register" className="flex-1 text-white data-[state=active]:bg-zinc-700/50">
                   Kayıt Ol
                 </TabsTrigger>
               </TabsList>
@@ -181,30 +155,6 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
               {/* ── LOGIN ── */}
               <TabsContent value="login">
                 <form onSubmit={handleLogin} className="space-y-4">
-                  {/* Demo hint */}
-                  <Card className="bg-blue-900/30 border-blue-400/20">
-                    <CardContent className="p-3">
-                      <p className="text-xs font-semibold text-blue-200 mb-1.5">Demo Hesaplar (şifre: 123456)</p>
-                      <div className="space-y-1">
-                        {[
-                          { email: 'driver@demo.com', label: 'Sürücü' },
-                          { email: 'owner@demo.com', label: 'Sahibi' },
-                          { email: 'admin@demo.com', label: 'Admin' },
-                        ].map(acc => (
-                          <button
-                            key={acc.email}
-                            type="button"
-                            onClick={() => setLoginForm({ email: acc.email, password: '123456' })}
-                            className="w-full flex items-center justify-between text-xs text-blue-200 hover:bg-blue-800/30 rounded px-2 py-1 transition-colors"
-                          >
-                            <span>{acc.email}</span>
-                            <span className="text-blue-400 border border-blue-400/40 rounded px-1.5 py-0.5">{acc.label}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-
                   <div className="space-y-2">
                     <Label className="text-white/80 text-sm">E-posta</Label>
                     <div className="relative">
@@ -214,7 +164,7 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
                         placeholder="ornek@mail.com"
                         value={loginForm.email}
                         onChange={e => setLoginForm({ ...loginForm, email: e.target.value })}
-                        className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/30"
+                        className="pl-10 bg-zinc-950 border-zinc-800 text-zinc-100 placeholder:text-zinc-500"
                         required
                       />
                     </div>
@@ -229,7 +179,7 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
                         placeholder="••••••••"
                         value={loginForm.password}
                         onChange={e => setLoginForm({ ...loginForm, password: e.target.value })}
-                        className="pl-10 pr-10 bg-white/10 border-white/20 text-white"
+                        className="pl-10 pr-10 bg-zinc-950 border-zinc-800 text-zinc-100"
                         required
                       />
                       <button
@@ -245,7 +195,7 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full bg-gradient-to-r from-blue-500 to-green-500 text-white font-semibold border-0"
+                    className="w-full bg-emerald-400 text-zinc-950 font-semibold border-0 hover:bg-emerald-300"
                   >
                     {isLoading ? (
                       <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />Giriş yapılıyor...</>
@@ -272,8 +222,8 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
                           onClick={() => setRegisterForm({ ...registerForm, role: opt.value })}
                           className={`p-2 rounded-lg border text-[10px] font-bold transition-all ${
                             registerForm.role === opt.value
-                              ? 'bg-blue-500/40 border-blue-400 text-white shadow-lg'
-                              : 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10'
+                              ? 'bg-zinc-800 border-emerald-400 text-zinc-100 shadow-lg'
+                              : 'bg-zinc-800/30 border-zinc-800 text-white/60 hover:bg-zinc-800/40'
                           }`}
                         >
                           {opt.label}
@@ -290,7 +240,7 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
                         placeholder="Ad Soyad"
                         value={registerForm.name}
                         onChange={e => setRegisterForm({ ...registerForm, name: e.target.value })}
-                        className="pl-10 bg-white/10 border-white/20 text-white"
+                        className="pl-10 bg-zinc-950 border-zinc-800 text-zinc-100"
                         required
                       />
                     </div>
@@ -306,7 +256,7 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
                           placeholder="E-posta"
                           value={registerForm.email}
                           onChange={e => setRegisterForm({ ...registerForm, email: e.target.value })}
-                          className="pl-8 bg-white/10 border-white/20 text-white text-xs"
+                          className="pl-8 bg-zinc-950 border-zinc-800 text-zinc-100 text-xs"
                           required
                         />
                       </div>
@@ -319,7 +269,7 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
                           placeholder="+90 5XX"
                           value={registerForm.phone}
                           onChange={e => setRegisterForm({ ...registerForm, phone: e.target.value })}
-                          className="pl-8 bg-white/10 border-white/20 text-white text-xs"
+                          className="pl-8 bg-zinc-950 border-zinc-800 text-zinc-100 text-xs"
                         />
                       </div>
                     </div>
@@ -333,7 +283,7 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
                         placeholder="••••••••"
                         value={registerForm.password}
                         onChange={e => setRegisterForm({ ...registerForm, password: e.target.value })}
-                        className="bg-white/10 border-white/20 text-white text-xs"
+                        className="bg-zinc-950 border-zinc-800 text-zinc-100 text-xs"
                         required
                       />
                     </div>
@@ -344,7 +294,7 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
                         placeholder="••••••••"
                         value={registerForm.confirmPassword}
                         onChange={e => setRegisterForm({ ...registerForm, confirmPassword: e.target.value })}
-                        className="bg-white/10 border-white/20 text-white text-xs"
+                        className="bg-zinc-950 border-zinc-800 text-zinc-100 text-xs"
                         required
                       />
                     </div>
@@ -353,7 +303,7 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full bg-gradient-to-r from-blue-500 to-green-500 text-white font-semibold border-0 mt-2"
+                    className="w-full bg-emerald-400 text-zinc-950 font-semibold border-0 hover:bg-emerald-300 mt-2"
                   >
                     {isLoading ? (
                       <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />Hesap oluşturuluyor...</>
@@ -363,24 +313,6 @@ export function AuthScreen({ onAuthenticated }: AuthScreenProps) {
               </TabsContent>
             </Tabs>
 
-            {/* Divider */}
-            <div className="relative my-4">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/10" />
-              </div>
-              <div className="relative text-center">
-                <span className="bg-transparent px-2 text-white/30 text-xs uppercase tracking-widest">veya</span>
-              </div>
-            </div>
-
-            <Button
-              variant="outline"
-              className="w-full bg-white/5 border-white/20 text-white/70 hover:text-white"
-              onClick={handleGuestLogin}
-            >
-              <ShieldCheck className="w-4 h-4 mr-2" />
-              Misafir (Admin Test)
-            </Button>
           </CardContent>
         </Card>
 
