@@ -267,7 +267,7 @@ export const mockPaymentMethods: PaymentMethod[] = [
     type: 'credit',
     cardNumber: '4532',
     expiryDate: '12/26',
-    cardHolder: 'Ahmet Yılmaz',
+    cardHolder: 'Sibel Karabulut',
     isDefault: true
   },
   {
@@ -275,7 +275,7 @@ export const mockPaymentMethods: PaymentMethod[] = [
     type: 'debit',
     cardNumber: '5421',
     expiryDate: '08/27',
-    cardHolder: 'Ahmet Yılmaz',
+    cardHolder: 'Sibel Karabulut',
     isDefault: false
   }
 ];
