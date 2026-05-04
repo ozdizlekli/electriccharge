@@ -112,9 +112,9 @@ const MOCK_OWNED_STATIONS: OwnedStation[] = [
 ];
 
 const statusConfig = {
-  operational: { label: 'Aktif', color: 'bg-zinc-800 text-zinc-300 border-zinc-700', dot: 'bg-zinc-500' },
-  maintenance: { label: 'Bakımda', color: 'bg-zinc-800 text-zinc-300 border-zinc-700', dot: 'bg-zinc-500' },
-  offline: { label: 'Çevrimdışı', color: 'bg-zinc-800 text-zinc-300 border-zinc-700', dot: 'bg-zinc-500' },
+  operational: { label: 'Aktif', color: 'bg-zinc-800 text-zinc-300 border-zinc-700', dot: 'bg-zinc-500', dotColor: 'bg-zinc-500' },
+  maintenance: { label: 'Bakımda', color: 'bg-zinc-800 text-zinc-300 border-zinc-700', dot: 'bg-zinc-500', dotColor: 'bg-zinc-500' },
+  offline: { label: 'Çevrimdışı', color: 'bg-zinc-800 text-zinc-300 border-zinc-700', dot: 'bg-zinc-500', dotColor: 'bg-zinc-500' },
 };
 
 const cpStatusConfig = {

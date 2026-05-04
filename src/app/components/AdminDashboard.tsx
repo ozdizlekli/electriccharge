@@ -90,10 +90,10 @@ const damageSeverityLabels: Record<string, string> = {
 };
 
 const kpis = [
-  { label: 'Toplam Kullanıcı',        value: '12,847', change: '+8.2%',    trend: 'up',      icon: Users,     bg: 'bg-zinc-800/40',   iconColor: 'text-emerald-400'   },
-  { label: 'Platform Geliri (Bu Ay)', value: '₺284,600', change: '+14.5%', trend: 'up',      icon: DollarSign,bg: 'bg-green-50',  iconColor: 'text-green-600'  },
-  { label: 'Kayıtlı İstasyonlar',     value: '342',    change: '+3 bekliyor', trend: 'neutral', icon: Building2, bg: 'bg-purple-50', iconColor: 'text-purple-600' },
-  { label: 'Aktif Şarj Oturumu',      value: '1,204',  change: 'Anlık',   trend: 'live',    icon: Activity,  bg: 'bg-orange-50', iconColor: 'text-orange-600' },
+  { label: 'Toplam Kullanıcı',        value: '12,847', change: '+8.2%', trend: 'up',      icon: Users,      bg: 'bg-zinc-800/40', iconColor: 'text-emerald-400', borderColor: 'border-zinc-800' },
+  { label: 'Platform Geliri (Bu Ay)', value: '₺284,600', change: '+14.5%', trend: 'up',   icon: DollarSign, bg: 'bg-zinc-800/40', iconColor: 'text-emerald-400', borderColor: 'border-zinc-800' },
+  { label: 'Kayıtlı İstasyonlar',     value: '342', change: '+3 bekliyor', trend: 'neutral', icon: Building2, bg: 'bg-zinc-800/40', iconColor: 'text-zinc-300', borderColor: 'border-zinc-800' },
+  { label: 'Aktif Şarj Oturumu',      value: '1,204', change: 'Anlık', trend: 'live', icon: Activity, bg: 'bg-zinc-800/40', iconColor: 'text-zinc-300', borderColor: 'border-zinc-800' },
 ];
 
 interface Props { onClose: () => void; }
