@@ -134,12 +134,12 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
 
   return (
     <div className="fixed inset-0 bg-black/60 z-[1100] flex items-end md:items-center justify-center p-0 md:p-4">
-      <div className="bg-white w-full md:max-w-xl md:rounded-2xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl">
+      <div className="bg-zinc-900 w-full md:max-w-xl md:rounded-2xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl">
 
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-5 py-4 flex items-center justify-between flex-shrink-0">
+        <div className="bg-zinc-900 border-b border-zinc-800 px-5 py-4 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-2 text-white">
-            <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-zinc-900/20 rounded-lg flex items-center justify-center">
               <Route className="w-4 h-4" />
             </div>
             <div>
@@ -147,7 +147,7 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
               <div className="text-xs opacity-75">Şarj duraklarıyla optimize edilmiş rota</div>
             </div>
           </div>
-          <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={onClose}>
+          <Button variant="ghost" size="icon" className="text-white hover:bg-zinc-900/20" onClick={onClose}>
             <X className="w-4 h-4" />
           </Button>
         </div>
@@ -155,10 +155,10 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
         <div className="flex-1 overflow-y-auto">
 
           {/* Input Section */}
-          <div className="p-5 space-y-4 border-b">
+          <div className="p-5 space-y-4 border-b border-zinc-800">
             <div className="space-y-2">
               <Label className="text-sm font-semibold flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-blue-600" />
+                <MapPin className="w-4 h-4 text-emerald-400" />
                 Hedef Konum
               </Label>
               <div className="flex gap-2">
@@ -167,7 +167,7 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
                   value={destination}
                   onChange={e => setDestination(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && calculateTrip()}
-                  className="flex-1"
+                  className="flex-1 bg-zinc-950 text-zinc-100 placeholder:text-zinc-500 border-zinc-800"
                 />
               </div>
             </div>
@@ -176,10 +176,10 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <Label className="text-sm font-semibold flex items-center gap-1">
-                    <Car className="w-3.5 h-3.5 text-blue-600" />
+                    <Car className="w-3.5 h-3.5 text-emerald-400" />
                     Toplam Mesafe
                   </Label>
-                  <span className="text-sm font-bold text-blue-600">{totalDistance} km</span>
+                  <span className="text-sm font-bold text-emerald-400">{totalDistance} km</span>
                 </div>
                 <Slider
                   value={[totalDistance]}
@@ -188,7 +188,7 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
                   max={600}
                   step={10}
                 />
-                <div className="flex justify-between text-xs text-muted-foreground">
+                <div className="flex justify-between text-xs text-zinc-400">
                   <span>50 km</span>
                   <span>600 km</span>
                 </div>
@@ -197,7 +197,7 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <Label className="text-sm font-semibold flex items-center gap-1">
-                    <Battery className="w-3.5 h-3.5 text-green-600" />
+                    <Battery className="w-3.5 h-3.5 text-emerald-400" />
                     Başlangıç Şarjı
                   </Label>
                   <span className="text-sm font-bold" style={{ color: batteryColor(startBattery) }}>
@@ -211,7 +211,7 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
                   max={100}
                   step={5}
                 />
-                <div className="flex justify-between text-xs text-muted-foreground">
+                <div className="flex justify-between text-xs text-zinc-400">
                   <span>%10</span>
                   <span>%100</span>
                 </div>
@@ -219,7 +219,7 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
             </div>
 
             {/* Vehicle info */}
-            <Card className="bg-blue-50 border-blue-100">
+            <Card className="bg-zinc-800/40 border-zinc-700">
               <CardContent className="p-3 flex items-center gap-3">
                 <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Car className="w-4 h-4 text-white" />
@@ -249,13 +249,13 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
           {isCalculating && (
             <div className="p-8 flex flex-col items-center gap-4 text-center">
               <div className="relative">
-                <div className="w-16 h-16 rounded-full border-4 border-blue-100 flex items-center justify-center">
-                  <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+                <div className="w-16 h-16 rounded-full border-4 border-zinc-700 flex items-center justify-center">
+                  <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
                 </div>
               </div>
               <div>
                 <p className="font-semibold">Optimal rota hesaplanıyor...</p>
-                <p className="text-sm text-muted-foreground mt-1">Şarj noktaları analiz ediliyor</p>
+                <p className="text-sm text-zinc-400 mt-1">Şarj noktaları analiz ediliyor</p>
               </div>
             </div>
           )}
@@ -266,17 +266,17 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
               <div className="grid grid-cols-3 gap-3">
                 <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-0">
                   <CardContent className="p-3 text-center">
-                    <div className="text-xl font-bold text-blue-700">{totalDistance} km</div>
-                    <div className="text-xs text-blue-600 mt-0.5">Toplam Mesafe</div>
+                    <div className="text-xl font-bold text-emerald-300">{totalDistance} km</div>
+                    <div className="text-xs text-emerald-400 mt-0.5">Toplam Mesafe</div>
                   </CardContent>
                 </Card>
                 <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0">
                   <CardContent className="p-3 text-center">
                     <div className="text-xl font-bold text-green-700">{chargeStops.length}</div>
-                    <div className="text-xs text-green-600 mt-0.5">Şarj Durağı</div>
+                    <div className="text-xs text-emerald-400 mt-0.5">Şarj Durağı</div>
                   </CardContent>
                 </Card>
-                <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0">
+                <Card className="bg-zinc-900 border border-zinc-800">
                   <CardContent className="p-3 text-center">
                     <div className="text-xl font-bold text-purple-700">{totalCost.toFixed(0)} ₺</div>
                     <div className="text-xs text-purple-600 mt-0.5">Tahmini Maliyet</div>
@@ -285,9 +285,9 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
               </div>
 
               {chargeStops.length === 0 && (
-                <Card className="bg-green-50 border-green-200">
+                <Card className="bg-zinc-800/40 border-zinc-700">
                   <CardContent className="p-3 flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                     <p className="text-sm text-green-800 font-medium">
                       Şarj durağına gerek yok! Hedefinize tek seferde ulaşabilirsiniz.
                     </p>
@@ -302,9 +302,9 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
                     {/* Timeline line */}
                     <div className="flex flex-col items-center">
                       <div className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 border-2 ${
-                        stop.type === 'start' ? 'bg-blue-600 border-blue-600 text-white' :
+                        stop.type === 'start' ? 'bg-blue-600 border-emerald-500 text-white' :
                         stop.type === 'destination' ? 'bg-green-600 border-green-600 text-white' :
-                        'bg-orange-500 border-orange-500 text-white'
+                        'bg-emerald-400 border-orange-500 text-white'
                       }`}>
                         {stop.type === 'start' && <Navigation className="w-4 h-4" />}
                         {stop.type === 'charge' && <Zap className="w-4 h-4" />}
@@ -326,10 +326,10 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
                             )}
                           </div>
                           {stop.address && (
-                            <p className="text-xs text-muted-foreground mt-0.5">{stop.address}</p>
+                            <p className="text-xs text-zinc-400 mt-0.5">{stop.address}</p>
                           )}
                           {stop.distanceFromPrev > 0 && (
-                            <p className="text-xs text-blue-600 mt-0.5">
+                            <p className="text-xs text-emerald-400 mt-0.5">
                               +{Math.round(stop.distanceFromPrev)} km
                             </p>
                           )}
@@ -340,27 +340,27 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
                           <div className="text-sm font-bold" style={{ color: batteryColor(stop.batteryOnArrival) }}>
                             %{stop.batteryOnArrival}
                           </div>
-                          <div className="text-xs text-muted-foreground">varışta</div>
+                          <div className="text-xs text-zinc-400">varışta</div>
                         </div>
                       </div>
 
                       {/* Charge stop details */}
                       {stop.type === 'charge' && stop.station && (
-                        <Card className="bg-orange-50 border-orange-200 mt-2">
+                        <Card className="bg-zinc-800/40 border-zinc-700 mt-2">
                           <CardContent className="p-3 space-y-2">
                             <div className="grid grid-cols-3 gap-2 text-xs">
                               <div>
-                                <div className="text-muted-foreground">Şarj Süresi</div>
+                                <div className="text-zinc-400">Şarj Süresi</div>
                                 <div className="font-bold text-orange-700 flex items-center gap-1">
                                   <Clock className="w-3 h-3" />{stop.chargeTime} dk
                                 </div>
                               </div>
                               <div>
-                                <div className="text-muted-foreground">Çıkışta</div>
-                                <div className="font-bold text-green-600">%{stop.batteryAfterCharge}</div>
+                                <div className="text-zinc-400">Çıkışta</div>
+                                <div className="font-bold text-emerald-400">%{stop.batteryAfterCharge}</div>
                               </div>
                               <div>
-                                <div className="text-muted-foreground">Maliyet</div>
+                                <div className="text-zinc-400">Maliyet</div>
                                 <div className="font-bold text-purple-700">{stop.estimatedCost} ₺</div>
                               </div>
                             </div>
@@ -382,7 +382,7 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
               {totalChargeTime > 0 && (
                 <Card className="bg-slate-50 border-slate-200">
                   <CardContent className="p-3 flex items-center justify-between text-sm">
-                    <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="flex items-center gap-2 text-zinc-400">
                       <Clock className="w-4 h-4" />
                       Toplam Şarj Süresi
                     </div>
@@ -393,7 +393,7 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
 
               <Button
                 variant="outline"
-                className="w-full"
+                className="w-full bg-emerald-400 text-zinc-950 hover:bg-emerald-300"
                 onClick={() => {
                   const firstCharge = chargeStops[0];
                   if (firstCharge?.station) {

@@ -96,10 +96,10 @@ const damageSeverityLabels: Record<string, string> = {
 };
 
 const kpis = [
-  { label: 'Toplam Kullanıcı',        value: '12,847', change: '+8.2%',    trend: 'up',      icon: Users,     bg: 'bg-blue-50',   iconColor: 'text-blue-600'   },
-  { label: 'Platform Geliri (Bu Ay)', value: '₺284,600', change: '+14.5%', trend: 'up',      icon: DollarSign,bg: 'bg-green-50',  iconColor: 'text-green-600'  },
-  { label: 'Kayıtlı İstasyonlar',     value: '342',    change: '+3 bekliyor', trend: 'neutral', icon: Building2, bg: 'bg-purple-50', iconColor: 'text-purple-600' },
-  { label: 'Aktif Şarj Oturumu',      value: '1,204',  change: 'Anlık',   trend: 'live',    icon: Activity,  bg: 'bg-orange-50', iconColor: 'text-orange-600' },
+  { label: 'Toplam Kullanıcı',        value: '12,847', change: '+8.2%', trend: 'up',      icon: Users,      bg: 'bg-zinc-800/40', iconColor: 'text-emerald-400', borderColor: 'border-zinc-800' },
+  { label: 'Platform Geliri (Bu Ay)', value: '₺284,600', change: '+14.5%', trend: 'up',   icon: DollarSign, bg: 'bg-zinc-800/40', iconColor: 'text-emerald-400', borderColor: 'border-zinc-800' },
+  { label: 'Kayıtlı İstasyonlar',     value: '342', change: '+3 bekliyor', trend: 'neutral', icon: Building2, bg: 'bg-zinc-800/40', iconColor: 'text-zinc-300', borderColor: 'border-zinc-800' },
+  { label: 'Aktif Şarj Oturumu',      value: '1,204', change: 'Anlık', trend: 'live', icon: Activity, bg: 'bg-zinc-800/40', iconColor: 'text-zinc-300', borderColor: 'border-zinc-800' },
 ];
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -208,12 +208,12 @@ export function AdminDashboard({ onClose }: Props) {
 
   return (
     <div className="fixed inset-0 bg-black/60 z-[2000] flex items-end md:items-center justify-center p-0 md:p-4">
-      <div className="bg-white w-full md:max-w-5xl md:rounded-2xl max-h-[96vh] overflow-hidden flex flex-col shadow-2xl">
+      <div className="bg-zinc-900 w-full md:max-w-5xl md:rounded-2xl max-h-[96vh] overflow-hidden flex flex-col shadow-2xl">
 
         {/* Header */}
         <div className="bg-gradient-to-r from-slate-900 to-slate-700 px-6 py-5 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center">
+            <div className="w-9 h-9 bg-zinc-800/40 rounded-xl flex items-center justify-center">
               <Shield className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -234,11 +234,11 @@ export function AdminDashboard({ onClose }: Props) {
                 {criticalAiReports} kritik arıza
               </div>
             )}
-            <Button variant="ghost" size="sm" className="text-white/60 hover:text-white hover:bg-white/10" onClick={resetAll}>
+            <Button variant="ghost" size="sm" className="text-white/60 hover:text-white hover:bg-zinc-800/40" onClick={resetAll}>
               <RefreshCw className="w-3.5 h-3.5 mr-1" />
               <span className="hidden sm:inline text-xs">Sıfırla</span>
             </Button>
-            <Button variant="ghost" size="icon" onClick={onClose} className="text-white hover:bg-white/10">
+            <Button variant="ghost" size="icon" onClick={onClose} className="text-white hover:bg-zinc-800/40">
               <X className="w-4 h-4" />
             </Button>
           </div>
@@ -252,7 +252,7 @@ export function AdminDashboard({ onClose }: Props) {
               <Card key={kpi.label} className="border-0 shadow-sm">
                 <CardContent className={`p-4 ${kpi.bg} rounded-xl`}>
                   <div className="flex items-start justify-between mb-3">
-                    <div className="w-9 h-9 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                    <div className="w-9 h-9 bg-zinc-900 rounded-lg border border-zinc-800 flex items-center justify-center shadow-sm">
                       <kpi.icon className={`w-4 h-4 ${kpi.iconColor}`} />
                     </div>
                     {kpi.trend === 'live' && (
@@ -270,8 +270,8 @@ export function AdminDashboard({ onClose }: Props) {
                       <span className="text-xs text-orange-600 font-semibold">{kpi.change}</span>
                     )}
                   </div>
-                  <div className="text-2xl font-bold text-gray-900">{kpi.value}</div>
-                  <div className="text-xs text-gray-500 mt-0.5">{kpi.label}</div>
+                  <div className="text-2xl font-bold text-zinc-100">{kpi.value}</div>
+                  <div className="text-xs text-zinc-400 mt-0.5">{kpi.label}</div>
                 </CardContent>
               </Card>
             ))}
@@ -308,8 +308,8 @@ export function AdminDashboard({ onClose }: Props) {
             <TabsContent value="users">
               <div className="flex gap-2 mb-4">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input placeholder="Ad veya e-posta ara..." value={userSearch} onChange={e => setUserSearch(e.target.value)} className="pl-9" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                  <Input placeholder="Ad veya e-posta ara..." value={userSearch} onChange={e => setUserSearch(e.target.value)} className="pl-9 bg-zinc-950 text-zinc-100 border-zinc-800 placeholder:text-zinc-500" />
                 </div>
               </div>
 
@@ -334,8 +334,8 @@ export function AdminDashboard({ onClose }: Props) {
                               {user.status === 'active' ? 'Aktif' : user.status === 'suspended' ? 'Askıya Alındı' : 'Beklemede'}
                             </Badge>
                           </div>
-                          <div className="text-xs text-muted-foreground mt-0.5">{user.email}</div>
-                          <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                          <div className="text-xs text-zinc-400 mt-0.5">{user.email}</div>
+                          <div className="flex items-center gap-3 mt-1 text-xs text-zinc-400">
                             <span>{user.totalSessions} oturum</span>
                             <span>₺{user.totalSpent.toLocaleString('tr-TR')} harcama</span>
                           </div>
@@ -348,23 +348,23 @@ export function AdminDashboard({ onClose }: Props) {
                           </Button>
 
                           {userActionMenu === user.id && (
-                            <div className="absolute right-0 top-full mt-1 bg-white border rounded-lg shadow-xl z-20 py-1 min-w-[190px]">
-                              <div className="px-3 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Rol Değiştir</div>
+                            <div className="absolute right-0 top-full mt-1 bg-zinc-900 border border-zinc-800 rounded-lg shadow-xl z-20 py-1 min-w-[190px]">
+                              <div className="px-3 py-1.5 text-xs font-semibold text-zinc-400 uppercase tracking-wide">Rol Değiştir</div>
                               {(['driver', 'station_owner', 'admin'] as UserRole[]).map(role => (
                                 <button
                                   key={role}
                                   onClick={() => changeUserRole(user.id, role)}
-                                  className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 transition-colors ${user.role === role ? 'text-blue-600 font-semibold bg-blue-50' : 'text-gray-700'}`}
+                                  className={`w-full text-left px-3 py-2 text-sm hover:bg-zinc-950 flex items-center gap-2 transition-colors ${user.role === role ? 'text-emerald-400 font-semibold bg-zinc-800/40' : 'text-zinc-300'}`}
                                 >
                                   {user.role === role
-                                    ? <CheckCircle className="w-3.5 h-3.5 text-blue-600" />
+                                    ? <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
                                     : <div className="w-3.5 h-3.5" />}
                                   {roleLabels[role]}
                                 </button>
                               ))}
                               <Separator className="my-1" />
                               <button onClick={() => toggleUserStatus(user.id)}
-                                className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-gray-50 transition-colors ${user.status === 'active' ? 'text-red-600' : 'text-green-600'}`}>
+                                className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-zinc-950 transition-colors ${user.status === 'active' ? 'text-red-600' : 'text-green-600'}`}>
                                 {user.status === 'active'
                                   ? <><UserX className="w-3.5 h-3.5" /> Askıya Al</>
                                   : <><UserCheck className="w-3.5 h-3.5" /> Aktif Et</>}
@@ -377,7 +377,7 @@ export function AdminDashboard({ onClose }: Props) {
                   </Card>
                 ))}
                 {filteredUsers.length === 0 && (
-                  <div className="text-center py-10 text-muted-foreground">
+                  <div className="text-center py-10 text-zinc-400">
                     <Users className="w-10 h-10 mx-auto mb-2 opacity-30" />
                     <p className="text-sm">Kullanıcı bulunamadı</p>
                   </div>
@@ -389,8 +389,8 @@ export function AdminDashboard({ onClose }: Props) {
             <TabsContent value="stations">
               <div className="flex gap-2 mb-4">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input placeholder="İstasyon, sahip veya şehir ara..." value={stationSearch} onChange={e => setStationSearch(e.target.value)} className="pl-9" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                  <Input placeholder="İstasyon, sahip veya şehir ara..." value={stationSearch} onChange={e => setStationSearch(e.target.value)} className="pl-9 bg-zinc-950 text-zinc-100 border-zinc-800 placeholder:text-zinc-500" />
                 </div>
               </div>
 
@@ -419,7 +419,7 @@ export function AdminDashboard({ onClose }: Props) {
                             <Badge className={`text-xs border-0 ${stationStatusColors[station.status]}`}>{stationStatusLabels[station.status]}</Badge>
                             <Badge variant="outline" className="text-xs">{station.brand}</Badge>
                           </div>
-                          <div className="text-xs text-muted-foreground">
+                          <div className="text-xs text-zinc-400">
                             Sahip: {station.owner} · {station.city} · {station.totalPoints} şarj noktası
                           </div>
                           {station.status === 'active' && (
@@ -456,7 +456,7 @@ export function AdminDashboard({ onClose }: Props) {
                   </Card>
                 ))}
                 {filteredStations.length === 0 && (
-                  <div className="text-center py-10 text-muted-foreground">
+                  <div className="text-center py-10 text-zinc-400">
                     <Building2 className="w-10 h-10 mx-auto mb-2 opacity-30" />
                     <p className="text-sm">İstasyon bulunamadı</p>
                   </div>
@@ -469,7 +469,7 @@ export function AdminDashboard({ onClose }: Props) {
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h3 className="font-semibold">AI Hasar Raporları</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <p className="text-xs text-zinc-400 mt-0.5">
                     Sürücüler tarafından bildirilen ve AI tarafından analiz edilen arızalar
                   </p>
                 </div>
@@ -495,7 +495,7 @@ export function AdminDashboard({ onClose }: Props) {
               </div>
 
               {aiReports.length === 0 ? (
-                <div className="text-center py-12 text-muted-foreground">
+                <div className="text-center py-12 text-zinc-400">
                   <Wrench className="w-12 h-12 mx-auto mb-3 opacity-20" />
                   <p className="text-sm font-medium">Henüz AI hasar raporu yok</p>
                   <p className="text-xs mt-1">Sürücüler istasyon detay sayfasından hasar bildirebilir.</p>
@@ -520,7 +520,7 @@ export function AdminDashboard({ onClose }: Props) {
                             <AlertTriangle className={`w-5 h-5 ${
                               report.severity === 'critical' ? 'text-red-600' :
                               report.severity === 'high'     ? 'text-orange-600' :
-                              report.severity === 'medium'   ? 'text-yellow-600' : 'text-blue-600'
+                              report.severity === 'medium'   ? 'text-yellow-600' : 'text-emerald-400'
                             }`} />
                           </div>
 
@@ -536,11 +536,11 @@ export function AdminDashboard({ onClose }: Props) {
                               {report.status === 'resolved' && <Badge className="text-xs bg-green-100 text-green-700 border-0">Çözüldü</Badge>}
                             </div>
 
-                            <p className="text-xs text-muted-foreground mb-1">📍 {report.stationName}</p>
-                            <p className="text-xs text-gray-700 mb-1 line-clamp-2">{report.description}</p>
+                            <p className="text-xs text-zinc-400 mb-1">📍 {report.stationName}</p>
+                            <p className="text-xs text-zinc-300 mb-1 line-clamp-2">{report.description}</p>
                             <p className="text-xs text-blue-700 italic mb-2 line-clamp-1">{report.recommendation}</p>
 
-                            <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                            <div className="flex items-center gap-3 text-xs text-zinc-400">
                               <span className="flex items-center gap-1">
                                 <Clock className="w-3 h-3" />
                                 {new Date(report.timestamp).toLocaleString('tr-TR')}
@@ -574,7 +574,7 @@ export function AdminDashboard({ onClose }: Props) {
         </div>
 
         {/* Footer */}
-        <div className="border-t px-5 py-3 bg-gray-50 flex items-center justify-between text-xs text-muted-foreground flex-shrink-0">
+        <div className="border-t px-5 py-3 bg-zinc-950 flex items-center justify-between text-xs text-zinc-400 flex-shrink-0">
           <span>eŞarj Admin · Değişiklikler otomatik kaydediliyor</span>
           <Button variant="ghost" size="sm" className="text-xs h-7 gap-1" onClick={() => {
             setUsers(loadLS(LS_USERS, DEFAULT_USERS));
