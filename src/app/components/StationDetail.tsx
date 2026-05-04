@@ -301,16 +301,16 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
             </Card>
 
             {/* Tabs */}
-            <Tabs defaultValue="charging" className="w-full bg-emerald-400 text-zinc-950 hover:bg-emerald-300">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="charging">Şarj Noktaları</TabsTrigger>
-                <TabsTrigger value="amenities">Olanaklar</TabsTrigger>
-                <TabsTrigger value="info">Bilgiler</TabsTrigger>
+            <Tabs defaultValue="charging" className="w-full">
+              <TabsList className="grid w-full grid-cols-3 bg-zinc-900 border border-zinc-800">
+                <TabsTrigger value="charging" className="data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100 text-zinc-400">Şarj Noktaları</TabsTrigger>
+                <TabsTrigger value="amenities" className="data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100 text-zinc-400">Olanaklar</TabsTrigger>
+                <TabsTrigger value="info" className="data-[state=active]:bg-zinc-800 data-[state=active]:text-zinc-100 text-zinc-400">Bilgiler</TabsTrigger>
               </TabsList>
 
               <TabsContent value="charging" className="space-y-3 mt-4">
                 {station.chargingPoints.map(point => (
-                  <Card key={point.id} className={point.status === 'available' ? 'border-zinc-700' : ''}>
+                  <Card key={point.id} className={`bg-zinc-900 border-zinc-800 ${point.status === 'available' ? 'border-zinc-700' : ''}`}>
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1">
@@ -362,12 +362,12 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
               <TabsContent value="amenities" className="mt-4">
                 <div className="grid grid-cols-2 gap-3">
                   {station.amenities.map((amenity, idx) => (
-                    <Card key={idx}>
+                    <Card key={idx} className="bg-zinc-900 border-zinc-800">
                       <CardContent className="p-3 flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center flex-shrink-0">
                           <Info className="w-4 h-4 text-emerald-400" />
                         </div>
-                        <span className="text-sm font-medium">{amenity}</span>
+                        <span className="text-sm font-medium text-zinc-200">{amenity}</span>
                       </CardContent>
                     </Card>
                   ))}
@@ -375,18 +375,18 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
               </TabsContent>
 
               <TabsContent value="info" className="mt-4 space-y-4">
-                <Card>
+                <Card className="bg-zinc-900 border-zinc-800">
                   <CardContent className="p-4">
-                    <h4 className="font-semibold mb-3">Çalışma Saatleri</h4>
+                    <h4 className="font-semibold mb-3 text-zinc-100">Çalışma Saatleri</h4>
                     <div className="flex items-center gap-2 text-sm">
                       <Clock className="w-4 h-4 text-zinc-400" />
                       <span>{station.isOpen24Hours ? '24 Saat Hizmet' : station.openingHours}</span>
                     </div>
                   </CardContent>
                 </Card>
-                <Card>
+                <Card className="bg-zinc-900 border-zinc-800">
                   <CardContent className="p-4">
-                    <h4 className="font-semibold mb-3">Fiyatlandırma</h4>
+                    <h4 className="font-semibold mb-3 text-zinc-100">Fiyatlandırma</h4>
                     <div className="space-y-2 text-sm">
                       {station.chargingPoints.map((point, idx) => (
                         <div key={idx} className="flex justify-between">
@@ -397,9 +397,9 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
                     </div>
                   </CardContent>
                 </Card>
-                <Card>
+                <Card className="bg-zinc-900 border-zinc-800">
                   <CardContent className="p-4">
-                    <h4 className="font-semibold mb-3">Ödeme Yöntemleri</h4>
+                    <h4 className="font-semibold mb-3 text-zinc-100">Ödeme Yöntemleri</h4>
                     <div className="flex items-center gap-2 text-sm">
                       <CreditCard className="w-4 h-4 text-zinc-400" />
                       <span>Kredi Kartı, Banka Kartı, Dijital Cüzdan, QR Kod</span>

@@ -112,9 +112,9 @@ const MOCK_OWNED_STATIONS: OwnedStation[] = [
 ];
 
 const statusConfig = {
-  operational: { label: 'Aktif', dotColor: 'bg-emerald-400' },
-  maintenance: { label: 'Bakımda', dotColor: 'bg-amber-400' },
-  offline: { label: 'Çevrimdışı', dotColor: 'bg-zinc-500' },
+  operational: { label: 'Aktif', color: 'bg-zinc-800 text-zinc-300 border-zinc-700', dot: 'bg-zinc-500' },
+  maintenance: { label: 'Bakımda', color: 'bg-zinc-800 text-zinc-300 border-zinc-700', dot: 'bg-zinc-500' },
+  offline: { label: 'Çevrimdışı', color: 'bg-zinc-800 text-zinc-300 border-zinc-700', dot: 'bg-zinc-500' },
 };
 
 const cpStatusConfig = {
@@ -259,14 +259,14 @@ export function StationOwnerDashboard({ onClose }: Props) {
   ] as const;
 
   return (
-    <div className="fixed inset-0 bg-black/70 z-[9999] flex items-end md:items-stretch justify-center">
-      <div className="bg-zinc-950 border border-zinc-800 w-full md:max-w-6xl md:m-4 md:rounded-2xl overflow-hidden flex flex-col shadow-2xl max-h-screen md:max-h-[calc(100vh-2rem)]">
+    <div className="fixed inset-0 bg-black/60 z-[9999] flex items-end md:items-stretch justify-center">
+      <div className="bg-zinc-900 w-full md:max-w-6xl md:m-4 md:rounded-2xl overflow-hidden flex flex-col shadow-2xl max-h-screen md:max-h-[calc(100vh-2rem)]">
 
         {/* Top Header */}
         <div className="bg-zinc-900 border-b border-zinc-800 px-6 py-4 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-zinc-800 rounded-xl flex items-center justify-center border border-zinc-700">
-              <Zap className="w-5 h-5 text-emerald-400" />
+            <div className="w-9 h-9 bg-zinc-800/40 rounded-xl flex items-center justify-center border border-zinc-700">
+              <Zap className="w-5 h-5 text-blue-400" />
             </div>
             <div>
               <div className="text-zinc-100 font-bold text-lg leading-tight">İstasyon Yönetimi</div>
@@ -274,11 +274,11 @@ export function StationOwnerDashboard({ onClose }: Props) {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800" onClick={() => toast.info('Veriler güncelleniyor...')}>
+            <Button variant="ghost" size="sm" className="text-white/60 hover:text-white hover:bg-zinc-800/40" onClick={() => toast.info('Veriler güncelleniyor...')}>
               <RefreshCw className="w-4 h-4 mr-1" />
               <span className="hidden sm:inline text-xs">Yenile</span>
             </Button>
-            <Button variant="ghost" size="icon" onClick={onClose} className="text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800">
+            <Button variant="ghost" size="icon" onClick={onClose} className="text-white/60 hover:text-white hover:bg-zinc-800/40">
               <X className="w-4 h-4" />
             </Button>
           </div>
@@ -294,8 +294,8 @@ export function StationOwnerDashboard({ onClose }: Props) {
                   onClick={() => { setActiveNav(id); setSelectedStationId(null); }}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                     activeNav === id
-                      ? 'bg-emerald-400/10 text-emerald-300 border border-emerald-400/20'
-                      : 'text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200'
+                      ? 'bg-emerald-400 text-zinc-950 shadow-sm'
+                      : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
                   }`}
                 >
                   <Icon className="w-4 h-4 flex-shrink-0" />
@@ -312,7 +312,7 @@ export function StationOwnerDashboard({ onClose }: Props) {
               <Separator className="mb-3 bg-zinc-800" />
               <button
                 onClick={onClose}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-400 hover:bg-red-950/30 transition-all"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-300 hover:bg-zinc-800 transition-all"
               >
                 <X className="w-4 h-4 flex-shrink-0" />
                 <span className="hidden md:inline">Çıkış</span>
@@ -332,27 +332,50 @@ export function StationOwnerDashboard({ onClose }: Props) {
                 </div>
 
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                  {kpis.map(kpi => (
-                    <Card key={kpi.label} className={`bg-zinc-900 border ${kpi.borderColor}`}>
-                      <CardContent className="p-4">
-                        <div className="flex items-start justify-between mb-3">
-                          <div className={`w-9 h-9 bg-zinc-800 rounded-lg border border-zinc-700 flex items-center justify-center`}>
-                            <kpi.icon className={`w-4 h-4 ${kpi.iconColor}`} />
-                          </div>
-                          {kpi.trend === 'live' && (
-                            <div className="flex items-center gap-1">
-                              <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
-                              <span className="text-xs text-emerald-400 font-medium">Canlı</span>
-                            </div>
-                          )}
-                          {kpi.trend === 'up' && (
-                            <span className="text-xs text-emerald-400 font-semibold flex items-center gap-0.5">
-                              <TrendingUp className="w-3 h-3" />{kpi.change}
-                            </span>
-                          )}
-                          {kpi.trend === 'neutral' && (
-                            <span className="text-xs text-orange-400 font-semibold">{kpi.change}</span>
-                          )}
+                  <Card className="border-0 bg-gradient-to-br from-green-50 to-emerald-50">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-8 h-8 bg-green-500/15 rounded-lg flex items-center justify-center">
+                          <DollarSign className="w-4 h-4 text-green-600" />
+                        </div>
+                        <span className="text-xs text-slate-500 font-medium">Bugün Gelir</span>
+                      </div>
+                      <div className="text-2xl font-bold text-green-700">{totalRevenue.toFixed(0)} ₺</div>
+                      <div className="text-xs text-green-600 mt-1">↑ %12 dün'e göre</div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-0 bg-gradient-to-br from-zinc-900 to-zinc-800">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-8 h-8 bg-zinc-800/40 rounded-lg flex items-center justify-center">
+                          <Activity className="w-4 h-4 text-emerald-400" />
+                        </div>
+                        <span className="text-xs text-slate-500 font-medium">Aktif Oturum</span>
+                      </div>
+                      <div className="text-2xl font-bold text-blue-700">{totalSessions}</div>
+                      <div className="text-xs text-emerald-400 mt-1">{totalActivePoints}/{totalPoints} nokta aktif</div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border border-zinc-800 bg-zinc-900">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-8 h-8 bg-purple-500/15 rounded-lg flex items-center justify-center">
+                          <TrendingUp className="w-4 h-4 text-purple-600" />
+                        </div>
+                        <span className="text-xs text-slate-500 font-medium">Doluluk Oranı</span>
+                      </div>
+                      <div className="text-2xl font-bold text-purple-700">%{avgUtilization}</div>
+                      <Progress value={avgUtilization} className="h-1.5 mt-2" />
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-0 bg-gradient-to-br from-orange-50 to-amber-50">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-8 h-8 bg-orange-500/15 rounded-lg flex items-center justify-center">
+                          <MapPin className="w-4 h-4 text-orange-600" />
                         </div>
                         <div className="text-2xl font-bold text-zinc-100">{kpi.value}</div>
                         <div className="text-xs text-zinc-500 mt-0.5">{kpi.label}</div>
@@ -382,8 +405,8 @@ export function StationOwnerDashboard({ onClose }: Props) {
                                 <div className="text-xs text-zinc-500">Bugün</div>
                               </div>
                               <div className="text-center">
-                                <div className="font-bold text-zinc-200">{station.activeSessions}</div>
-                                <div className="text-xs text-zinc-500">Oturum</div>
+                                <div className="font-bold text-emerald-400">{station.activeSessions}</div>
+                                <div className="text-xs text-slate-400">Oturum</div>
                               </div>
                               <div className="text-center">
                                 <div className="font-bold text-zinc-200">%{station.utilization}</div>
@@ -453,9 +476,9 @@ export function StationOwnerDashboard({ onClose }: Props) {
                             <div className="text-lg font-bold text-emerald-400">{station.todayRevenue.toFixed(0)} ₺</div>
                             <div className="text-xs text-zinc-500">Bugün Gelir</div>
                           </div>
-                          <div className="bg-zinc-800/60 border border-zinc-700/50 rounded-lg p-2 text-center">
-                            <div className="text-lg font-bold text-zinc-200">{station.activePoints}/{station.totalPoints}</div>
-                            <div className="text-xs text-zinc-500">Aktif Nokta</div>
+                          <div className="bg-slate-50 rounded-lg p-2 text-center">
+                            <div className="text-lg font-bold text-emerald-400">{station.activePoints}/{station.totalPoints}</div>
+                            <div className="text-xs text-slate-500">Aktif Nokta</div>
                           </div>
                           <div className="bg-zinc-800/60 border border-zinc-700/50 rounded-lg p-2 text-center">
                             <div className="text-lg font-bold text-zinc-200">%{station.utilization}</div>
@@ -494,7 +517,7 @@ export function StationOwnerDashboard({ onClose }: Props) {
                                   </div>
                                 ) : (
                                   <button
-                                    className="flex items-center gap-1 text-sm font-semibold text-zinc-300 hover:text-emerald-400 transition-colors"
+                                    className="flex items-center gap-1 text-sm font-semibold text-slate-700 hover:text-emerald-400 transition-colors"
                                     onClick={() => setEditingPrices(prev => ({ ...prev, [key]: cp.price.toString() }))}
                                   >
                                     {cp.price} ₺/kWh
@@ -536,10 +559,10 @@ export function StationOwnerDashboard({ onClose }: Props) {
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {[
-                    { label: 'Toplam Gelir', value: `${selectedStation.totalRevenue.toFixed(0)} ₺`, color: 'text-emerald-400' },
+                    { label: 'Toplam Gelir', value: `${selectedStation.totalRevenue.toFixed(0)} ₺`, color: 'text-green-600' },
                     { label: 'Bugün', value: `${selectedStation.todayRevenue.toFixed(0)} ₺`, color: 'text-emerald-400' },
-                    { label: 'Aktif Oturum', value: selectedStation.activeSessions, color: 'text-zinc-200' },
-                    { label: 'Değerlendirme', value: selectedStation.rating, color: 'text-amber-400' },
+                    { label: 'Aktif Oturum', value: selectedStation.activeSessions, color: 'text-purple-600' },
+                    { label: 'Değerlendirme', value: selectedStation.rating, color: 'text-amber-600' },
                   ].map(stat => (
                     <Card key={stat.label} className="bg-zinc-900 border-zinc-800">
                       <CardContent className="p-3 text-center">
@@ -583,7 +606,7 @@ export function StationOwnerDashboard({ onClose }: Props) {
                               <span className="text-xs text-zinc-500">Birim Fiyat</span>
                               {isEditing ? (
                                 <div className="flex items-center gap-1">
-                                  <Input className="h-7 w-24 text-xs bg-zinc-950 text-zinc-100 border-zinc-700" value={editingPrices[key]}
+                                  <Input className="h-7 w-24 text-xs bg-zinc-950 text-zinc-100 border-zinc-800" value={editingPrices[key]}
                                     onChange={e => setEditingPrices(prev => ({ ...prev, [key]: e.target.value }))} />
                                   <Button size="icon" className="h-7 w-7 bg-emerald-400 text-zinc-950 hover:bg-emerald-300" onClick={() => updatePrice(selectedStation.id, cp.id)}>
                                     <Check className="w-3 h-3" />
@@ -593,7 +616,7 @@ export function StationOwnerDashboard({ onClose }: Props) {
                                   </Button>
                                 </div>
                               ) : (
-                                <button className="flex items-center gap-1 font-bold text-zinc-200 hover:text-emerald-400 transition-colors text-sm"
+                                <button className="flex items-center gap-1 font-bold text-slate-700 hover:text-emerald-400 transition-colors text-sm"
                                   onClick={() => setEditingPrices(prev => ({ ...prev, [key]: cp.price.toString() }))}>
                                   {cp.price} ₺/kWh <Edit2 className="w-3 h-3 opacity-40" />
                                 </button>
@@ -644,7 +667,7 @@ export function StationOwnerDashboard({ onClose }: Props) {
                     </Card>
                   ))}
                 </div>
-                <Card className="bg-zinc-900 border-zinc-800">
+                <Card className="bg-zinc-800/40 border-blue-100">
                   <CardContent className="p-4 text-center">
                     <p className="text-sm text-zinc-300 font-medium">Detaylı raporlar yakında kullanıma sunulacak.</p>
                     <p className="text-xs text-zinc-500 mt-1">Günlük, haftalık ve aylık grafik raporları geliştiriliyor.</p>
@@ -656,35 +679,38 @@ export function StationOwnerDashboard({ onClose }: Props) {
             {/* ── ALERTS ── */}
             {activeNav === 'alerts' && (
               <div className="p-5 space-y-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-xl font-bold text-zinc-100">Uyarılar</h2>
-                    <p className="text-sm text-zinc-400 mt-0.5">
-                      {activeAlerts.length} aktif bildirim
-                    </p>
-                  </div>
-                  {dismissedAlerts.length > 0 && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 text-xs"
-                      onClick={() => setDismissedAlerts([])}
-                    >
-                      Tümünü Geri Al
-                    </Button>
-                  )}
+                <div>
+                  <h2 className="text-xl font-bold text-zinc-100">Uyarılar</h2>
+                  <p className="text-sm text-zinc-400 mt-0.5">Dikkat gerektiren durumlar</p>
                 </div>
-
-                {/* Summary chips */}
-                <div className="flex gap-2 flex-wrap">
-                  {(['error', 'warning', 'success', 'info'] as const).map(type => {
-                    const count = activeAlerts.filter(a => a.type === type).length;
-                    if (count === 0) return null;
-                    const cfg = alertConfig[type];
-                    return (
-                      <div key={type} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium ${cfg.badge}`}>
-                        <div className={`w-1.5 h-1.5 rounded-full ${cfg.stripe}`} />
-                        {count} {cfg.label}
+                <div className="space-y-3">
+                  <Card className="border-zinc-700 bg-zinc-900">
+                    <CardContent className="p-4 flex items-start gap-3">
+                      <AlertTriangle className="w-5 h-5 text-zinc-400 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <div className="font-semibold text-sm text-zinc-200">Bakım Gerekiyor</div>
+                        <div className="text-xs text-zinc-400 mt-1">Gaziemir Sanayi Şarj Merkezi — 3 şarj noktası bakım modunda. Servis ekibiyle iletişime geçin.</div>
+                        <Button size="sm" variant="outline" className="mt-2 border-zinc-700 text-zinc-300 hover:bg-zinc-800" onClick={() => toast.info('Servis talebi oluşturuldu')}>
+                          Servis Talep Et
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card className="border-zinc-700 bg-zinc-900">
+                    <CardContent className="p-4 flex items-start gap-3">
+                      <TrendingUp className="w-5 h-5 text-zinc-400 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <div className="font-semibold text-sm text-zinc-200">Yüksek Doluluk</div>
+                        <div className="text-xs text-zinc-400 mt-1">Balçova AVM %83 doluluk oranıyla pik seviyede. Yeni şarj noktası eklemeyi düşünün.</div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card className="border-zinc-700 bg-zinc-900">
+                    <CardContent className="p-4 flex items-start gap-3">
+                      <Check className="w-5 h-5 text-zinc-400 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <div className="font-semibold text-sm text-zinc-200">Güçlü Performans</div>
+                        <div className="text-xs text-zinc-400 mt-1">Narlıdere Merkez bu hafta %12 gelir artışı gösterdi. Mevcut strateji iyi çalışıyor.</div>
                       </div>
                     );
                   })}
