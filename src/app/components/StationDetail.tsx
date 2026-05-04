@@ -269,7 +269,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
               <Button
                 variant="outline"
                 size="sm"
-                className="flex flex-col h-auto py-3 gap-1 border-zinc-700 text-green-700 hover:bg-zinc-800/40"
+                className="flex flex-col h-auto py-3 gap-1 border-zinc-700 text-emerald-300 hover:bg-zinc-800/40"
                 onClick={() => setShowQRScanner(true)}
               >
                 <QrCode className="w-5 h-5" />
@@ -339,7 +339,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
                               <Button
                                 size="sm"
                                 variant="outline"
-                                className="border-green-300 text-green-700 hover:bg-zinc-800/40"
+                                className="border-green-300 text-emerald-300 hover:bg-zinc-800/40"
                                 onClick={() => handleStartCharging(point)}
                               >
                                 <Play className="w-3 h-3 mr-1" />

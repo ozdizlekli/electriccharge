@@ -309,8 +309,8 @@ export function UserProfile({ onClose }: UserProfileProps) {
                             <div className="flex items-start gap-2">
                               <span className="text-2xl grayscale">{locked.icon}</span>
                               <div className="flex-1">
-                                <div className="font-semibold text-sm text-gray-500">{locked.label}</div>
-                                <div className="text-xs text-gray-400 mt-0.5">{locked.description}</div>
+                                <div className="font-semibold text-sm text-zinc-300">{locked.label}</div>
+                                <div className="text-xs text-zinc-400 mt-0.5">{locked.description}</div>
                                 <Badge variant="outline" className="text-xs mt-1">Kilitli 🔒</Badge>
                               </div>
                             </div>
@@ -322,7 +322,7 @@ export function UserProfile({ onClose }: UserProfileProps) {
                 </div>
 
                 {/* Redeem */}
-                <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+                <Card className="bg-zinc-800/40 border-zinc-800">
                   <CardContent className="p-4 flex items-center gap-3">
                     <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
                       <Gift className="w-5 h-5 text-purple-600" />

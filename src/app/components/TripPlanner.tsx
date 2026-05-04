@@ -167,7 +167,7 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
                   value={destination}
                   onChange={e => setDestination(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && calculateTrip()}
-                  className="flex-1"
+                  className="flex-1 bg-zinc-950 text-zinc-100 placeholder:text-zinc-500 border-zinc-800"
                 />
               </div>
             </div>
