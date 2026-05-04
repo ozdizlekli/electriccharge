@@ -172,12 +172,12 @@ export function StationOwnerDashboard({ onClose }: StationOwnerDashboardProps) {
 
   return (
     <div className="fixed inset-0 bg-black/60 z-[9999] flex items-end md:items-stretch justify-center">
-      <div className="bg-white w-full md:max-w-6xl md:m-4 md:rounded-2xl overflow-hidden flex flex-col shadow-2xl max-h-screen md:max-h-[calc(100vh-2rem)]">
+      <div className="bg-zinc-900 w-full md:max-w-6xl md:m-4 md:rounded-2xl overflow-hidden flex flex-col shadow-2xl max-h-screen md:max-h-[calc(100vh-2rem)]">
 
         {/* Top Header */}
         <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 px-6 py-4 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-blue-500/20 rounded-xl flex items-center justify-center border border-blue-400/30">
+            <div className="w-9 h-9 bg-zinc-800/400/20 rounded-xl flex items-center justify-center border border-blue-400/30">
               <Zap className="w-5 h-5 text-blue-400" />
             </div>
             <div>
@@ -186,11 +186,11 @@ export function StationOwnerDashboard({ onClose }: StationOwnerDashboardProps) {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="text-white/60 hover:text-white hover:bg-white/10" onClick={() => toast.info('Veriler güncelleniyor...')}>
+            <Button variant="ghost" size="sm" className="text-white/60 hover:text-white hover:bg-zinc-800/40" onClick={() => toast.info('Veriler güncelleniyor...')}>
               <RefreshCw className="w-4 h-4 mr-1" />
               <span className="hidden sm:inline text-xs">Yenile</span>
             </Button>
-            <Button variant="ghost" size="icon" onClick={onClose} className="text-white/60 hover:text-white hover:bg-white/10">
+            <Button variant="ghost" size="icon" onClick={onClose} className="text-white/60 hover:text-white hover:bg-zinc-800/40">
               <X className="w-4 h-4" />
             </Button>
           </div>
@@ -256,13 +256,13 @@ export function StationOwnerDashboard({ onClose }: StationOwnerDashboardProps) {
                   <Card className="border-0 bg-gradient-to-br from-blue-50 to-indigo-50">
                     <CardContent className="p-4">
                       <div className="flex items-center gap-2 mb-2">
-                        <div className="w-8 h-8 bg-blue-500/15 rounded-lg flex items-center justify-center">
-                          <Activity className="w-4 h-4 text-blue-600" />
+                        <div className="w-8 h-8 bg-zinc-800/400/15 rounded-lg flex items-center justify-center">
+                          <Activity className="w-4 h-4 text-emerald-400" />
                         </div>
                         <span className="text-xs text-slate-500 font-medium">Aktif Oturum</span>
                       </div>
                       <div className="text-2xl font-bold text-blue-700">{totalSessions}</div>
-                      <div className="text-xs text-blue-600 mt-1">{totalActivePoints}/{totalPoints} nokta aktif</div>
+                      <div className="text-xs text-emerald-400 mt-1">{totalActivePoints}/{totalPoints} nokta aktif</div>
                     </CardContent>
                   </Card>
 
@@ -315,7 +315,7 @@ export function StationOwnerDashboard({ onClose }: StationOwnerDashboardProps) {
                                 <div className="text-xs text-slate-400">Bugün</div>
                               </div>
                               <div className="text-center">
-                                <div className="font-bold text-blue-600">{station.activeSessions}</div>
+                                <div className="font-bold text-emerald-400">{station.activeSessions}</div>
                                 <div className="text-xs text-slate-400">Oturum</div>
                               </div>
                               <div className="text-center">
@@ -386,7 +386,7 @@ export function StationOwnerDashboard({ onClose }: StationOwnerDashboardProps) {
                             <div className="text-xs text-slate-500">Bugün Gelir</div>
                           </div>
                           <div className="bg-slate-50 rounded-lg p-2 text-center">
-                            <div className="text-lg font-bold text-blue-600">{station.activePoints}/{station.totalPoints}</div>
+                            <div className="text-lg font-bold text-emerald-400">{station.activePoints}/{station.totalPoints}</div>
                             <div className="text-xs text-slate-500">Aktif Nokta</div>
                           </div>
                           <div className="bg-slate-50 rounded-lg p-2 text-center">
@@ -425,7 +425,7 @@ export function StationOwnerDashboard({ onClose }: StationOwnerDashboardProps) {
                                   </div>
                                 ) : (
                                   <button
-                                    className="flex items-center gap-1 text-sm font-semibold text-slate-700 hover:text-blue-600 transition-colors"
+                                    className="flex items-center gap-1 text-sm font-semibold text-slate-700 hover:text-emerald-400 transition-colors"
                                     onClick={() => setEditingPrices(prev => ({ ...prev, [key]: cp.price.toString() }))}
                                   >
                                     {cp.price} ₺/kWh
@@ -468,7 +468,7 @@ export function StationOwnerDashboard({ onClose }: StationOwnerDashboardProps) {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {[
                     { label: 'Toplam Gelir', value: `${selectedStation.totalRevenue.toFixed(0)} ₺`, color: 'text-green-600' },
-                    { label: 'Bugün', value: `${selectedStation.todayRevenue.toFixed(0)} ₺`, color: 'text-blue-600' },
+                    { label: 'Bugün', value: `${selectedStation.todayRevenue.toFixed(0)} ₺`, color: 'text-emerald-400' },
                     { label: 'Aktif Oturum', value: selectedStation.activeSessions, color: 'text-purple-600' },
                     { label: 'Değerlendirme', value: selectedStation.rating, color: 'text-amber-600' },
                   ].map(stat => (
@@ -522,7 +522,7 @@ export function StationOwnerDashboard({ onClose }: StationOwnerDashboardProps) {
                                   </Button>
                                 </div>
                               ) : (
-                                <button className="flex items-center gap-1 font-bold text-slate-700 hover:text-blue-600 transition-colors text-sm"
+                                <button className="flex items-center gap-1 font-bold text-slate-700 hover:text-emerald-400 transition-colors text-sm"
                                   onClick={() => setEditingPrices(prev => ({ ...prev, [key]: cp.price.toString() }))}>
                                   {cp.price} ₺/kWh <Edit2 className="w-3 h-3 opacity-50" />
                                 </button>
@@ -573,7 +573,7 @@ export function StationOwnerDashboard({ onClose }: StationOwnerDashboardProps) {
                     </Card>
                   ))}
                 </div>
-                <Card className="bg-blue-50 border-blue-100">
+                <Card className="bg-zinc-800/40 border-blue-100">
                   <CardContent className="p-4 text-center">
                     <p className="text-sm text-blue-700 font-medium">📊 Detaylı raporlar yakında kullanıma sunulacak.</p>
                     <p className="text-xs text-blue-500 mt-1">Günlük, haftalık ve aylık grafik raporları geliştiriliyor.</p>
@@ -602,7 +602,7 @@ export function StationOwnerDashboard({ onClose }: StationOwnerDashboardProps) {
                       </div>
                     </CardContent>
                   </Card>
-                  <Card className="border-blue-200 bg-blue-50">
+                  <Card className="border-blue-200 bg-zinc-800/40">
                     <CardContent className="p-4 flex items-start gap-3">
                       <TrendingUp className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
                       <div>
