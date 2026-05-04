@@ -47,7 +47,7 @@ const seedReviews: Review[] = [
   {
     id: 'r_seed_1',
     stationId: 'global',
-    author: 'Ahmet Y.',
+    author: 'Sibel K.',
     initials: 'AY',
     rating: 5,
     comment: 'Şarj noktaları çok hızlı, DC 150kW\'da 20 dakikada %80\'e çıktım. Yakında AVM var, alışveriş yaparken şarj tamamlandı. Kesinlikle tavsiye ederim!',

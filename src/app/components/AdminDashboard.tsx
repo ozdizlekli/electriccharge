@@ -36,7 +36,7 @@ const LS_AI_DAMAGE = 'ai_damage_reports';
 
 const DEFAULT_USERS: AdminUser[] = [
   { id: 'u1', name: 'Hatice Çevik',   email: 'hatice@gmail.com',   role: 'driver',         status: 'active',    joinDate: '2024-03-15', totalSessions: 47,  totalSpent: 1240, initials: 'HÇ' },
-  { id: 'u2', name: 'Ahmet Yılmaz',   email: 'ahmet@mail.com',     role: 'station_owner',  status: 'active',    joinDate: '2024-01-08', totalSessions: 12,  totalSpent: 320,  initials: 'AY' },
+  { id: 'u2', name: 'Sibel Karabulut',   email: 'sibelkarabulut@email.com',     role: 'station_owner',  status: 'active',    joinDate: '2024-01-08', totalSessions: 12,  totalSpent: 320,  initials: 'AY' },
   { id: 'u3', name: 'Zeynep Kaya',    email: 'zeynep@gmail.com',   role: 'driver',         status: 'suspended', joinDate: '2024-05-20', totalSessions: 3,   totalSpent: 85,   initials: 'ZK' },
   { id: 'u4', name: 'Mehmet Arslan',  email: 'mehmet@hotmail.com', role: 'driver',         status: 'active',    joinDate: '2024-02-11', totalSessions: 89,  totalSpent: 2650, initials: 'MA' },
   { id: 'u5', name: 'Fatma Demir',    email: 'fatma@gmail.com',    role: 'station_owner',  status: 'pending',   joinDate: '2025-04-28', totalSessions: 0,   totalSpent: 0,    initials: 'FD' },
@@ -44,7 +44,7 @@ const DEFAULT_USERS: AdminUser[] = [
 ];
 
 const DEFAULT_STATIONS: AdminStation[] = [
-  { id: 's1', name: 'İzmir Konak Pier Şarj',   owner: 'Ahmet Yılmaz',  city: 'İzmir', brand: 'Eşarj',   status: 'active',           totalPoints: 6, monthlyRevenue: 18400, submittedDate: '2024-01-08', rating: 4.7 },
+  { id: 's1', name: 'İzmir Konak Pier Şarj',   owner: 'Sibel Karabulut',  city: 'İzmir', brand: 'Eşarj',   status: 'active',           totalPoints: 6, monthlyRevenue: 18400, submittedDate: '2024-01-08', rating: 4.7 },
   { id: 's2', name: 'Bornova Forum Şarj',       owner: 'Eşarj A.Ş.',   city: 'İzmir', brand: 'Eşarj',   status: 'active',           totalPoints: 4, monthlyRevenue: 12100, submittedDate: '2024-02-14', rating: 4.5 },
   { id: 's3', name: 'Karşıyaka Marina Şarj',    owner: 'Fatma Demir',   city: 'İzmir', brand: 'ZES',     status: 'pending_approval', totalPoints: 8, monthlyRevenue: 0,     submittedDate: '2025-04-28', rating: 0   },
   { id: 's4', name: 'Balçova AVM Şarj',         owner: 'Voltrun Ltd.',  city: 'İzmir', brand: 'Voltrun', status: 'active',           totalPoints: 3, monthlyRevenue: 7800,  submittedDate: '2024-03-22', rating: 4.3 },
