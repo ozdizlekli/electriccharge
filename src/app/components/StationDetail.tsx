@@ -251,40 +251,40 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
               <Button
                 variant="outline"
                 size="sm"
-                className="flex flex-col h-auto py-3 gap-1 border-zinc-700 text-emerald-300 hover:bg-zinc-800/40"
+                className="flex flex-col h-auto py-3 gap-1 bg-zinc-900 border border-zinc-800 text-zinc-300 hover:bg-zinc-800 transition-colors"
                 onClick={() => setShowCommunity(true)}
               >
-                <MessageSquare className="w-5 h-5" />
+                <MessageSquare className="w-5 h-5 text-zinc-400" />
                 <span className="text-xs font-medium">Topluluk</span>
               </Button>
               <Button
                 variant="outline"
                 size="sm"
-                className="flex flex-col h-auto py-3 gap-1 border-zinc-700 text-orange-700 hover:bg-zinc-800/40"
+                className="flex flex-col h-auto py-3 gap-1 bg-zinc-900 border border-zinc-800 text-zinc-300 hover:bg-zinc-800 transition-colors"
                 onClick={() => setShowAIDamage(true)}
               >
-                <AlertTriangle className="w-5 h-5" />
+                <AlertTriangle className="w-5 h-5 text-zinc-400" />
                 <span className="text-xs font-medium">Hasar Bildir</span>
               </Button>
               <Button
                 variant="outline"
                 size="sm"
-                className="flex flex-col h-auto py-3 gap-1 border-zinc-700 text-emerald-300 hover:bg-zinc-800/40"
+                className="flex flex-col h-auto py-3 gap-1 bg-zinc-900 border border-zinc-800 text-zinc-300 hover:bg-zinc-800 transition-colors"
                 onClick={() => setShowQRScanner(true)}
               >
-                <QrCode className="w-5 h-5" />
+                <QrCode className="w-5 h-5 text-zinc-400" />
                 <span className="text-xs font-medium">QR ile Şarj</span>
               </Button>
             </div>
 
             {/* Availability banner */}
-            <Card className="mb-5 bg-gradient-to-r from-blue-50 to-green-50">
+            <Card className="mb-5 bg-zinc-900 border border-zinc-800">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className={`w-3 h-3 rounded-full ${availablePoints > 0 ? 'bg-emerald-400' : 'bg-emerald-400'}`} />
                     <div>
-                      <div className="font-semibold">
+                      <div className="font-semibold text-zinc-100">
                         {availablePoints > 0 ? `${availablePoints} Şarj Noktası Müsait` : 'Tüm Noktalar Dolu'}
                       </div>
                       <div className="text-sm text-zinc-400">
@@ -294,7 +294,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
                   </div>
                   <div className="text-right">
                     <div className="text-sm text-zinc-400">Mesafe</div>
-                    <div className="font-semibold">{station.distance} km</div>
+                    <div className="font-semibold text-zinc-100">{station.distance} km</div>
                   </div>
                 </div>
               </CardContent>
@@ -333,13 +333,13 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
                           <div className="font-semibold text-lg">{point.price} ₺/kWh</div>
                           {point.status === 'available' && (
                             <div className="flex flex-col gap-1">
-                              <Button size="sm" onClick={() => handleReserve(point)}>
+                              <Button size="sm" className="bg-zinc-800 hover:bg-zinc-700 text-zinc-100" onClick={() => handleReserve(point)}>
                                 Rezervasyon
                               </Button>
                               <Button
                                 size="sm"
                                 variant="outline"
-                                className="border-green-300 text-emerald-300 hover:bg-zinc-800/40"
+                                className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20"
                                 onClick={() => handleStartCharging(point)}
                               >
                                 <Play className="w-3 h-3 mr-1" />
@@ -348,7 +348,12 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
                             </div>
                           )}
                           {point.status === 'occupied' && point.currentUser && point.currentUser.remainingMinutes <= 60 && (
-                            <Button size="sm" variant="outline" onClick={() => handleReserve(point)}>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="bg-zinc-800 hover:bg-zinc-700 text-zinc-100 border border-zinc-700"
+                              onClick={() => handleReserve(point)}
+                            >
                               Ön Rezervasyon
                             </Button>
                           )}

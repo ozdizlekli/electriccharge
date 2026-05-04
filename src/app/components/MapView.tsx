@@ -75,24 +75,24 @@ export function MapView({ stations, selectedStation, onStationSelect }: MapViewP
   // L.divIcon metodunu kullanarak özel HTML ikonları üretiyoruz.
   const createCustomIcon = (availablePoints: number, isSelected: boolean) => {
     const bgColor = availablePoints > 0 ? 'bg-green-500' : 'bg-red-500';
-    const scaleClass = isSelected ? 'scale-125' : 'scale-100';
+    const scaleClass = isSelected ? 'scale-110' : 'scale-100';
     
     // HTML string olarak kendi tasarımımızı veriyoruz
     const htmlString = `
       <div class="relative transition-transform duration-300 ${scaleClass}">
-        <div class="w-10 h-10 rounded-full flex items-center justify-center shadow-lg text-white ${bgColor}">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <div class="w-7 h-7 rounded-full flex items-center justify-center shadow-md text-white ${bgColor}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         </div>
-        ${!isSelected ? `<div class="absolute -top-2 -right-2 w-5 h-5 bg-white rounded-full shadow flex items-center justify-center text-xs font-semibold text-black">${availablePoints}</div>` : ''}
+        ${!isSelected ? `<div class="absolute -top-1 -right-1 w-4 h-4 bg-white rounded-full shadow flex items-center justify-center text-[10px] leading-none font-semibold text-black">${availablePoints}</div>` : ''}
       </div>
     `;
 
     return L.divIcon({
       html: htmlString,
       className: 'custom-leaflet-icon', // Varsayılan css'i ezmek için
-      iconSize: [40, 40],
-      iconAnchor: [20, 40], // İkonun tam ucu koordinata denk gelsin diye
-      popupAnchor: [0, -40] // Tıklanınca açılan baloncuğun nerede çıkacağı
+      iconSize: [28, 28],
+      iconAnchor: [14, 28], // İkonun tam ucu koordinata denk gelsin diye
+      popupAnchor: [0, -28] // Tıklanınca açılan baloncuğun nerede çıkacağı
     });
   };
 
@@ -179,9 +179,9 @@ export function MapView({ stations, selectedStation, onStationSelect }: MapViewP
       </div>
 
       {/* Map Legend (Bilgilendirme Kutusu) */}
-      <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-3 z-[400]">
-        <div className="text-xs font-semibold mb-2">Durum</div>
-        <div className="flex flex-col gap-1.5 text-xs">
+      <div className="absolute bottom-4 left-4 bg-zinc-900 text-zinc-100 border border-zinc-700 rounded-lg shadow-lg p-3 z-[400]">
+        <div className="text-xs font-semibold mb-2 text-zinc-100">Durum</div>
+        <div className="flex flex-col gap-1.5 text-xs text-zinc-200">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-green-500" />
             <span>Müsait</span>

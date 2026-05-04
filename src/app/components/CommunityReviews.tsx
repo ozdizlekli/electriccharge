@@ -154,10 +154,10 @@ function saveReport(report: StatusReport) {
 const AVAILABLE_TAGS = ['Hızlı Şarj', 'Temiz', 'Kolay Erişim', 'Güvenilir', 'İyi Konum', 'WiFi', 'Gece Açık', 'Fiyat Uygun'];
 
 const statusOptions = [
-  { type: 'available' as const, label: 'Müsait', emoji: '🟢', message: 'Şu an müsait, sorun yok.' },
-  { type: 'occupied' as const, label: 'Dolu', emoji: '🟡', message: 'Tüm noktalar dolu, bekleme var.' },
-  { type: 'queue' as const, label: 'Kuyruk Var', emoji: '🟠', message: 'Kuyruk var, yaklaşık 15 dk bekleme.' },
-  { type: 'broken' as const, label: 'Arızalı', emoji: '🔴', message: 'Bazı noktalar arızalı görünüyor.' },
+  { type: 'available' as const, label: 'Müsait', emoji: '', message: 'Şu an müsait, sorun yok.' },
+  { type: 'occupied' as const, label: 'Dolu', emoji: '', message: 'Tüm noktalar dolu, bekleme var.' },
+  { type: 'queue' as const, label: 'Kuyruk Var', emoji: '', message: 'Kuyruk var, yaklaşık 15 dk bekleme.' },
+  { type: 'broken' as const, label: 'Arızalı', emoji: '', message: 'Bazı noktalar arızalı görünüyor.' },
 ];
 
 function formatRelativeDate(iso: string): string {
@@ -260,35 +260,35 @@ export function CommunityReviews({ station, onClose }: CommunityReviewsProps) {
 
   return (
     <div className="fixed inset-0 bg-black/60 z-[1050] flex items-end md:items-center justify-center p-0 md:p-4">
-      <div className="bg-white w-full md:max-w-2xl md:rounded-2xl max-h-[92vh] overflow-hidden flex flex-col shadow-2xl">
+      <div className="bg-zinc-900 w-full md:max-w-2xl md:rounded-2xl max-h-[92vh] overflow-hidden flex flex-col shadow-2xl">
         
         {/* Header */}
-        <div className="px-5 pt-5 pb-4 border-b flex items-start justify-between gap-3 flex-shrink-0">
+        <div className="px-5 pt-5 pb-4 border-b border-zinc-800 flex items-start justify-between gap-3 flex-shrink-0">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <MessageCircle className="w-5 h-5 text-blue-600" />
-              <h3 className="font-bold text-lg">Topluluk</h3>
+              <MessageCircle className="w-5 h-5 text-zinc-400" />
+              <h3 className="font-bold text-lg text-zinc-100">Topluluk</h3>
             </div>
-            <p className="text-sm text-muted-foreground truncate max-w-xs">{station.name}</p>
+            <p className="text-sm text-zinc-400 truncate max-w-xs">{station.name}</p>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose} className="flex-shrink-0">
+          <Button variant="ghost" size="icon" onClick={onClose} className="flex-shrink-0 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800">
             <X className="w-4 h-4" />
           </Button>
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b flex-shrink-0">
+        <div className="flex border-b border-zinc-800 flex-shrink-0">
           <button
-            className={`flex-1 py-3 text-sm font-medium transition-colors ${activeTab === 'reviews' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-muted-foreground hover:text-foreground'}`}
+            className={`flex-1 py-3 text-sm font-medium transition-colors ${activeTab === 'reviews' ? 'text-zinc-100 border-b-2 border-zinc-100' : 'text-zinc-400 hover:text-zinc-100'}`}
             onClick={() => setActiveTab('reviews')}
           >
-            ⭐ Değerlendirmeler ({reviews.length})
+            Değerlendirmeler ({reviews.length})
           </button>
           <button
-            className={`flex-1 py-3 text-sm font-medium transition-colors ${activeTab === 'status' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-muted-foreground hover:text-foreground'}`}
+            className={`flex-1 py-3 text-sm font-medium transition-colors ${activeTab === 'status' ? 'text-zinc-100 border-b-2 border-zinc-100' : 'text-zinc-400 hover:text-zinc-100'}`}
             onClick={() => setActiveTab('status')}
           >
-            📍 Anlık Durum
+            Anlık Durum
           </button>
         </div>
 
@@ -300,30 +300,30 @@ export function CommunityReviews({ station, onClose }: CommunityReviewsProps) {
             <div className="p-4 space-y-4">
               
               {/* Rating Summary */}
-              <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-0">
+              <Card className="bg-zinc-900 border border-zinc-800">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-6">
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-blue-700">{avgRating.toFixed(1)}</div>
+                      <div className="text-4xl font-bold text-zinc-100">{avgRating.toFixed(1)}</div>
                       <div className="flex gap-0.5 mt-1 justify-center">
                         {[1,2,3,4,5].map(s => (
                           <Star key={s} className={`w-3.5 h-3.5 ${s <= Math.round(avgRating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
                         ))}
                       </div>
-                      <div className="text-xs text-muted-foreground mt-1">{reviews.length} yorum</div>
+                      <div className="text-xs text-zinc-400 mt-1">{reviews.length} yorum</div>
                     </div>
                     <div className="flex-1 space-y-1.5">
                       {ratingCounts.map(({ star, count }) => (
                         <div key={star} className="flex items-center gap-2">
-                          <span className="text-xs text-muted-foreground w-4">{star}</span>
+                          <span className="text-xs text-zinc-400 w-4">{star}</span>
                           <Star className="w-3 h-3 fill-yellow-400 text-yellow-400 flex-shrink-0" />
-                          <div className="flex-1 bg-white rounded-full h-2 overflow-hidden">
+                          <div className="flex-1 bg-zinc-800 rounded-full h-2 overflow-hidden">
                             <div
                               className="h-full bg-yellow-400 rounded-full transition-all"
                               style={{ width: reviews.length > 0 ? `${(count / reviews.length) * 100}%` : '0%' }}
                             />
                           </div>
-                          <span className="text-xs text-muted-foreground w-4">{count}</span>
+                          <span className="text-xs text-zinc-400 w-4">{count}</span>
                         </div>
                       ))}
                     </div>
@@ -333,7 +333,7 @@ export function CommunityReviews({ station, onClose }: CommunityReviewsProps) {
 
               {/* Add Review Button */}
               {!showAddReview && (
-                <Button className="w-full" onClick={() => setShowAddReview(true)}>
+                <Button className="w-full bg-zinc-800 text-zinc-100 hover:bg-zinc-700" onClick={() => setShowAddReview(true)}>
                   <Star className="w-4 h-4 mr-2" />
                   Değerlendirme Yaz
                 </Button>
@@ -341,9 +341,9 @@ export function CommunityReviews({ station, onClose }: CommunityReviewsProps) {
 
               {/* Add Review Form */}
               {showAddReview && (
-                <Card className="border-blue-200 bg-blue-50/50">
+                <Card className="bg-zinc-900 border border-zinc-800">
                   <CardContent className="p-4 space-y-4">
-                    <div className="font-semibold text-sm">Değerlendirmeniz</div>
+                    <div className="font-semibold text-sm text-zinc-100">Değerlendirmeniz</div>
 
                     {/* Star Selector */}
                     <div className="flex gap-1">
@@ -359,7 +359,7 @@ export function CommunityReviews({ station, onClose }: CommunityReviewsProps) {
                         </button>
                       ))}
                       {newRating > 0 && (
-                        <span className="ml-2 self-center text-sm text-muted-foreground">
+                        <span className="ml-2 self-center text-sm text-zinc-400">
                           {['', 'Çok Kötü', 'Kötü', 'Orta', 'İyi', 'Mükemmel'][newRating]}
                         </span>
                       )}
@@ -367,7 +367,7 @@ export function CommunityReviews({ station, onClose }: CommunityReviewsProps) {
 
                     {/* Tags */}
                     <div>
-                      <div className="text-xs text-muted-foreground mb-2">Etiket ekle (isteğe bağlı)</div>
+                      <div className="text-xs text-zinc-400 mb-2">Etiket ekle (isteğe bağlı)</div>
                       <div className="flex flex-wrap gap-1.5">
                         {AVAILABLE_TAGS.map(tag => (
                           <button
@@ -377,8 +377,8 @@ export function CommunityReviews({ station, onClose }: CommunityReviewsProps) {
                             )}
                             className={`px-2.5 py-1 rounded-full text-xs font-medium border transition-colors ${
                               selectedTags.includes(tag)
-                                ? 'bg-blue-600 text-white border-blue-600'
-                                : 'bg-white text-muted-foreground border-gray-200 hover:border-blue-300'
+                                ? 'bg-zinc-700 text-zinc-100 border-zinc-600'
+                                : 'bg-zinc-950 text-zinc-400 border-zinc-800 hover:border-zinc-600'
                             }`}
                           >
                             {tag}
@@ -392,15 +392,15 @@ export function CommunityReviews({ station, onClose }: CommunityReviewsProps) {
                       placeholder="Deneyiminizi paylaşın... (en az 10 karakter)"
                       value={newComment}
                       onChange={e => setNewComment(e.target.value)}
-                      className="bg-white resize-none"
+                      className="bg-zinc-950 border-zinc-800 text-zinc-100 placeholder:text-zinc-500 resize-none"
                       rows={3}
                     />
 
                     <div className="flex gap-2">
-                      <Button variant="outline" className="flex-1" onClick={() => setShowAddReview(false)}>
+                      <Button variant="outline" className="flex-1 bg-transparent border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100" onClick={() => setShowAddReview(false)}>
                         İptal
                       </Button>
-                      <Button className="flex-1" onClick={handleSubmitReview} disabled={isSubmitting}>
+                      <Button className="flex-1 bg-zinc-800 text-zinc-100 hover:bg-zinc-700" onClick={handleSubmitReview} disabled={isSubmitting}>
                         {isSubmitting ? (
                           <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />Gönderiliyor...</>
                         ) : 'Gönder'}
@@ -412,46 +412,46 @@ export function CommunityReviews({ station, onClose }: CommunityReviewsProps) {
 
               {/* Review List */}
               {reviews.map(review => (
-                <Card key={review.id} className="hover:shadow-md transition-shadow">
+                <Card key={review.id} className="bg-zinc-900 border border-zinc-800 hover:bg-zinc-800/50 transition-colors">
                   <CardContent className="p-4">
                     <div className="flex items-start gap-3">
                       <Avatar className="w-9 h-9 flex-shrink-0">
-                        <AvatarFallback className="bg-blue-100 text-blue-700 text-xs font-semibold">
+                        <AvatarFallback className="bg-zinc-800 text-zinc-300 text-xs font-semibold">
                           {review.initials}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1 flex-wrap">
-                          <span className="font-semibold text-sm">{review.author}</span>
+                          <span className="font-semibold text-sm text-zinc-100">{review.author}</span>
                           {review.verified && (
-                            <span className="flex items-center gap-0.5 text-xs text-green-600">
+                            <span className="flex items-center gap-0.5 text-xs text-emerald-400">
                               <CheckCircle className="w-3 h-3" /> Doğrulandı
                             </span>
                           )}
-                          <span className="text-xs text-muted-foreground ml-auto">{formatRelativeDate(review.date)}</span>
+                          <span className="text-xs text-zinc-500 ml-auto">{formatRelativeDate(review.date)}</span>
                         </div>
                         <div className="flex gap-0.5 mb-2">
                           {[1,2,3,4,5].map(s => (
                             <Star key={s} className={`w-3.5 h-3.5 ${s <= review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-200'}`} />
                           ))}
                         </div>
-                        <p className="text-sm text-gray-700 leading-relaxed mb-2">{review.comment}</p>
+                        <p className="text-sm text-zinc-300 leading-relaxed mb-2">{review.comment}</p>
                         {review.tags.length > 0 && (
                           <div className="flex flex-wrap gap-1 mb-3">
                             {review.tags.map(tag => (
-                              <Badge key={tag} variant="secondary" className="text-xs px-2 py-0.5">{tag}</Badge>
+                            <Badge key={tag} variant="secondary" className="text-xs px-2 py-0.5 bg-zinc-800 text-zinc-300 border border-zinc-700">{tag}</Badge>
                             ))}
                           </div>
                         )}
                         <div className="flex items-center gap-3">
                           <button
                             onClick={() => handleHelpful(review.id)}
-                            className={`flex items-center gap-1 text-xs transition-colors ${review.userHelpedIds.includes(SESSION_ID) ? 'text-blue-600 font-medium' : 'text-muted-foreground hover:text-blue-600'}`}
+                            className={`flex items-center gap-1 text-xs transition-colors ${review.userHelpedIds.includes(SESSION_ID) ? 'text-zinc-100 font-medium' : 'text-zinc-400 hover:text-zinc-100'}`}
                           >
                             <ThumbsUp className="w-3.5 h-3.5" />
                             Faydalı ({review.helpful})
                           </button>
-                          <button className="flex items-center gap-1 text-xs text-muted-foreground hover:text-red-500 transition-colors">
+                          <button className="flex items-center gap-1 text-xs text-zinc-400 hover:text-zinc-100 transition-colors">
                             <Flag className="w-3.5 h-3.5" />
                             Raporla
                           </button>
@@ -463,7 +463,7 @@ export function CommunityReviews({ station, onClose }: CommunityReviewsProps) {
               ))}
 
               {reviews.length === 0 && (
-                <div className="text-center py-8 text-muted-foreground">
+                <div className="text-center py-8 text-zinc-400">
                   <MessageCircle className="w-10 h-10 mx-auto mb-3 opacity-30" />
                   <p className="text-sm">Henüz yorum yok. İlk yorumu siz yapın!</p>
                 </div>
@@ -477,11 +477,11 @@ export function CommunityReviews({ station, onClose }: CommunityReviewsProps) {
               
               {/* Current Live Status */}
               {latestReport ? (
-                <Card className={`border-2 ${
-                  latestReport.type === 'available' ? 'border-green-200 bg-green-50' :
-                  latestReport.type === 'broken' ? 'border-red-200 bg-red-50' :
-                  latestReport.type === 'queue' ? 'border-orange-200 bg-orange-50' :
-                  'border-yellow-200 bg-yellow-50'
+                <Card className={`border ${
+                  latestReport.type === 'available' ? 'border-emerald-800 bg-emerald-950/30' :
+                  latestReport.type === 'broken' ? 'border-red-800 bg-red-950/30' :
+                  latestReport.type === 'queue' ? 'border-orange-800 bg-orange-950/30' :
+                  'border-zinc-700 bg-zinc-800/50'
                 }`}>
                   <CardContent className="p-4">
                     <div className="flex items-center gap-2 mb-1">
@@ -490,19 +490,19 @@ export function CommunityReviews({ station, onClose }: CommunityReviewsProps) {
                         latestReport.type === 'broken' ? 'bg-red-500' :
                         latestReport.type === 'queue' ? 'bg-orange-500' : 'bg-yellow-500'
                       }`} />
-                      <span className="text-sm font-semibold">Son Topluluk Bildirimi</span>
-                      <span className="text-xs text-muted-foreground ml-auto flex items-center gap-1">
+                      <span className="text-sm font-semibold text-zinc-100">Son Topluluk Bildirimi</span>
+                      <span className="text-xs text-zinc-400 ml-auto flex items-center gap-1">
                         <Clock className="w-3 h-3" />
                         {formatRelativeDate(latestReport.date)}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-700">{latestReport.message}</p>
-                    <p className="text-xs text-muted-foreground mt-1">— {latestReport.author} tarafından</p>
+                    <p className="text-sm text-zinc-300">{latestReport.message}</p>
+                    <p className="text-xs text-zinc-400 mt-1">— {latestReport.author} tarafından</p>
                   </CardContent>
                 </Card>
               ) : (
-                <Card className="border-dashed">
-                  <CardContent className="p-4 text-center text-muted-foreground">
+                <Card className="bg-zinc-900 border border-dashed border-zinc-700">
+                  <CardContent className="p-4 text-center text-zinc-400">
                     <Zap className="w-8 h-8 mx-auto mb-2 opacity-30" />
                     <p className="text-sm">Henüz durum bildirimi yok.</p>
                     <p className="text-xs mt-1">İstasyondaysanız toplulukla paylaşın!</p>
@@ -512,22 +512,21 @@ export function CommunityReviews({ station, onClose }: CommunityReviewsProps) {
 
               {/* Report Buttons */}
               <div>
-                <p className="text-sm font-semibold mb-3">📍 Şu anki durumu bildir</p>
+                <p className="text-sm font-semibold mb-3 text-zinc-100">Şu anki durumu bildir</p>
                 <div className="grid grid-cols-2 gap-2">
                   {statusOptions.map(opt => (
                     <button
                       key={opt.type}
                       onClick={() => handleStatusReport(opt)}
-                      className={`p-3 rounded-xl border-2 text-left transition-all hover:scale-[1.02] active:scale-[0.98] ${
-                        opt.type === 'available' ? 'border-green-200 bg-green-50 hover:border-green-400' :
-                        opt.type === 'broken' ? 'border-red-200 bg-red-50 hover:border-red-400' :
-                        opt.type === 'queue' ? 'border-orange-200 bg-orange-50 hover:border-orange-400' :
-                        'border-yellow-200 bg-yellow-50 hover:border-yellow-400'
+                      className={`p-3 rounded-xl border text-center flex flex-col items-center justify-center transition-all hover:scale-[1.02] active:scale-[0.98] ${
+                        opt.type === 'available' ? 'border-emerald-800 bg-emerald-950/30 text-emerald-400 hover:bg-emerald-950/50' :
+                        opt.type === 'broken' ? 'border-red-800 bg-red-950/30 text-red-400 hover:bg-red-950/50' :
+                        opt.type === 'queue' ? 'border-orange-800 bg-orange-950/30 text-orange-400 hover:bg-orange-950/50' :
+                        'border-zinc-700 bg-zinc-800/50 text-zinc-300 hover:bg-zinc-800'
                       }`}
                     >
-                      <div className="text-xl mb-1">{opt.emoji}</div>
                       <div className="text-sm font-semibold">{opt.label}</div>
-                      <div className="text-xs text-muted-foreground mt-0.5 leading-tight">{opt.message}</div>
+                      <div className="text-xs text-zinc-400 mt-0.5 leading-tight">{opt.message}</div>
                     </button>
                   ))}
                 </div>
@@ -536,15 +535,15 @@ export function CommunityReviews({ station, onClose }: CommunityReviewsProps) {
               {/* Recent Reports */}
               {reports.length > 1 && (
                 <div>
-                  <p className="text-sm font-semibold mb-2">Son Bildirimler</p>
+                  <p className="text-sm font-semibold mb-2 text-zinc-100">Son Bildirimler</p>
                   <div className="space-y-2">
                     {reports.slice(1, 6).map(rep => (
-                      <div key={rep.id} className="flex items-center gap-2 text-sm py-2 border-b last:border-0">
-                        <span className="text-base">
-                          {rep.type === 'available' ? '🟢' : rep.type === 'broken' ? '🔴' : rep.type === 'queue' ? '🟠' : '🟡'}
-                        </span>
-                        <span className="flex-1 text-gray-700">{rep.message}</span>
-                        <span className="text-xs text-muted-foreground flex-shrink-0">{formatRelativeDate(rep.date)}</span>
+                      <div key={rep.id} className="flex items-center gap-2 text-sm py-2 border-b border-zinc-800 last:border-0">
+                        <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                          rep.type === 'available' ? 'bg-emerald-500' : rep.type === 'broken' ? 'bg-red-500' : rep.type === 'queue' ? 'bg-orange-500' : 'bg-zinc-500'
+                        }`} />
+                        <span className="flex-1 text-zinc-300">{rep.message}</span>
+                        <span className="text-xs text-zinc-500 flex-shrink-0">{formatRelativeDate(rep.date)}</span>
                       </div>
                     ))}
                   </div>

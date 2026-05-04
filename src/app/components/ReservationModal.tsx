@@ -117,14 +117,14 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
     }
     if (pricingTier === 'eco') {
       return (
-        <div className="flex items-center gap-2 p-3 bg-zinc-800/40 border border-zinc-700 rounded-xl">
+        <div className="flex items-center gap-2 p-3 bg-emerald-950/20 border border-emerald-900/30 rounded-xl">
           <Leaf className="w-4 h-4 text-emerald-400 flex-shrink-0" />
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-green-800">Eco İndirim</span>
-              <Badge className="bg-green-100 text-green-700 border-zinc-700 border text-xs">-%10</Badge>
+              <span className="text-sm font-semibold text-emerald-400">Eco İndirim</span>
+              <Badge className="bg-emerald-500/10 text-emerald-400 border border-emerald-900/30 text-xs">-%10</Badge>
             </div>
-            <p className="text-xs text-emerald-400 mt-0.5">Gece saatleri indirimi aktif. Taban fiyata %10 indirim uygulanıyor.</p>
+            <p className="text-xs text-emerald-500/80 mt-0.5">Gece saatleri indirimi aktif. Taban fiyata %10 indirim uygulanıyor.</p>
           </div>
         </div>
       );
@@ -151,11 +151,11 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             <Card className="bg-zinc-800/40">
               <CardContent className="p-4">
-                <div className="font-semibold mb-1">{station.name}</div>
+                <div className="font-semibold mb-1 text-zinc-100">{station.name}</div>
                 <div className="text-sm text-zinc-400 mb-2">{station.address}</div>
                 <div className="flex items-center gap-2 text-sm">
-                  <Zap className="w-4 h-4" />
-                  <span className="font-medium">
+                  <Zap className="w-4 h-4 text-zinc-400" />
+                  <span className="font-medium text-zinc-100">
                     {chargingPoint.type} - {chargingPoint.power} kW - {chargingPoint.connector}
                   </span>
                 </div>
@@ -188,6 +188,7 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
                 onChange={(e) => setSelectedDate(e.target.value)}
                 min={new Date().toISOString().split('T')[0]}
                 max={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
+                className="bg-zinc-950 border border-zinc-800 text-zinc-100 placeholder:text-zinc-500"
               />
             </div>
 
@@ -195,13 +196,13 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
               <Label className="flex items-center gap-2">
                 <Clock className="w-4 h-4" />
                 Saat
-                <span className="text-xs text-zinc-400 ml-auto">🔴 Yoğun  🟢 Eco</span>
+               
               </Label>
               <Select value={selectedTime} onValueChange={setSelectedTime}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-zinc-950 border border-zinc-800 text-zinc-100 placeholder:text-zinc-500">
                   <SelectValue placeholder="Saat seçin" />
                 </SelectTrigger>
-                <SelectContent className="z-[10000]">
+                <SelectContent className="z-[10000] bg-zinc-950 border border-zinc-800 text-zinc-100">
                   {timeSlots.map((time) => (
                     <SelectItem key={time} value={time}>
                       {getSlotLabel(time)}
@@ -218,10 +219,10 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
             <div className="space-y-2">
               <Label>Tahmini Şarj Süresi</Label>
               <Select value={duration} onValueChange={setDuration}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-zinc-950 border border-zinc-800 text-zinc-100 placeholder:text-zinc-500">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="z-[10000]">
+                <SelectContent className="z-[10000] bg-zinc-950 border border-zinc-800 text-zinc-100">
                   <SelectItem value="30">30 dakika</SelectItem>
                   <SelectItem value="45">45 dakika</SelectItem>
                   <SelectItem value="60">1 saat</SelectItem>
@@ -232,11 +233,7 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
               </Select>
             </div>
 
-            <Card className={`bg-gradient-to-r ${
-              pricingTier === 'peak' ? 'from-red-50 to-orange-50' :
-              pricingTier === 'eco' ? 'from-green-50 to-emerald-50' :
-              'from-green-50 to-blue-50'
-            }`}>
+            <Card className="bg-zinc-900 border border-zinc-800">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-zinc-400">Taban Fiyat</span>
@@ -246,21 +243,18 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
                 </div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-zinc-400">Geçerli Fiyat</span>
-                  <span className={`font-semibold ${
-                    pricingTier === 'peak' ? 'text-red-600' :
-                    pricingTier === 'eco' ? 'text-emerald-400' : 'text-zinc-200'
-                  }`}>
+                  <span className="font-semibold text-emerald-400">
                     {effectivePrice} ₺/kWh
                   </span>
                 </div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-zinc-400">Tahmini Enerji</span>
-                  <span className="font-medium">
+                  <span className="font-medium text-emerald-400">
                     {(chargingPoint.power * parseInt(duration) / 60 * 0.8).toFixed(1)} kWh
                   </span>
                 </div>
                 <div className="flex items-center justify-between pt-2 border-t border-zinc-800">
-                  <span className="font-semibold">Tahmini Tutar</span>
+                  <span className="font-semibold text-zinc-100">Tahmini Tutar</span>
                   <span className="text-xl font-bold text-emerald-400">{calculatePrice()} ₺</span>
                 </div>
                 <div className="text-xs text-zinc-400 mt-2">
@@ -276,7 +270,7 @@ export function ReservationModal({ station, chargingPoint, onClose }: Reservatio
           </div>
 
           <div className="p-4 border-t border-zinc-800 bg-zinc-950">
-            <Button className="w-full bg-emerald-400 text-zinc-950 hover:bg-emerald-300" size="lg" onClick={handleReservation}>
+            <Button className="w-full bg-emerald-500 text-zinc-950 hover:bg-emerald-400 font-bold" size="lg" onClick={handleReservation}>
               <CreditCard className="w-4 h-4 mr-2" />
               Ödeme Yap ve Rezerve Et
             </Button>

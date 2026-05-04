@@ -61,29 +61,29 @@ function saveLS<T>(key: string, val: T) {
 
 const roleLabels: Record<UserRole, string> = { driver: 'Sürücü', station_owner: 'İstasyon Sahibi', admin: 'Admin' };
 const roleColors: Record<UserRole, string> = {
-  driver: 'bg-blue-900/60 text-blue-300 border border-blue-700/50',
-  station_owner: 'bg-purple-900/60 text-purple-300 border border-purple-700/50',
-  admin: 'bg-red-900/60 text-red-300 border border-red-700/50',
+  driver: 'bg-zinc-800 text-zinc-300 border border-zinc-700',
+  station_owner: 'bg-zinc-800 text-zinc-300 border border-zinc-700',
+  admin: 'bg-zinc-800 text-zinc-300 border border-zinc-700',
 };
 const userStatusColors: Record<UserStatus, string> = {
-  active: 'bg-emerald-900/60 text-emerald-300 border border-emerald-700/50',
-  suspended: 'bg-red-900/60 text-red-300 border border-red-700/50',
-  pending: 'bg-yellow-900/60 text-yellow-300 border border-yellow-700/50',
+  active: 'bg-zinc-900 text-zinc-400 border border-zinc-800',
+  suspended: 'bg-zinc-900 text-zinc-400 border border-zinc-800',
+  pending: 'bg-zinc-900 text-zinc-400 border border-zinc-800',
 };
 const stationStatusColors: Record<StationStatus, string> = {
-  active: 'bg-emerald-900/60 text-emerald-300 border border-emerald-700/50',
-  suspended: 'bg-red-900/60 text-red-300 border border-red-700/50',
-  pending_approval: 'bg-orange-900/60 text-orange-300 border border-orange-700/50',
+  active: 'bg-zinc-800 text-zinc-300 border border-zinc-700',
+  suspended: 'bg-zinc-800 text-zinc-300 border border-zinc-700',
+  pending_approval: 'bg-zinc-800 text-zinc-300 border border-zinc-700',
 };
 const stationStatusLabels: Record<StationStatus, string> = {
   active: 'Aktif', suspended: 'Askıya Alındı', pending_approval: 'Onay Bekliyor',
 };
 
 const damageSeverityColors: Record<string, string> = {
-  low:      'bg-blue-900/60 text-blue-300 border border-blue-700/50',
-  medium:   'bg-yellow-900/60 text-yellow-300 border border-yellow-700/50',
-  high:     'bg-orange-900/60 text-orange-300 border border-orange-700/50',
-  critical: 'bg-red-900/60 text-red-300 border border-red-700/50',
+  low:      'bg-zinc-800 text-zinc-300 border border-zinc-700',
+  medium:   'bg-zinc-800 text-zinc-300 border border-zinc-700',
+  high:     'bg-zinc-800 text-zinc-300 border border-zinc-700',
+  critical: 'bg-zinc-800 text-zinc-300 border border-zinc-700',
 };
 const damageSeverityLabels: Record<string, string> = {
   low: 'Düşük', medium: 'Orta', high: 'Yüksek', critical: 'Kritik',
@@ -209,7 +209,7 @@ export function AdminDashboard({ onClose }: Props) {
                 {criticalAiReports} kritik arıza
               </div>
             )}
-            <Button variant="ghost" size="sm" className="text-white/60 hover:text-white hover:bg-zinc-800/40" onClick={resetAll}>
+            <Button variant="ghost" size="sm" className="bg-transparent border border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100" onClick={resetAll}>
               <RefreshCw className="w-3.5 h-3.5 mr-1" />
               <span className="hidden sm:inline text-xs">Sıfırla</span>
             </Button>
@@ -342,7 +342,7 @@ export function AdminDashboard({ onClose }: Props) {
                               ))}
                               <Separator className="my-1" />
                               <button onClick={() => toggleUserStatus(user.id)}
-                                className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-zinc-950 transition-colors ${user.status === 'active' ? 'text-red-600' : 'text-green-600'}`}>
+                                className="w-full text-left px-3 py-2 text-sm flex items-center gap-2 bg-transparent border border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 transition-colors">
                                 {user.status === 'active'
                                   ? <><UserX className="w-3.5 h-3.5" /> Askıya Al</>
                                   : <><UserCheck className="w-3.5 h-3.5" /> Aktif Et</>}
@@ -391,14 +391,8 @@ export function AdminDashboard({ onClose }: Props) {
                   >
                     <CardContent className="p-4">
                       <div className="flex items-start gap-3">
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                          station.status === 'pending_approval' ? 'bg-orange-950/60' :
-                          station.status === 'suspended' ? 'bg-red-950/60' : 'bg-emerald-950/60'
-                        }`}>
-                          <Zap className={`w-5 h-5 ${
-                            station.status === 'pending_approval' ? 'text-orange-400' :
-                            station.status === 'suspended' ? 'text-red-400' : 'text-emerald-400'
-                          }`} />
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-zinc-800/60">
+                          <Zap className="w-5 h-5 text-zinc-400" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap mb-1">
@@ -410,30 +404,30 @@ export function AdminDashboard({ onClose }: Props) {
                             Sahip: {station.owner} · {station.city} · {station.totalPoints} şarj noktası
                           </div>
                           {station.status === 'active' && (
-                            <div className="text-xs text-emerald-400 font-medium mt-1">
+                            <div className="text-xs text-zinc-300 font-medium mt-1">
                               ₺{station.monthlyRevenue.toLocaleString('tr-TR')}/ay
-                              {station.rating > 0 && <span className="ml-2 text-yellow-400">⭐ {station.rating}</span>}
+                              {station.rating > 0 && <span className="ml-2 text-zinc-500">★ {station.rating}</span>}
                             </div>
                           )}
                         </div>
                         <div className="flex items-center gap-1.5 flex-shrink-0">
                           {station.status === 'pending_approval' && (
                             <>
-                              <Button size="sm" className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs h-8 border-0" onClick={() => approveStation(station.id)}>
+                              <Button size="sm" variant="outline" className="bg-transparent border border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 text-xs h-8" onClick={() => approveStation(station.id)}>
                                 <CheckCircle className="w-3.5 h-3.5 mr-1" /> Onayla
                               </Button>
-                              <Button size="sm" variant="outline" className="border-red-700/50 text-red-400 hover:bg-red-950/40 text-xs h-8" onClick={() => suspendStation(station.id)}>
+                              <Button size="sm" variant="outline" className="bg-transparent border border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 text-xs h-8" onClick={() => suspendStation(station.id)}>
                                 <XCircle className="w-3.5 h-3.5 mr-1" /> Reddet
                               </Button>
                             </>
                           )}
                           {station.status === 'active' && (
-                            <Button size="sm" variant="outline" className="border-red-700/50 text-red-400 hover:bg-red-950/40 text-xs h-8" onClick={() => suspendStation(station.id)}>
+                            <Button size="sm" variant="outline" className="bg-transparent border border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 text-xs h-8" onClick={() => suspendStation(station.id)}>
                               <Ban className="w-3.5 h-3.5 mr-1" /> Askıya Al
                             </Button>
                           )}
                           {station.status === 'suspended' && (
-                            <Button size="sm" variant="outline" className="border-emerald-700/50 text-emerald-400 hover:bg-emerald-950/40 text-xs h-8" onClick={() => reactivateStation(station.id)}>
+                            <Button size="sm" variant="outline" className="bg-transparent border border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 text-xs h-8" onClick={() => reactivateStation(station.id)}>
                               <RefreshCw className="w-3.5 h-3.5 mr-1" /> Aktif Et
                             </Button>
                           )}
@@ -460,23 +454,23 @@ export function AdminDashboard({ onClose }: Props) {
                     Sürücüler tarafından bildirilen ve AI tarafından analiz edilen arızalar
                   </p>
                 </div>
-                <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800" onClick={refreshAiReports}>
+                <Button variant="outline" size="sm" className="bg-transparent border border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100" onClick={refreshAiReports}>
                   <RefreshCw className="w-3.5 h-3.5 mr-1" /> Yenile
                 </Button>
               </div>
 
               <div className="flex gap-2 mb-4 flex-wrap">
-                <div className="flex items-center gap-1.5 bg-red-950/40 border border-red-800/50 rounded-lg px-3 py-1.5 text-xs">
-                  <div className="w-2 h-2 bg-red-500 rounded-full" />
-                  <span className="text-red-300 font-medium">{aiReports.filter(r => r.status === 'open').length} Açık</span>
+                <div className="flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs">
+                  <div className="w-2 h-2 bg-zinc-500 rounded-full" />
+                  <span className="text-zinc-300 font-medium">{aiReports.filter(r => r.status === 'open').length} Açık</span>
                 </div>
-                <div className="flex items-center gap-1.5 bg-yellow-950/40 border border-yellow-800/50 rounded-lg px-3 py-1.5 text-xs">
-                  <div className="w-2 h-2 bg-yellow-500 rounded-full" />
-                  <span className="text-yellow-300 font-medium">{aiReports.filter(r => r.status === 'in_progress').length} İşlemde</span>
+                <div className="flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs">
+                  <div className="w-2 h-2 bg-zinc-500 rounded-full" />
+                  <span className="text-zinc-300 font-medium">{aiReports.filter(r => r.status === 'in_progress').length} İşlemde</span>
                 </div>
-                <div className="flex items-center gap-1.5 bg-emerald-950/40 border border-emerald-800/50 rounded-lg px-3 py-1.5 text-xs">
-                  <div className="w-2 h-2 bg-emerald-500 rounded-full" />
-                  <span className="text-emerald-300 font-medium">{aiReports.filter(r => r.status === 'resolved').length} Çözüldü</span>
+                <div className="flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs">
+                  <div className="w-2 h-2 bg-zinc-500 rounded-full" />
+                  <span className="text-zinc-300 font-medium">{aiReports.filter(r => r.status === 'resolved').length} Çözüldü</span>
                 </div>
               </div>
 
@@ -491,23 +485,12 @@ export function AdminDashboard({ onClose }: Props) {
                   {aiReports.map(report => (
                     <Card
                       key={report.id}
-                      className={`bg-zinc-800/50 border-zinc-700 transition-all duration-200 ${
-                        report.severity === 'critical' ? 'border-red-700/50' :
-                        report.severity === 'high'     ? 'border-orange-700/50' : ''
-                      } ${report.status === 'resolved' ? 'opacity-60' : ''}`}
+                      className={`bg-zinc-800/50 border-zinc-700 transition-all duration-200 ${report.status === 'resolved' ? 'opacity-60' : ''}`}
                     >
                       <CardContent className="p-4">
                         <div className="flex items-start gap-3">
-                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                            report.severity === 'critical' ? 'bg-red-950/60' :
-                            report.severity === 'high'     ? 'bg-orange-950/60' :
-                            report.severity === 'medium'   ? 'bg-yellow-950/60' : 'bg-blue-950/60'
-                          }`}>
-                            <AlertTriangle className={`w-5 h-5 ${
-                              report.severity === 'critical' ? 'text-red-600' :
-                              report.severity === 'high'     ? 'text-orange-600' :
-                              report.severity === 'medium'   ? 'text-yellow-600' : 'text-emerald-400'
-                            }`} />
+                          <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-zinc-900 border border-zinc-700">
+                            <AlertTriangle className="w-5 h-5 text-zinc-400" />
                           </div>
 
                           <div className="flex-1 min-w-0">
@@ -517,14 +500,14 @@ export function AdminDashboard({ onClose }: Props) {
                                 {damageSeverityLabels[report.severity] ?? report.severity}
                               </Badge>
                               <Badge variant="outline" className="text-xs font-mono border-zinc-600 text-zinc-400">{report.priorityCode}</Badge>
-                              {report.status === 'open' && <Badge className="text-xs bg-red-950/60 text-red-300 border border-red-700/50 border-0">Açık</Badge>}
-                              {report.status === 'in_progress' && <Badge className="text-xs bg-yellow-950/60 text-yellow-300 border-0">İşlemde</Badge>}
-                              {report.status === 'resolved' && <Badge className="text-xs bg-emerald-950/60 text-emerald-300 border-0">Çözüldü</Badge>}
+                              {report.status === 'open' && <Badge className="text-xs bg-zinc-800 text-zinc-300 border border-zinc-700">Açık</Badge>}
+                              {report.status === 'in_progress' && <Badge className="text-xs bg-zinc-800 text-zinc-300 border border-zinc-700">İşlemde</Badge>}
+                              {report.status === 'resolved' && <Badge className="text-xs bg-zinc-800 text-zinc-300 border border-zinc-700">Çözüldü</Badge>}
                             </div>
 
                             <p className="text-xs text-zinc-400 mb-1">📍 {report.stationName}</p>
                             <p className="text-xs text-zinc-300 mb-1 line-clamp-2">{report.description}</p>
-                            <p className="text-xs text-blue-700 italic mb-2 line-clamp-1">{report.recommendation}</p>
+                            <p className="text-xs text-zinc-400 italic mb-2 line-clamp-1">{report.recommendation}</p>
 
                             <div className="flex items-center gap-3 text-xs text-zinc-400">
                               <span className="flex items-center gap-1">
@@ -538,12 +521,12 @@ export function AdminDashboard({ onClose }: Props) {
                           {report.status !== 'resolved' && (
                             <div className="flex flex-col gap-1.5 flex-shrink-0">
                               {report.status === 'open' && (
-                                <Button size="sm" variant="outline" className="text-xs h-7 border-yellow-700/50 text-yellow-400 hover:bg-yellow-950/40"
+                                <Button size="sm" variant="outline" className="text-xs h-7 bg-transparent border border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100"
                                   onClick={() => markReportInProgress(report.id)}>
                                   İşleme Al
                                 </Button>
                               )}
-                              <Button size="sm" variant="outline" className="text-xs h-7 border-emerald-700/50 text-emerald-400 hover:bg-emerald-950/40"
+                              <Button size="sm" variant="outline" className="text-xs h-7 bg-transparent border border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100"
                                 onClick={() => markReportResolved(report.id)}>
                                 <CheckCircle className="w-3 h-3 mr-1" /> Çözüldü
                               </Button>
@@ -562,7 +545,7 @@ export function AdminDashboard({ onClose }: Props) {
         {/* Footer */}
         <div className="border-t px-5 py-3 bg-zinc-950 flex items-center justify-between text-xs text-zinc-400 flex-shrink-0">
           <span>eŞarj Admin · Değişiklikler otomatik kaydediliyor</span>
-          <Button variant="ghost" size="sm" className="text-xs h-7 gap-1 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800" onClick={() => {
+          <Button variant="ghost" size="sm" className="text-xs h-7 gap-1 bg-transparent border border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100" onClick={() => {
             setUsers(loadLS(LS_USERS, DEFAULT_USERS));
             setStations(loadLS(LS_STATIONS, DEFAULT_STATIONS));
             toast.info('Veriler yenilendi');

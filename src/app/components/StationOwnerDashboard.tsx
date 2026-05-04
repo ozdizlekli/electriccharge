@@ -111,24 +111,25 @@ const MOCK_OWNED_STATIONS: OwnedStation[] = [
   }
 ];
 
-const statusConfig = {
-  operational: { label: 'Aktif', color: 'bg-zinc-800 text-zinc-300 border-zinc-700', dot: 'bg-zinc-500', dotColor: 'bg-zinc-500' },
-  maintenance: { label: 'Bakımda', color: 'bg-zinc-800 text-zinc-300 border-zinc-700', dot: 'bg-zinc-500', dotColor: 'bg-zinc-500' },
-  offline: { label: 'Çevrimdışı', color: 'bg-zinc-800 text-zinc-300 border-zinc-700', dot: 'bg-zinc-500', dotColor: 'bg-zinc-500' },
+type StatusConfigType = {
+  [key: string]: { label: string; dotColor: string }
 };
 
-const cpStatusConfig = {
-  available: { label: 'Müsait', dotColor: 'bg-emerald-400', textColor: 'text-emerald-300' },
-  occupied: { label: 'Dolu', dotColor: 'bg-amber-400', textColor: 'text-amber-300' },
-  maintenance: { label: 'Bakım', dotColor: 'bg-zinc-500', textColor: 'text-zinc-400' },
+const statusConfig: StatusConfigType = {
+  operational: { label: 'Aktif', dotColor: 'bg-emerald-400' },
+  maintenance: { label: 'Bakımda', dotColor: 'bg-zinc-500' },
+  offline: { label: 'Çevrimdışı', dotColor: 'bg-zinc-700' },
 };
 
-const kpis = [
-  { label: 'Toplam Kullanıcı', value: '12,847', change: '+8.2%', trend: 'up', icon: Users, iconColor: 'text-emerald-400', borderColor: 'border-emerald-800/40' },
-  { label: 'Platform Geliri (Bu Ay)', value: '₺284,600', change: '+14.5%', trend: 'up', icon: DollarSign, iconColor: 'text-green-400', borderColor: 'border-green-800/40' },
-  { label: 'Kayıtlı İstasyonlar', value: '342', change: '+3 bekliyor', trend: 'neutral', icon: MapPin, iconColor: 'text-purple-400', borderColor: 'border-purple-800/40' },
-  { label: 'Aktif Şarj Oturumu', value: '1,204', change: 'Anlık', trend: 'live', icon: Activity, iconColor: 'text-orange-400', borderColor: 'border-orange-800/40' },
-];
+type CpStatusConfigType = {
+  [key: string]: { label: string; dotColor: string; textColor: string }
+};
+
+const cpStatusConfig: CpStatusConfigType = {
+  available: { label: 'Müsait', dotColor: 'bg-emerald-400', textColor: 'text-emerald-400' },
+  occupied: { label: 'Dolu', dotColor: 'bg-zinc-400', textColor: 'text-zinc-300' },
+  maintenance: { label: 'Bakım', dotColor: 'bg-zinc-600', textColor: 'text-zinc-500' },
+};
 
 interface AlertItem {
   id: string;
@@ -176,37 +177,38 @@ const ALERTS: AlertItem[] = [
   },
 ];
 
-const alertConfig = {
+type AlertConfigType = {
+  [key: string]: { icon: any; iconColor: string; iconBg: string; badge: string; label: string }
+};
+
+// Tüm uyarılar gri ve zarif yeşil tonlarında
+const alertConfig: AlertConfigType = {
   error: {
-    stripe: 'bg-red-500',
     icon: AlertTriangle,
-    iconColor: 'text-red-400',
-    iconBg: 'bg-red-950/60',
-    badge: 'bg-red-950/60 text-red-300 border border-red-800/40',
+    iconColor: 'text-zinc-300',
+    iconBg: 'bg-zinc-800/80',
+    badge: 'bg-zinc-800 text-zinc-300 border border-zinc-700',
     label: 'Kritik',
   },
   warning: {
-    stripe: 'bg-amber-400',
     icon: AlertTriangle,
-    iconColor: 'text-amber-400',
-    iconBg: 'bg-amber-950/60',
-    badge: 'bg-amber-950/60 text-amber-300 border border-amber-800/40',
+    iconColor: 'text-zinc-400',
+    iconBg: 'bg-zinc-800/50',
+    badge: 'bg-zinc-800/50 text-zinc-400 border border-zinc-700',
     label: 'Uyarı',
   },
   success: {
-    stripe: 'bg-emerald-400',
     icon: CheckCircle2,
-    iconColor: 'text-emerald-400',
-    iconBg: 'bg-emerald-950/60',
-    badge: 'bg-emerald-950/60 text-emerald-300 border border-emerald-800/40',
+    iconColor: 'text-zinc-400',
+    iconBg: 'bg-zinc-800/50',
+    badge: 'bg-zinc-800/50 text-zinc-400 border border-zinc-700',
     label: 'Başarı',
   },
   info: {
-    stripe: 'bg-blue-500',
     icon: Info,
-    iconColor: 'text-blue-400',
-    iconBg: 'bg-blue-950/60',
-    badge: 'bg-blue-950/60 text-blue-300 border border-blue-800/40',
+    iconColor: 'text-zinc-500',
+    iconBg: 'bg-zinc-900',
+    badge: 'bg-zinc-900 text-zinc-500 border border-zinc-800',
     label: 'Bilgi',
   },
 };
@@ -266,7 +268,7 @@ export function StationOwnerDashboard({ onClose }: Props) {
         <div className="bg-zinc-900 border-b border-zinc-800 px-6 py-4 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-zinc-800/40 rounded-xl flex items-center justify-center border border-zinc-700">
-              <Zap className="w-5 h-5 text-blue-400" />
+              <Zap className="w-5 h-5 text-emerald-400" />
             </div>
             <div>
               <div className="text-zinc-100 font-bold text-lg leading-tight">İstasyon Yönetimi</div>
@@ -294,14 +296,14 @@ export function StationOwnerDashboard({ onClose }: Props) {
                   onClick={() => { setActiveNav(id); setSelectedStationId(null); }}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                     activeNav === id
-                      ? 'bg-emerald-400 text-zinc-950 shadow-sm'
-                      : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
+                      ? 'bg-zinc-800 text-zinc-100 shadow-sm'
+                      : 'text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-300'
                   }`}
                 >
                   <Icon className="w-4 h-4 flex-shrink-0" />
                   <span className="hidden md:inline">{label}</span>
                   {id === 'alerts' && activeAlerts.filter(a => a.type === 'error').length > 0 && (
-                    <span className="hidden md:flex ml-auto w-4 h-4 bg-red-500 rounded-full items-center justify-center text-white text-[10px] font-bold">
+                    <span className="hidden md:flex ml-auto w-4 h-4 bg-zinc-700 rounded-full items-center justify-center text-zinc-300 text-[10px] font-bold">
                       {activeAlerts.filter(a => a.type === 'error').length}
                     </span>
                   )}
@@ -325,100 +327,79 @@ export function StationOwnerDashboard({ onClose }: Props) {
 
             {/* ── OVERVIEW ── */}
             {activeNav === 'overview' && !selectedStationId && (
-              <div className="p-5 space-y-6">
+              <div className="p-6 space-y-6">
                 <div>
                   <h2 className="text-xl font-bold text-zinc-100">Genel Bakış</h2>
                   <p className="text-sm text-zinc-400 mt-0.5">Bugünkü performans özeti</p>
                 </div>
 
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                  <Card className="border-0 bg-gradient-to-br from-green-50 to-emerald-50">
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="w-8 h-8 bg-green-500/15 rounded-lg flex items-center justify-center">
-                          <DollarSign className="w-4 h-4 text-green-600" />
-                        </div>
-                        <span className="text-xs text-slate-500 font-medium">Bugün Gelir</span>
+                  <Card className="bg-zinc-900 border-zinc-800 p-6 rounded-2xl">
+                    <CardContent className="p-0 space-y-3">
+                      <div className="flex justify-between text-xs text-zinc-400 mb-1">
+                        <span className="text-zinc-400 font-medium">Bugün Gelir</span>
                       </div>
-                      <div className="text-2xl font-bold text-green-700">{totalRevenue.toFixed(0)} ₺</div>
-                      <div className="text-xs text-green-600 mt-1">↑ %12 dün'e göre</div>
+                      <div className="text-2xl font-bold text-emerald-400">{totalRevenue.toFixed(0)} ₺</div>
                     </CardContent>
                   </Card>
 
-                  <Card className="border-0 bg-gradient-to-br from-zinc-900 to-zinc-800">
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="w-8 h-8 bg-zinc-800/40 rounded-lg flex items-center justify-center">
-                          <Activity className="w-4 h-4 text-emerald-400" />
-                        </div>
-                        <span className="text-xs text-slate-500 font-medium">Aktif Oturum</span>
+                  <Card className="bg-zinc-900 border-zinc-800 p-6 rounded-2xl">
+                    <CardContent className="p-0 space-y-3">
+                      <div className="flex justify-between text-xs text-zinc-400 mb-1">
+                         <span className="text-zinc-400 font-medium">Aktif Oturum</span>
                       </div>
-                      <div className="text-2xl font-bold text-blue-700">{totalSessions}</div>
-                      <div className="text-xs text-emerald-400 mt-1">{totalActivePoints}/{totalPoints} nokta aktif</div>
+                      <div className="text-2xl font-bold text-zinc-100">{totalSessions}</div>
                     </CardContent>
                   </Card>
 
-                  <Card className="border border-zinc-800 bg-zinc-900">
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="w-8 h-8 bg-purple-500/15 rounded-lg flex items-center justify-center">
-                          <TrendingUp className="w-4 h-4 text-purple-600" />
-                        </div>
-                        <span className="text-xs text-slate-500 font-medium">Doluluk Oranı</span>
+                  <Card className="bg-zinc-900 border-zinc-800 p-6 rounded-2xl">
+                    <CardContent className="p-0 space-y-3">
+                      <div className="flex justify-between text-xs text-zinc-400 mb-1">
+                        <span className="text-zinc-400 font-medium">Doluluk Oranı</span>
                       </div>
-                      <div className="text-2xl font-bold text-purple-700">%{avgUtilization}</div>
-                      <Progress value={avgUtilization} className="h-1.5 mt-2" />
+                      <div className="text-2xl font-bold text-zinc-100">%{avgUtilization}</div>
                     </CardContent>
                   </Card>
 
-                  <Card className="border-0 bg-gradient-to-br from-orange-50 to-amber-50">
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="w-8 h-8 bg-orange-500/15 rounded-lg flex items-center justify-center">
-                          <MapPin className="w-4 h-4 text-orange-600" />
-                        </div>
-                        <div className="text-2xl font-bold text-zinc-100">{kpi.value}</div>
-                        <div className="text-xs text-zinc-500 mt-0.5">{kpi.label}</div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                  <Card className="bg-zinc-900 border-zinc-800 p-6 rounded-2xl">
+                    <CardContent className="p-0 space-y-3">
+                       <div className="flex justify-between text-xs text-zinc-400 mb-1">
+                        <span className="text-zinc-400 font-medium">Toplam İstasyon</span>
+                      </div>
+                      <div className="text-2xl font-bold text-zinc-100">{stations.length}</div>
+                    </CardContent>
+                  </Card>
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center justify-between mb-4">
                     <h3 className="font-semibold text-zinc-100">İstasyonlarım</h3>
                     <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800" onClick={() => setActiveNav('stations')}>Tümünü Gör</Button>
                   </div>
-                  <div className="space-y-3">
-                    {stations.map(station => (
-                      <Card key={station.id} className="bg-zinc-900 border-zinc-800 hover:border-zinc-700 transition-colors cursor-pointer" onClick={() => { setSelectedStationId(station.id); setActiveNav('stations'); }}>
-                        <CardContent className="p-4">
-                          <div className="flex items-center gap-4">
-                            <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${statusConfig[station.status].dotColor}`} />
-                            <div className="flex-1 min-w-0">
-                              <div className="font-semibold text-sm text-zinc-100 truncate">{station.name}</div>
-                              <div className="text-xs text-zinc-500">{station.address}</div>
-                            </div>
-                            <div className="hidden sm:flex items-center gap-4 text-sm">
-                              <div className="text-center">
-                                <div className="font-bold text-emerald-400">{station.todayRevenue.toFixed(0)} ₺</div>
-                                <div className="text-xs text-zinc-500">Bugün</div>
-                              </div>
-                              <div className="text-center">
-                                <div className="font-bold text-emerald-400">{station.activeSessions}</div>
-                                <div className="text-xs text-slate-400">Oturum</div>
-                              </div>
-                              <div className="text-center">
-                                <div className="font-bold text-zinc-200">%{station.utilization}</div>
-                                <div className="text-xs text-zinc-500">Doluluk</div>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-1.5 text-xs text-zinc-400">
-                              <div className={`w-1.5 h-1.5 rounded-full ${statusConfig[station.status].dotColor}`} />
-                              <span className="hidden sm:inline">{statusConfig[station.status].label}</span>
-                            </div>
-                            <ChevronRight className="w-4 h-4 text-zinc-600" />
+                  <div className="space-y-4">
+                     {stations.map(station => (
+                        <Card key={station.id} className="bg-zinc-900 border-zinc-800 p-6 rounded-2xl hover:border-zinc-700 transition-colors cursor-pointer" onClick={() => { setSelectedStationId(station.id); setActiveNav('stations'); }}>
+                        <CardContent className="p-0">
+                           <div className="mb-4">
+                            <h3 className="font-bold text-zinc-100 text-lg truncate">{station.name}</h3>
                           </div>
+                            <div className="space-y-4">
+                                <div>
+                                    <div className="flex justify-between text-sm text-zinc-400 mb-2">
+                                      <span>Kullanım Oranı</span>
+                                      <span>%{station.utilization}</span>
+                                    </div>
+                                    <Progress value={station.utilization} className="h-2.5 bg-zinc-950" />
+                                </div>
+                                <div className="flex justify-between text-sm items-center pt-2">
+                                    <span className="text-zinc-400">Bugün Gelir</span>
+                                    <span className="font-bold text-emerald-400">{station.todayRevenue.toLocaleString('tr-TR')} ₺</span>
+                                </div>
+                                <div className="flex justify-between text-sm items-center">
+                                    <span className="text-zinc-400">Aktif Oturum</span>
+                                    <span className="font-bold text-zinc-100">{station.activeSessions}</span>
+                                </div>
+                            </div>
                         </CardContent>
                       </Card>
                     ))}
@@ -429,7 +410,7 @@ export function StationOwnerDashboard({ onClose }: Props) {
 
             {/* ── STATIONS LIST ── */}
             {activeNav === 'stations' && !selectedStationId && (
-              <div className="p-5 space-y-5">
+              <div className="p-6 space-y-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-xl font-bold text-zinc-100">İstasyonlarım</h2>
@@ -438,29 +419,28 @@ export function StationOwnerDashboard({ onClose }: Props) {
                 </div>
                 <div className="space-y-4">
                   {stations.map(station => (
-                    <Card key={station.id} className="bg-zinc-900 border-zinc-800 overflow-hidden">
-                      <div className={`h-px ${station.status === 'operational' ? 'bg-emerald-400' : station.status === 'maintenance' ? 'bg-amber-400' : 'bg-zinc-600'}`} />
-                      <CardContent className="p-5">
-                        <div className="flex items-start justify-between gap-4 mb-4">
+                    <Card key={station.id} className="bg-zinc-900 border-zinc-800 p-6 rounded-2xl overflow-hidden">
+                      <CardContent className="p-0">
+                        <div className="flex items-start justify-between gap-4 mb-6">
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
-                              <h3 className="font-bold text-zinc-100 truncate">{station.name}</h3>
+                            <div className="flex items-center gap-3 mb-2">
+                              <h3 className="font-bold text-zinc-100 text-lg truncate">{station.name}</h3>
                               <div className="flex items-center gap-1.5 flex-shrink-0">
-                                <div className={`w-1.5 h-1.5 rounded-full ${statusConfig[station.status].dotColor}`} />
+                                <div className={`w-2 h-2 rounded-full ${statusConfig[station.status].dotColor}`} />
                                 <span className="text-xs text-zinc-400">{statusConfig[station.status].label}</span>
                               </div>
                             </div>
-                            <div className="flex items-center gap-1 text-sm text-zinc-400">
-                              <MapPin className="w-3 h-3" />
+                            <div className="flex items-center gap-2 text-sm text-zinc-400">
+                              <MapPin className="w-3.5 h-3.5" />
                               <span>{station.address}, {station.city}</span>
                             </div>
-                            <div className="flex items-center gap-1 mt-1">
-                              <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                              <span className="text-sm font-medium text-zinc-200">{station.rating}</span>
+                            <div className="flex items-center gap-1.5 mt-2">
+                              <Star className="w-3.5 h-3.5 fill-zinc-600 text-zinc-600" />
+                              <span className="text-sm font-bold text-zinc-200">{station.rating}</span>
                               <span className="text-xs text-zinc-500">({station.totalReviews})</span>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 flex-shrink-0">
+                          <div className="flex items-center gap-3 flex-shrink-0">
                             <span className="text-xs text-zinc-500 hidden sm:block">
                               {station.status === 'operational' ? 'Aktif' : 'Bakım Modu'}
                             </span>
@@ -471,72 +451,73 @@ export function StationOwnerDashboard({ onClose }: Props) {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-3 gap-3 mb-4">
-                          <div className="bg-zinc-800/60 border border-zinc-700/50 rounded-lg p-2 text-center">
+                        <div className="grid grid-cols-3 gap-4 mb-6">
+                          <div className="bg-zinc-950 border border-zinc-800/80 rounded-xl p-3 text-center">
                             <div className="text-lg font-bold text-emerald-400">{station.todayRevenue.toFixed(0)} ₺</div>
-                            <div className="text-xs text-zinc-500">Bugün Gelir</div>
+                            <div className="text-xs text-zinc-500 mt-1">Bugün Gelir</div>
                           </div>
-                          <div className="bg-slate-50 rounded-lg p-2 text-center">
-                            <div className="text-lg font-bold text-emerald-400">{station.activePoints}/{station.totalPoints}</div>
-                            <div className="text-xs text-slate-500">Aktif Nokta</div>
+                          <div className="bg-zinc-950 border border-zinc-800/80 rounded-xl p-3 text-center">
+                            <div className="text-lg font-bold text-zinc-100">{station.activePoints}/{station.totalPoints}</div>
+                            <div className="text-xs text-zinc-500 mt-1">Aktif Nokta</div>
                           </div>
-                          <div className="bg-zinc-800/60 border border-zinc-700/50 rounded-lg p-2 text-center">
-                            <div className="text-lg font-bold text-zinc-200">%{station.utilization}</div>
-                            <div className="text-xs text-zinc-500">Kullanım</div>
+                          <div className="bg-zinc-950 border border-zinc-800/80 rounded-xl p-3 text-center">
+                            <div className="text-lg font-bold text-zinc-100">%{station.utilization}</div>
+                            <div className="text-xs text-zinc-500 mt-1">Kullanım</div>
                           </div>
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                           <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Şarj Noktaları & Fiyatlar</div>
-                          {station.chargingPoints.map(cp => {
-                            const key = `${station.id}_${cp.id}`;
-                            const isEditing = key in editingPrices;
-                            const cpStatus = cpStatusConfig[cp.status];
-                            return (
-                              <div key={cp.id} className="flex items-center gap-3 p-2.5 rounded-lg border border-zinc-700/50 bg-zinc-800/40 text-sm">
-                                <div className={`w-1.5 h-8 rounded-full flex-shrink-0 ${cpStatus.dotColor === 'bg-emerald-400' ? 'bg-emerald-400/70' : cpStatus.dotColor === 'bg-amber-400' ? 'bg-amber-400/70' : 'bg-zinc-600'}`} />
-                                <div className="flex-1 min-w-0">
-                                  <span className="font-medium text-zinc-200">{cp.type} {cp.power}kW</span>
-                                  <span className="text-zinc-500 ml-2 text-xs">{cp.connector}</span>
-                                </div>
-                                <div className="flex items-center gap-1.5">
-                                  <div className={`w-1.5 h-1.5 rounded-full ${cpStatus.dotColor === 'bg-emerald-400' ? 'bg-emerald-400' : cpStatus.dotColor === 'bg-amber-400' ? 'bg-amber-400' : 'bg-zinc-500'}`} />
-                                  <span className={`text-xs ${cpStatus.textColor}`}>{cpStatus.label}</span>
-                                </div>
-                                {isEditing ? (
-                                  <div className="flex items-center gap-1">
-                                    <Input
-                                      className="h-7 w-20 text-xs bg-zinc-950 border-zinc-700 text-zinc-100"
-                                      value={editingPrices[key]}
-                                      onChange={e => setEditingPrices(prev => ({ ...prev, [key]: e.target.value }))}
-                                      placeholder="₺/kWh"
-                                    />
-                                    <Button size="icon" className="h-7 w-7 bg-emerald-400 text-zinc-950 hover:bg-emerald-300" onClick={() => updatePrice(station.id, cp.id)}>
-                                      <Check className="w-3 h-3" />
-                                    </Button>
+                          <div className="bg-zinc-950 border border-zinc-800 p-2 rounded-xl space-y-1">
+                            {station.chargingPoints.map(cp => {
+                              const key = `${station.id}_${cp.id}`;
+                              const isEditing = key in editingPrices;
+                              const cpStatus = cpStatusConfig[cp.status];
+                              return (
+                                <div key={cp.id} className="flex items-center gap-4 p-2 rounded-lg text-sm hover:bg-zinc-900 transition-colors">
+                                  <div className="flex-1 min-w-0">
+                                    <span className="font-bold text-zinc-200">{cp.type} {cp.power}kW</span>
+                                    <span className="text-zinc-500 ml-2 text-xs">{cp.connector}</span>
                                   </div>
-                                ) : (
-                                  <button
-                                    className="flex items-center gap-1 text-sm font-semibold text-slate-700 hover:text-emerald-400 transition-colors"
-                                    onClick={() => setEditingPrices(prev => ({ ...prev, [key]: cp.price.toString() }))}
-                                  >
-                                    {cp.price} ₺/kWh
-                                    <Edit2 className="w-3 h-3 opacity-40" />
-                                  </button>
-                                )}
-                              </div>
-                            );
-                          })}
+                                  <div className="flex items-center gap-1.5 w-24">
+                                    <div className={`w-1.5 h-1.5 rounded-full ${cpStatus.dotColor}`} />
+                                    <span className={`text-xs font-medium ${cpStatus.textColor}`}>{cpStatus.label}</span>
+                                  </div>
+                                  {isEditing ? (
+                                    <div className="flex items-center gap-1">
+                                      <Input
+                                        className="h-7 w-20 text-xs bg-zinc-950 border-zinc-700 text-zinc-100"
+                                        value={editingPrices[key]}
+                                        onChange={e => setEditingPrices(prev => ({ ...prev, [key]: e.target.value }))}
+                                        placeholder="₺/kWh"
+                                      />
+                                      <Button size="icon" className="h-7 w-7 bg-zinc-800 text-zinc-300 hover:bg-zinc-700" onClick={() => updatePrice(station.id, cp.id)}>
+                                        <Check className="w-3 h-3" />
+                                      </Button>
+                                    </div>
+                                  ) : (
+                                    <button
+                                      className="flex items-center gap-1.5 text-sm font-bold text-zinc-400 hover:text-zinc-100 transition-colors"
+                                      onClick={() => setEditingPrices(prev => ({ ...prev, [key]: cp.price.toString() }))}
+                                    >
+                                      {cp.price} ₺/kWh
+                                      <Edit2 className="w-3 h-3 opacity-40" />
+                                    </button>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
                         </div>
 
-                        <div className="flex gap-2 mt-4">
+                        <div className="flex gap-3 mt-6">
                           <Button variant="outline" size="sm" className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800" onClick={() => setSelectedStationId(station.id)}>
-                            <Settings className="w-3 h-3 mr-1" />
-                            Detay
+                            <Settings className="w-4 h-4 mr-2" />
+                            Detaylı Yönetim
                           </Button>
                           <Button variant="outline" size="sm" className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800" onClick={() => toast.info('Rapor indiriliyor...')}>
-                            <Download className="w-3 h-3 mr-1" />
-                            Rapor
+                            <Download className="w-4 h-4 mr-2" />
+                            Rapor Al
                           </Button>
                         </div>
                       </CardContent>
@@ -548,37 +529,37 @@ export function StationOwnerDashboard({ onClose }: Props) {
 
             {/* ── STATION DETAIL ── */}
             {selectedStationId && selectedStation && (
-              <div className="p-5 space-y-5">
+              <div className="p-6 space-y-6">
                 <div className="flex items-center gap-3">
-                  <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800" onClick={() => setSelectedStationId(null)}>← Geri</Button>
+                  <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800" onClick={() => setSelectedStationId(null)}>← Geri Dön</Button>
                   <div>
-                    <h2 className="font-bold text-zinc-100">{selectedStation.name}</h2>
-                    <p className="text-xs text-zinc-500">{selectedStation.address}</p>
+                    <h2 className="font-bold text-zinc-100 text-xl">{selectedStation.name}</h2>
+                    <p className="text-sm text-zinc-500 mt-0.5">{selectedStation.address}</p>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {[
-                    { label: 'Toplam Gelir', value: `${selectedStation.totalRevenue.toFixed(0)} ₺`, color: 'text-green-600' },
-                    { label: 'Bugün', value: `${selectedStation.todayRevenue.toFixed(0)} ₺`, color: 'text-emerald-400' },
-                    { label: 'Aktif Oturum', value: selectedStation.activeSessions, color: 'text-purple-600' },
-                    { label: 'Değerlendirme', value: selectedStation.rating, color: 'text-amber-600' },
+                    { label: 'Toplam Gelir', value: `${selectedStation.totalRevenue.toLocaleString('tr-TR')} ₺`, color: 'text-zinc-100' },
+                    { label: 'Bugün', value: `${selectedStation.todayRevenue.toLocaleString('tr-TR')} ₺`, color: 'text-emerald-400' },
+                    { label: 'Aktif Oturum', value: selectedStation.activeSessions, color: 'text-zinc-100' },
+                    { label: 'Değerlendirme', value: selectedStation.rating, color: 'text-zinc-100' },
                   ].map(stat => (
-                    <Card key={stat.label} className="bg-zinc-900 border-zinc-800">
-                      <CardContent className="p-3 text-center">
-                        <div className={`text-xl font-bold ${stat.color}`}>{stat.value}</div>
-                        <div className="text-xs text-zinc-500 mt-0.5">{stat.label}</div>
+                    <Card key={stat.label} className="bg-zinc-900 border-zinc-800 p-5 rounded-2xl">
+                      <CardContent className="p-0 text-center">
+                        <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
+                        <div className="text-sm text-zinc-500 mt-1">{stat.label}</div>
                       </CardContent>
                     </Card>
                   ))}
                 </div>
 
-                <Card className="bg-zinc-900 border-zinc-800">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between mb-4">
-                      <h4 className="font-semibold text-zinc-100">İstasyon Durumu</h4>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-zinc-400">{selectedStation.status === 'operational' ? 'Aktif' : 'Bakım'}</span>
+                <Card className="bg-zinc-900 border-zinc-800 p-6 rounded-2xl">
+                  <CardContent className="p-0">
+                    <div className="flex items-center justify-between mb-6">
+                      <h4 className="font-bold text-zinc-100 text-lg">İstasyon Durumu ve Fiyatlar</h4>
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm font-medium text-zinc-400">{selectedStation.status === 'operational' ? 'Aktif' : 'Bakım Modunda'}</span>
                         <Switch
                           checked={selectedStation.status === 'operational'}
                           onCheckedChange={() => toggleStationStatus(selectedStation.id)}
@@ -591,32 +572,32 @@ export function StationOwnerDashboard({ onClose }: Props) {
                         const isEditing = key in editingPrices;
                         const cpStatus = cpStatusConfig[cp.status];
                         return (
-                          <div key={cp.id} className="p-3 rounded-xl border border-zinc-700/50 bg-zinc-800/40">
-                            <div className="flex items-center justify-between mb-2">
-                              <div className="flex items-center gap-2">
-                                <Zap className="w-4 h-4 text-zinc-400" />
-                                <span className="font-semibold text-sm text-zinc-200">{cp.type} {cp.power} kW — {cp.connector}</span>
+                          <div key={cp.id} className="p-4 rounded-xl border border-zinc-800 bg-zinc-950">
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center gap-3">
+                                <Zap className="w-4 h-4 text-zinc-500" />
+                                <span className="font-bold text-base text-zinc-200">{cp.type} {cp.power} kW — {cp.connector}</span>
                               </div>
                               <div className="flex items-center gap-1.5">
-                                <div className={`w-1.5 h-1.5 rounded-full ${cpStatus.dotColor === 'bg-emerald-400' ? 'bg-emerald-400' : cpStatus.dotColor === 'bg-amber-400' ? 'bg-amber-400' : 'bg-zinc-500'}`} />
-                                <span className={`text-xs ${cpStatus.textColor}`}>{cpStatus.label}</span>
+                                <div className={`w-2 h-2 rounded-full ${cpStatus.dotColor}`} />
+                                <span className={`text-sm font-medium ${cpStatus.textColor}`}>{cpStatus.label}</span>
                               </div>
                             </div>
                             <div className="flex items-center justify-between">
-                              <span className="text-xs text-zinc-500">Birim Fiyat</span>
+                              <span className="text-sm text-zinc-500">Birim Fiyatlandırma</span>
                               {isEditing ? (
-                                <div className="flex items-center gap-1">
-                                  <Input className="h-7 w-24 text-xs bg-zinc-950 text-zinc-100 border-zinc-800" value={editingPrices[key]}
+                                <div className="flex items-center gap-2">
+                                  <Input className="h-8 w-24 text-sm bg-zinc-900 text-zinc-100 border-zinc-700" value={editingPrices[key]}
                                     onChange={e => setEditingPrices(prev => ({ ...prev, [key]: e.target.value }))} />
-                                  <Button size="icon" className="h-7 w-7 bg-emerald-400 text-zinc-950 hover:bg-emerald-300" onClick={() => updatePrice(selectedStation.id, cp.id)}>
-                                    <Check className="w-3 h-3" />
+                                  <Button size="icon" className="h-8 w-8 bg-zinc-800 text-zinc-300 hover:bg-zinc-700" onClick={() => updatePrice(selectedStation.id, cp.id)}>
+                                    <Check className="w-4 h-4" />
                                   </Button>
-                                  <Button variant="ghost" size="icon" className="h-7 w-7 text-zinc-400 hover:bg-zinc-700" onClick={() => setEditingPrices(prev => { const n = {...prev}; delete n[key]; return n; })}>
-                                    <X className="w-3 h-3" />
+                                  <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300" onClick={() => setEditingPrices(prev => { const n = {...prev}; delete n[key]; return n; })}>
+                                    <X className="w-4 h-4" />
                                   </Button>
                                 </div>
                               ) : (
-                                <button className="flex items-center gap-1 font-bold text-slate-700 hover:text-emerald-400 transition-colors text-sm"
+                                <button className="flex items-center gap-2 font-bold text-zinc-300 hover:text-zinc-100 transition-colors text-base"
                                   onClick={() => setEditingPrices(prev => ({ ...prev, [key]: cp.price.toString() }))}>
                                   {cp.price} ₺/kWh <Edit2 className="w-3 h-3 opacity-40" />
                                 </button>
@@ -633,162 +614,114 @@ export function StationOwnerDashboard({ onClose }: Props) {
 
             {/* ── ANALYTICS ── */}
             {activeNav === 'analytics' && (
-              <div className="p-5 space-y-5">
+              <div className="p-6 space-y-6">
                 <div>
                   <h2 className="text-xl font-bold text-zinc-100">Analitik</h2>
                   <p className="text-sm text-zinc-400 mt-0.5">Son 30 günlük performans</p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {stations.map(station => (
-                    <Card key={station.id} className="bg-zinc-900 border-zinc-800">
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-semibold text-zinc-200 truncate">{station.name}</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-3">
-                        <div>
-                          <div className="flex justify-between text-xs text-zinc-400 mb-1">
-                            <span>Kullanım Oranı</span><span>%{station.utilization}</span>
-                          </div>
-                          <Progress value={station.utilization} className="h-2" />
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-zinc-400">Toplam Gelir</span>
-                          <span className="font-bold text-emerald-400">{station.totalRevenue.toLocaleString('tr-TR')} ₺</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-zinc-400">Değerlendirme</span>
-                          <div className="flex items-center gap-1">
-                            <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-                            <span className="font-bold text-zinc-200">{station.rating}</span>
-                            <span className="text-zinc-500 text-xs">({station.totalReviews})</span>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+                     <Card key={station.id} className="bg-zinc-900 border-zinc-800 p-6 rounded-2xl">
+                     <CardContent className="p-0 space-y-4">
+                       <h3 className="font-bold text-zinc-100 text-lg">{station.name}</h3>
+
+                       <div>
+                         <div className="flex justify-between text-sm text-zinc-400 mb-2">
+                           <span>Kullanım Oranı</span>
+                           <span>%{station.utilization}</span>
+                         </div>
+                         <Progress value={station.utilization} className="h-2.5 bg-zinc-950" />
+                       </div>
+
+                       <div className="flex justify-between text-sm items-center pt-2">
+                         <span className="text-zinc-400">Toplam Gelir</span>
+                         <span className="font-bold text-zinc-100">{station.totalRevenue.toLocaleString('tr-TR')} ₺</span>
+                       </div>
+
+                       <div className="flex justify-between text-sm items-center">
+                         <span className="text-zinc-400">Değerlendirme</span>
+                         <div className="flex items-center gap-1.5">
+                           <Star className="w-4 h-4 fill-zinc-600 text-zinc-600" />
+                           <span className="font-bold text-zinc-200">{station.rating}</span>
+                           <span className="text-zinc-500">({station.totalReviews})</span>
+                         </div>
+                       </div>
+                     </CardContent>
+                   </Card>
                   ))}
                 </div>
-                <Card className="bg-zinc-800/40 border-blue-100">
-                  <CardContent className="p-4 text-center">
-                    <p className="text-sm text-zinc-300 font-medium">Detaylı raporlar yakında kullanıma sunulacak.</p>
-                    <p className="text-xs text-zinc-500 mt-1">Günlük, haftalık ve aylık grafik raporları geliştiriliyor.</p>
-                  </CardContent>
-                </Card>
               </div>
             )}
 
             {/* ── ALERTS ── */}
             {activeNav === 'alerts' && (
-              <div className="p-5 space-y-5">
+              <div className="p-6 space-y-6">
                 <div>
                   <h2 className="text-xl font-bold text-zinc-100">Uyarılar</h2>
                   <p className="text-sm text-zinc-400 mt-0.5">Dikkat gerektiren durumlar</p>
                 </div>
-                <div className="space-y-3">
-                  <Card className="border-zinc-700 bg-zinc-900">
-                    <CardContent className="p-4 flex items-start gap-3">
-                      <AlertTriangle className="w-5 h-5 text-zinc-400 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <div className="font-semibold text-sm text-zinc-200">Bakım Gerekiyor</div>
-                        <div className="text-xs text-zinc-400 mt-1">Gaziemir Sanayi Şarj Merkezi — 3 şarj noktası bakım modunda. Servis ekibiyle iletişime geçin.</div>
-                        <Button size="sm" variant="outline" className="mt-2 border-zinc-700 text-zinc-300 hover:bg-zinc-800" onClick={() => toast.info('Servis talebi oluşturuldu')}>
-                          Servis Talep Et
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card className="border-zinc-700 bg-zinc-900">
-                    <CardContent className="p-4 flex items-start gap-3">
-                      <TrendingUp className="w-5 h-5 text-zinc-400 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <div className="font-semibold text-sm text-zinc-200">Yüksek Doluluk</div>
-                        <div className="text-xs text-zinc-400 mt-1">Balçova AVM %83 doluluk oranıyla pik seviyede. Yeni şarj noktası eklemeyi düşünün.</div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card className="border-zinc-700 bg-zinc-900">
-                    <CardContent className="p-4 flex items-start gap-3">
-                      <Check className="w-5 h-5 text-zinc-400 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <div className="font-semibold text-sm text-zinc-200">Güçlü Performans</div>
-                        <div className="text-xs text-zinc-400 mt-1">Narlıdere Merkez bu hafta %12 gelir artışı gösterdi. Mevcut strateji iyi çalışıyor.</div>
-                      </div>
-                    );
-                  })}
-                </div>
 
                 {activeAlerts.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-16 text-center">
-                    <div className="w-12 h-12 bg-zinc-800/60 border border-zinc-700 rounded-2xl flex items-center justify-center mb-3">
-                      <CheckCircle2 className="w-6 h-6 text-emerald-400" />
+                  <div className="flex flex-col items-center justify-center py-20 text-center">
+                    <div className="w-16 h-16 bg-zinc-900 border border-zinc-800 rounded-2xl flex items-center justify-center mb-4">
+                      <CheckCircle2 className="w-8 h-8 text-zinc-500" />
                     </div>
-                    <p className="text-sm font-medium text-zinc-300">Tüm sistemler normal</p>
-                    <p className="text-xs text-zinc-600 mt-1">Aktif uyarı bulunmuyor.</p>
+                    <p className="text-base font-bold text-zinc-300">Tüm sistemler normal</p>
+                    <p className="text-sm text-zinc-500 mt-1">Aktif uyarı bulunmuyor.</p>
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {activeAlerts.map(alert => {
                       const cfg = alertConfig[alert.type];
                       const IconComp = cfg.icon;
                       return (
-                        <div
-                          key={alert.id}
-                          className="flex bg-zinc-950 border border-zinc-800 rounded-xl overflow-hidden hover:border-zinc-700 transition-colors group"
-                        >
-                          {/* Left color stripe */}
-                          <div className={`w-1 flex-shrink-0 ${cfg.stripe}`} />
-
-                          {/* Content */}
-                          <div className="flex-1 p-4 min-w-0">
-                            <div className="flex items-start justify-between gap-3">
-                              <div className="flex items-start gap-3 flex-1 min-w-0">
-                                {/* Icon */}
-                                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${cfg.iconBg}`}>
-                                  <IconComp className={`w-4 h-4 ${cfg.iconColor}`} />
-                                </div>
-
-                                {/* Text */}
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center gap-2 flex-wrap mb-1">
-                                    <span className="font-semibold text-sm text-zinc-100">{alert.title}</span>
-                                    <span className={`text-xs px-1.5 py-0.5 rounded-md font-medium ${cfg.badge}`}>{cfg.label}</span>
+                        <Card key={alert.id} className="bg-zinc-900 border-zinc-800 p-6 rounded-2xl relative overflow-hidden group">
+                           <CardContent className="p-0">
+                                <div className="flex gap-4">
+                                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${cfg.iconBg}`}>
+                                    <IconComp className={`w-5 h-5 ${cfg.iconColor}`} />
                                   </div>
-                                  <p className="text-xs text-zinc-400 leading-relaxed mb-2">{alert.description}</p>
-                                  <div className="flex items-center gap-3">
-                                    {alert.station && (
-                                      <span className="text-xs text-zinc-600 flex items-center gap-1">
-                                        <MapPin className="w-3 h-3" />
-                                        {alert.station}
-                                      </span>
+
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-3 mb-1.5">
+                                      <span className="font-bold text-zinc-100 text-base">{alert.title}</span>
+                                      <Badge className={`text-xs px-2 py-0.5 rounded-md font-medium ${cfg.badge}`}>{cfg.label}</Badge>
+                                    </div>
+                                    <p className="text-sm text-zinc-400 leading-relaxed mb-4 pr-6">{alert.description}</p>
+                                    
+                                    <div className="flex items-center gap-4 text-sm text-zinc-500">
+                                      {alert.station && (
+                                        <div className="flex items-center gap-1.5">
+                                          <MapPin className="w-4 h-4" />
+                                          <span>{alert.station}</span>
+                                        </div>
+                                      )}
+                                      <span>{alert.time}</span>
+                                    </div>
+
+                                    {alert.actionLabel && (
+                                      <div className="mt-5 pt-5 border-t border-zinc-800/50">
+                                        <Button
+                                          size="sm"
+                                          variant="outline"
+                                          className="text-sm bg-zinc-950 text-zinc-300 border-zinc-700 hover:bg-zinc-800 hover:text-zinc-100 transition-all duration-300"
+                                          onClick={() => toast.info('Servis talebi oluşturuldu')}
+                                        >
+                                          {alert.actionLabel}
+                                        </Button>
+                                      </div>
                                     )}
-                                    <span className="text-xs text-zinc-600">{alert.time}</span>
                                   </div>
+
+                                  <button
+                                      onClick={() => setDismissedAlerts(prev => [...prev, alert.id])}
+                                      className="absolute top-6 right-6 flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-zinc-600 hover:text-zinc-300 hover:bg-zinc-800 transition-colors opacity-0 group-hover:opacity-100"
+                                  >
+                                      <X className="w-4 h-4" />
+                                  </button>
                                 </div>
-                              </div>
-
-                              {/* Dismiss button */}
-                              <button
-                                onClick={() => setDismissedAlerts(prev => [...prev, alert.id])}
-                                className="flex-shrink-0 w-6 h-6 rounded-md flex items-center justify-center text-zinc-600 hover:text-zinc-300 hover:bg-zinc-800 transition-colors opacity-0 group-hover:opacity-100"
-                              >
-                                <X className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
-
-                            {/* Action button */}
-                            {alert.actionLabel && (
-                              <div className="mt-3 pl-11">
-                              <Button
-                                size="sm"
-                                variant="ghost" // Outline yerine ghost veya default kullanarak kenarlığı kendimiz yönetebiliriz
-                                className="h-7 text-xs bg-zinc-950 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-300 transition-all duration-300 shadow-[0_0_10px_rgba(52,211,153,0.1)]"
-                                onClick={() => toast.info('Servis talebi oluşturuldu')}
-                              >
-                                {alert.actionLabel}
-                              </Button>
-                            </div>
-                            )}
-                          </div>
-                        </div>
+                            </CardContent>
+                        </Card>
                       );
                     })}
                   </div>

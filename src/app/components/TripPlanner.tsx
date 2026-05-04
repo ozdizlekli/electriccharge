@@ -221,18 +221,18 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
             {/* Vehicle info */}
             <Card className="bg-zinc-800/40 border-zinc-700">
               <CardContent className="p-3 flex items-center gap-3">
-                <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Car className="w-4 h-4 text-white" />
+                <div className="w-9 h-9 bg-zinc-900 border border-zinc-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Car className="w-4 h-4 text-zinc-300" />
                 </div>
-                <div className="text-xs text-blue-800">
+                <div className="text-xs text-zinc-400">
                   <span className="font-semibold">Araç Menzili: {VEHICLE_RANGE_KM} km</span> (tam şarjda).{' '}
-                  Mevcut menzil: <span className="font-bold">{Math.round((startBattery / 100) * VEHICLE_RANGE_KM)} km</span>
+                  Mevcut menzil: <span className="font-bold text-zinc-300">{Math.round((startBattery / 100) * VEHICLE_RANGE_KM)} km</span>
                 </div>
               </CardContent>
             </Card>
 
             <Button
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0"
+              className="w-full bg-zinc-800 text-zinc-100 hover:bg-zinc-700 border border-zinc-700"
               size="lg"
               onClick={calculateTrip}
               disabled={isCalculating}
@@ -264,22 +264,22 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
             <div className="p-5 space-y-4">
               {/* Summary */}
               <div className="grid grid-cols-3 gap-3">
-                <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-0">
+                <Card className="bg-zinc-900 border border-zinc-800">
                   <CardContent className="p-3 text-center">
-                    <div className="text-xl font-bold text-emerald-300">{totalDistance} km</div>
-                    <div className="text-xs text-emerald-400 mt-0.5">Toplam Mesafe</div>
-                  </CardContent>
-                </Card>
-                <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0">
-                  <CardContent className="p-3 text-center">
-                    <div className="text-xl font-bold text-green-700">{chargeStops.length}</div>
-                    <div className="text-xs text-emerald-400 mt-0.5">Şarj Durağı</div>
+                    <div className="text-xl font-bold text-zinc-100">{totalDistance} km</div>
+                    <div className="text-xs text-zinc-400 mt-0.5">Toplam Mesafe</div>
                   </CardContent>
                 </Card>
                 <Card className="bg-zinc-900 border border-zinc-800">
                   <CardContent className="p-3 text-center">
-                    <div className="text-xl font-bold text-purple-700">{totalCost.toFixed(0)} ₺</div>
-                    <div className="text-xs text-purple-600 mt-0.5">Tahmini Maliyet</div>
+                    <div className="text-xl font-bold text-zinc-100">{chargeStops.length}</div>
+                    <div className="text-xs text-zinc-400 mt-0.5">Şarj Durağı</div>
+                  </CardContent>
+                </Card>
+                <Card className="bg-zinc-900 border border-zinc-800">
+                  <CardContent className="p-3 text-center">
+                    <div className="text-xl font-bold text-zinc-100">{totalCost.toFixed(0)} ₺</div>
+                    <div className="text-xs text-zinc-400 mt-0.5">Tahmini Maliyet</div>
                   </CardContent>
                 </Card>
               </div>

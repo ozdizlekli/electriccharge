@@ -1,4 +1,9 @@
 @import 'tailwindcss' source(none);
 @source '../**/*.{js,ts,jsx,tsx}';
+@config '../../tailwind.config.ts';
+
+@theme {
+  --font-sans: "Space Grotesk", sans-serif;
+}
 
 @import 'tw-animate-css';

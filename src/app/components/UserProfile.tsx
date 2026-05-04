@@ -1,4 +1,4 @@
-import { X, Calendar, Clock, MapPin, CreditCard, Star, User, LogOut, Award, Heart, Bell, Receipt, Zap, Shield, Trophy, Gift, ChevronDown } from 'lucide-react';
+import { X, Calendar, Clock, MapPin, CreditCard, Star, User, LogOut, Award, Heart, Bell, Receipt, Zap, Shield, Trophy, Gift, ChevronDown, Search, Leaf, Medal } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
@@ -20,11 +20,10 @@ interface UserProfileProps {
 
 interface EarnedBadge {
   id: string;
-  icon: string;
+  icon: React.ElementType;
   label: string;
   description: string;
-  bgClass: string;
-  textClass: string;
+  color: string;
 }
 
 function computeGamification() {
@@ -37,7 +36,7 @@ function computeGamification() {
     if (reports.length >= 1) {
       badges.push({
         id: 'first_reporter',
-        icon: '🔍',
+        icon: Search,
         label: 'İlk Raporcu',
         description: 'İlk AI hasar bildirimi',
         color: 'bg-zinc-800 text-zinc-300 border-zinc-700',
@@ -46,7 +45,7 @@ function computeGamification() {
     if (reports.length >= 5) {
       badges.push({
         id: 'guardian',
-        icon: '🛡️',
+        icon: Shield,
         label: 'İstasyon Koruyucusu',
         description: '5+ hasar bildirimi',
         color: 'bg-zinc-800 text-zinc-300 border-zinc-700',
@@ -64,7 +63,7 @@ function computeGamification() {
     if (userReviews.length >= 1) {
       badges.push({
         id: 'reviewer',
-        icon: '⭐',
+        icon: Star,
         label: 'Topluluk Üyesi',
         description: 'İlk değerlendirme',
         color: 'bg-zinc-800 text-zinc-300 border-zinc-700',
@@ -75,7 +74,7 @@ function computeGamification() {
   points += 100;
   badges.push({
     id: 'eco_driver',
-    icon: '🌿',
+    icon: Leaf,
     label: 'Eko Sürücü',
     description: 'Elektrikli araç kullanıcısı',
     color: 'bg-zinc-800 text-zinc-300 border-zinc-700',
@@ -84,7 +83,7 @@ function computeGamification() {
   if (completedCount >= 1) {
     badges.push({
       id: 'charged',
-      icon: '⚡',
+      icon: Zap,
       label: 'İlk Şarj',
       description: 'İlk şarj oturumu tamamlandı',
       color: 'bg-zinc-800 text-zinc-300 border-zinc-700',
@@ -103,15 +102,15 @@ function computeGamification() {
 function PointsAccordion() {
   const [open, setOpen] = useState(false);
   const items = [
-    { icon: '🔍', action: 'AI Hasar Bildirimi', points: '+50 puan', color: 'text-orange-400' },
-    { icon: '⭐', action: 'Değerlendirme Yaz', points: '+10 puan', color: 'text-yellow-400' },
-    { icon: '⚡', action: 'Şarj Oturumu Tamamla', points: '+30 puan', color: 'text-emerald-400' },
-    { icon: '📍', action: 'Durum Bildirimi', points: '+5 puan', color: 'text-blue-400' },
+    { icon: Search, action: 'AI Hasar Bildirimi', points: '+50 puan' },
+    { icon: Star, action: 'Değerlendirme Yaz', points: '+10 puan' },
+    { icon: Zap, action: 'Şarj Oturumu Tamamla', points: '+30 puan' },
+    { icon: MapPin, action: 'Durum Bildirimi', points: '+5 puan' },
   ];
   return (
-    <div className="border border-zinc-700 rounded-xl overflow-hidden">
+    <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
       <button
-        className="w-full flex items-center justify-between px-4 py-3 bg-zinc-800/60 hover:bg-zinc-800 transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 bg-zinc-900 hover:bg-zinc-800 transition-colors"
         onClick={() => setOpen(v => !v)}
       >
         <span className="text-sm font-semibold text-zinc-300 uppercase tracking-wide">Puan Kazanma Yolları</span>
@@ -119,15 +118,17 @@ function PointsAccordion() {
       </button>
       {open && (
         <div className="p-3 space-y-2 bg-zinc-900">
-          {items.map(item => (
+          {items.map(item => {
+            const Icon = item.icon;
+            return (
             <div key={item.action} className="flex items-center justify-between p-3 bg-zinc-800/60 border border-zinc-700 rounded-lg">
               <div className="flex items-center gap-2">
-                <span className="text-lg">{item.icon}</span>
+                <Icon className="w-4 h-4 text-zinc-400" />
                 <span className="text-sm font-medium text-zinc-200">{item.action}</span>
               </div>
-              <span className={`text-sm font-bold ${item.color}`}>{item.points}</span>
+              <span className="text-sm font-bold text-zinc-300">{item.points}</span>
             </div>
-          ))}
+          )})}
         </div>
       )}
     </div>
@@ -189,8 +190,8 @@ export function UserProfile({ onClose }: UserProfileProps) {
                     <Award className="w-3 h-3 mr-1 text-emerald-400" />
                     Premium Üye
                   </Badge>
-                  <Badge className="text-xs bg-amber-950/60 border border-amber-700/40 text-amber-300">
-                    <Trophy className="w-3 h-3 mr-1" />
+                  <Badge className="text-xs bg-zinc-800 border border-zinc-700 text-zinc-300">
+                    <Trophy className="w-3 h-3 mr-1 text-zinc-400" />
                     {gamification.levelName}
                   </Badge>
                 </div>
@@ -210,9 +211,9 @@ export function UserProfile({ onClose }: UserProfileProps) {
                   <div className="text-xs text-zinc-400">Toplam Harcama</div>
                 </CardContent>
               </Card>
-              <Card className="bg-amber-950/30 border-amber-800/40">
+              <Card className="bg-zinc-800/40 border border-zinc-800">
                 <CardContent className="p-3 text-center">
-                  <div className="text-2xl font-bold text-amber-600">{gamification.points}</div>
+                  <div className="text-2xl font-bold text-zinc-300">{gamification.points}</div>
                   <div className="text-xs text-zinc-400">e-Puan</div>
                 </CardContent>
               </Card>
@@ -221,37 +222,38 @@ export function UserProfile({ onClose }: UserProfileProps) {
 
           {/* Content */}
           <div className="flex-1 overflow-y-auto">
-            <Tabs defaultValue="rewards" className="w-full bg-emerald-400 text-zinc-950 hover:bg-emerald-300">
-              <TabsList className="w-full justify-start border-b border-zinc-800 rounded-none h-auto p-0 overflow-x-auto">
-                <TabsTrigger value="rewards" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-amber-500 whitespace-nowrap">
-                  🏆 Ödüller
+            <Tabs defaultValue="rewards" className="w-full bg-zinc-900 text-zinc-100">
+              <TabsList className="w-full justify-start bg-zinc-950 border-b border-zinc-800 rounded-none h-auto p-0 overflow-x-auto">
+                <TabsTrigger value="rewards" className="rounded-none text-zinc-400 data-[state=active]:bg-transparent data-[state=active]:text-zinc-100 data-[state=active]:border-b-2 data-[state=active]:border-zinc-100 whitespace-nowrap">
+                  <Trophy className="w-4 h-4 mr-2" />
+                  Ödüller
                 </TabsTrigger>
-                <TabsTrigger value="reservations" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-emerald-500 whitespace-nowrap">
+                <TabsTrigger value="reservations" className="rounded-none text-zinc-400 data-[state=active]:bg-transparent data-[state=active]:text-zinc-100 data-[state=active]:border-b-2 data-[state=active]:border-zinc-100 whitespace-nowrap">
                   Rezervasyonlar
                 </TabsTrigger>
-                <TabsTrigger value="payments" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-emerald-500 whitespace-nowrap">
+                <TabsTrigger value="payments" className="rounded-none text-zinc-400 data-[state=active]:bg-transparent data-[state=active]:text-zinc-100 data-[state=active]:border-b-2 data-[state=active]:border-zinc-100 whitespace-nowrap">
                   Ödeme
                 </TabsTrigger>
-                <TabsTrigger value="settings" className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-emerald-500 whitespace-nowrap">
+                <TabsTrigger value="settings" className="rounded-none text-zinc-400 data-[state=active]:bg-transparent data-[state=active]:text-zinc-100 data-[state=active]:border-b-2 data-[state=active]:border-zinc-100 whitespace-nowrap">
                   Ayarlar
                 </TabsTrigger>
               </TabsList>
 
               {/* REWARDS */}
               <TabsContent value="rewards" className="p-4 space-y-4">
-                <Card className="bg-amber-950/30 border-amber-800/40">
+                <Card className="bg-zinc-900 border border-zinc-800">
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <div className="w-10 h-10 bg-amber-950/60 border border-amber-700/40 rounded-xl flex items-center justify-center">
-                          <Trophy className="w-5 h-5 text-amber-400" />
+                        <div className="w-10 h-10 bg-zinc-800 border border-zinc-700 rounded-xl flex items-center justify-center">
+                          <Trophy className="w-5 h-5 text-zinc-400" />
                         </div>
                         <div>
                           <div className="font-bold text-zinc-100">Seviye {gamification.level} — {gamification.levelName}</div>
                           <div className="text-xs text-zinc-400">{gamification.points} / {gamification.nextLevelThreshold} e-Puan</div>
                         </div>
                       </div>
-                      <div className="text-2xl font-black text-amber-400">{gamification.points}</div>
+                      <div className="text-2xl font-black text-zinc-300">{gamification.points}</div>
                     </div>
                     <Progress value={gamification.progress} className="h-2.5" />
                     <p className="text-xs text-zinc-400 mt-2">
@@ -262,23 +264,7 @@ export function UserProfile({ onClose }: UserProfileProps) {
 
                 {/* Points breakdown */}
                 <div>
-                  <h4 className="font-semibold text-sm text-zinc-400 uppercase tracking-wide mb-3">Puan Kazanma Yolları</h4>
-                  <div className="space-y-2">
-                    {[
-                      { icon: '🔍', action: 'AI Hasar Bildirimi', points: '+50 puan', color: 'text-orange-600' },
-                      { icon: '⭐', action: 'Değerlendirme Yaz', points: '+10 puan', color: 'text-yellow-600' },
-                      { icon: '⚡', action: 'Şarj Oturumu Tamamla', points: '+30 puan', color: 'text-emerald-400' },
-                      { icon: '📍', action: 'Durum Bildirimi', points: '+5 puan', color: 'text-emerald-400' },
-                    ].map(item => (
-                      <div key={item.action} className="flex items-center justify-between p-3 bg-zinc-950 rounded-lg">
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg">{item.icon}</span>
-                          <span className="text-sm font-medium">{item.action}</span>
-                        </div>
-                        <span className={`text-sm font-bold ${item.color}`}>{item.points}</span>
-                      </div>
-                    ))}
-                  </div>
+                  <PointsAccordion />
                 </div>
 
                 {/* Badges */}
@@ -297,12 +283,12 @@ export function UserProfile({ onClose }: UserProfileProps) {
                   ) : (
                     <div className="grid grid-cols-2 gap-3">
                       {gamification.badges.map(badge => (
-                        <Card key={badge.id} className={`border ${badge.color.includes('border') ? '' : 'border-zinc-800'}`}>
-                          <CardContent className={`p-3 ${badge.color.split(' ').slice(0, 2).join(' ')} rounded-xl`}>
+                        <Card key={badge.id} className="bg-zinc-900 border border-zinc-800">
+                          <CardContent className="p-3 rounded-xl">
                             <div className="flex items-start gap-2">
-                              <span className="text-2xl">{badge.icon}</span>
+                              {React.createElement(badge.icon, { className: 'w-5 h-5 text-zinc-400 flex-shrink-0 mt-0.5' })}
                               <div className="flex-1 min-w-0">
-                                <div className={`font-semibold text-sm ${badge.textClass}`}>{badge.label}</div>
+                                <div className="font-semibold text-sm text-zinc-200">{badge.label}</div>
                                 <div className="text-xs text-zinc-500 mt-0.5">{badge.description}</div>
                               </div>
                             </div>
@@ -310,17 +296,17 @@ export function UserProfile({ onClose }: UserProfileProps) {
                         </Card>
                       ))}
                       {[
-                        { icon: '💎', label: 'Platin Sürücü', description: '1000 puana ulaş' },
-                        { icon: '🏅', label: 'Süper Raporcu', description: '10 hasar bildirimi' },
+                        { icon: Award, label: 'Platin Sürücü', description: '1000 puana ulaş' },
+                        { icon: Medal, label: 'Süper Raporcu', description: '10 hasar bildirimi' },
                       ].map(locked => (
-                        <Card key={locked.label} className="border-dashed opacity-50">
-                          <CardContent className="p-3 bg-zinc-950 rounded-xl">
+                        <Card key={locked.label} className="opacity-50 bg-zinc-900 border border-zinc-800">
+                          <CardContent className="p-3 rounded-xl">
                             <div className="flex items-start gap-2">
-                              <span className="text-2xl grayscale">{locked.icon}</span>
+                              <locked.icon className="w-5 h-5 text-zinc-400 flex-shrink-0 mt-0.5" />
                               <div className="flex-1">
                                 <div className="font-semibold text-sm text-zinc-300">{locked.label}</div>
                                 <div className="text-xs text-zinc-400 mt-0.5">{locked.description}</div>
-                                <Badge variant="outline" className="text-xs mt-1">Kilitli 🔒</Badge>
+                                <Badge variant="outline" className="text-xs mt-1 border-zinc-700 text-zinc-500">Kilitli</Badge>
                               </div>
                             </div>
                           </CardContent>
@@ -331,10 +317,10 @@ export function UserProfile({ onClose }: UserProfileProps) {
                 </div>
 
                 {/* Redeem */}
-                <Card className="bg-zinc-800/40 border-zinc-800">
+                <Card className="bg-zinc-900 border border-zinc-800">
                   <CardContent className="p-4 flex items-center gap-3">
-                    <div className="w-10 h-10 bg-purple-950/60 border border-purple-700/40 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <Gift className="w-5 h-5 text-purple-400" />
+                    <div className="w-10 h-10 bg-zinc-800 border border-zinc-700 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <Gift className="w-5 h-5 text-zinc-400" />
                     </div>
                     <div className="flex-1">
                       <div className="font-semibold text-sm text-zinc-100">Puanlarınızı Kullanın</div>
@@ -358,7 +344,7 @@ export function UserProfile({ onClose }: UserProfileProps) {
                         <CardContent className="p-4">
                           <div className="flex items-start justify-between gap-4 mb-3">
                             <div className="flex-1">
-                              <h5 className="font-semibold mb-1">{r.stationName}</h5>
+                              <h5 className="font-semibold mb-1 text-zinc-100">{r.stationName}</h5>
                               <div className="flex items-center gap-2 text-sm text-zinc-400">
                                 <Calendar className="w-3 h-3" />
                                 <span>{r.startTime.toLocaleDateString('tr-TR')}</span>
@@ -371,7 +357,7 @@ export function UserProfile({ onClose }: UserProfileProps) {
                           <Separator className="my-2 bg-zinc-700" />
                           <div className="flex items-center justify-between text-sm">
                             <span className="text-zinc-400">Süre: {r.estimatedDuration} dk</span>
-                            <span className="font-semibold">{r.price} ₺</span>
+                            <span className="font-semibold text-zinc-100">{r.price} ₺</span>
                           </div>
                           <div className="flex gap-2 mt-3">
                             <Button size="sm" variant="outline" className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800" onClick={() => { setSelectedReservation(r); setShowReservationDetail(true); }}>Detaylar</Button>
@@ -389,7 +375,7 @@ export function UserProfile({ onClose }: UserProfileProps) {
                       <CardContent className="p-4">
                         <div className="flex items-start justify-between gap-4 mb-3">
                           <div className="flex-1">
-                            <h5 className="font-semibold mb-1">{r.stationName}</h5>
+                            <h5 className="font-semibold mb-1 text-zinc-100">{r.stationName}</h5>
                             <div className="flex items-center gap-2 text-sm text-zinc-400">
                               <Calendar className="w-3 h-3" />
                               <span>{r.startTime.toLocaleDateString('tr-TR')}</span>
@@ -399,7 +385,7 @@ export function UserProfile({ onClose }: UserProfileProps) {
                         </div>
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-zinc-400">Süre: {r.estimatedDuration} dk</span>
-                          <span className="font-semibold">{r.price} ₺</span>
+                          <span className="font-semibold text-zinc-100">{r.price} ₺</span>
                         </div>
                       </CardContent>
                     </Card>
@@ -447,7 +433,7 @@ export function UserProfile({ onClose }: UserProfileProps) {
                       <div className="flex items-center gap-3">
                         <User className="w-5 h-5 text-zinc-400" />
                         <div>
-                          <div className="font-medium">Kişisel Bilgiler</div>
+                          <div className="font-medium text-zinc-100">Kişisel Bilgiler</div>
                           <div className="text-xs text-zinc-400">İsim, e-posta, telefon</div>
                         </div>
                       </div>
@@ -459,15 +445,15 @@ export function UserProfile({ onClose }: UserProfileProps) {
                       <div className="space-y-3 mt-4">
                         <div className="space-y-2">
                           <Label className="text-zinc-300">Ad Soyad</Label>
-                          <Input value={personalInfo.name} onChange={e => setPersonalInfo({ ...personalInfo, name: e.target.value })} className="bg-zinc-950 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-emerald-400" />
+                          <Input value={personalInfo.name} onChange={e => setPersonalInfo({ ...personalInfo, name: e.target.value })} className="bg-zinc-950 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-emerald-400 [&_input]:text-zinc-100" />
                         </div>
                         <div className="space-y-2">
                           <Label className="text-zinc-300">E-posta</Label>
-                          <Input type="email" value={personalInfo.email} onChange={e => setPersonalInfo({ ...personalInfo, email: e.target.value })} className="bg-zinc-950 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-emerald-400" />
+                          <Input type="email" value={personalInfo.email} onChange={e => setPersonalInfo({ ...personalInfo, email: e.target.value })} className="bg-zinc-950 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-emerald-400 [&_input]:text-zinc-100" />
                         </div>
                         <div className="space-y-2">
                           <Label className="text-zinc-300">Telefon</Label>
-                          <Input value={personalInfo.phone} onChange={e => setPersonalInfo({ ...personalInfo, phone: e.target.value })} className="bg-zinc-950 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-emerald-400" />
+                          <Input value={personalInfo.phone} onChange={e => setPersonalInfo({ ...personalInfo, phone: e.target.value })} className="bg-zinc-950 border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-emerald-400 [&_input]:text-zinc-100" />
                         </div>
                         <Button className="w-full bg-emerald-400 text-zinc-950 hover:bg-emerald-300" onClick={handleSavePersonalInfo}>Kaydet</Button>
                       </div>
@@ -475,31 +461,31 @@ export function UserProfile({ onClose }: UserProfileProps) {
                   </CardContent>
                 </Card>
 
-                <Card className="cursor-pointer hover:bg-zinc-950" onClick={() => setShowFavorites(true)}>
+                <Card className="bg-zinc-800/50 border-zinc-700 cursor-pointer hover:bg-zinc-800/80 transition-colors" onClick={() => setShowFavorites(true)}>
                   <CardContent className="p-4 flex items-center gap-3">
                     <MapPin className="w-5 h-5 text-zinc-400" />
                     <div className="flex-1">
-                      <div className="font-medium">Favori İstasyonlar</div>
+                      <div className="font-medium text-zinc-100">Favori İstasyonlar</div>
                       <div className="text-xs text-zinc-400">Sık kullandığınız istasyonlar</div>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="cursor-pointer hover:bg-zinc-950" onClick={() => setShowNotifications(true)}>
+                <Card className="bg-zinc-800/50 border-zinc-700 cursor-pointer hover:bg-zinc-800/80 transition-colors" onClick={() => setShowNotifications(true)}>
                   <CardContent className="p-4 flex items-center gap-3">
                     <Bell className="w-5 h-5 text-zinc-400" />
                     <div className="flex-1">
-                      <div className="font-medium">Bildirimler</div>
+                      <div className="font-medium text-zinc-100">Bildirimler</div>
                       <div className="text-xs text-zinc-400">Bildirim tercihlerinizi yönetin</div>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="cursor-pointer hover:bg-zinc-950" onClick={() => setShowInvoices(true)}>
+                <Card className="bg-zinc-800/50 border-zinc-700 cursor-pointer hover:bg-zinc-800/80 transition-colors" onClick={() => setShowInvoices(true)}>
                   <CardContent className="p-4 flex items-center gap-3">
                     <CreditCard className="w-5 h-5 text-zinc-400" />
                     <div className="flex-1">
-                      <div className="font-medium">Faturalar</div>
+                      <div className="font-medium text-zinc-100">Faturalar</div>
                       <div className="text-xs text-zinc-400">Ödeme geçmişi ve faturalar</div>
                     </div>
                   </CardContent>
@@ -507,7 +493,7 @@ export function UserProfile({ onClose }: UserProfileProps) {
 
                 <Separator className="my-4 bg-zinc-700" />
 
-                <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-zinc-800/40" onClick={handleLogout}>
+                <Button variant="outline" className="w-full justify-start border-red-800/50 text-red-400 hover:bg-red-950/40" onClick={handleLogout}>
                   <LogOut className="w-4 h-4 mr-2" />
                   Çıkış Yap
                 </Button>
@@ -522,20 +508,20 @@ export function UserProfile({ onClose }: UserProfileProps) {
         <div className="fixed inset-0 bg-black/50 z-[10000] flex items-end md:items-center justify-center p-0 md:p-4">
           <div className="bg-zinc-900 w-full md:max-w-lg md:rounded-lg overflow-hidden">
             <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
-              <h3 className="font-semibold text-lg">Rezervasyon Detayları</h3>
-              <Button variant="ghost" size="icon" onClick={() => setShowReservationDetail(false)}><X className="w-4 h-4" /></Button>
+              <h3 className="font-semibold text-lg text-zinc-100">Rezervasyon Detayları</h3>
+              <Button variant="ghost" size="icon" className="text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100" onClick={() => setShowReservationDetail(false)}><X className="w-4 h-4" /></Button>
             </div>
             <div className="p-4">
               <Card className="bg-zinc-800/50 border-zinc-700">
                 <CardContent className="p-4">
                   <h4 className="font-semibold mb-3 text-zinc-100">{selectedReservation.stationName}</h4>
                   <div className="space-y-2 text-sm">
-                    <div className="flex justify-between"><span className="text-zinc-400">Tarih</span><span className="font-medium">{selectedReservation.startTime.toLocaleDateString('tr-TR')}</span></div>
-                    <div className="flex justify-between"><span className="text-zinc-400">Başlangıç</span><span className="font-medium">{selectedReservation.startTime.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</span></div>
-                    <div className="flex justify-between"><span className="text-zinc-400">Süre</span><span className="font-medium">{selectedReservation.estimatedDuration} dakika</span></div>
-                    <Separator />
-                    <div className="flex justify-between font-semibold"><span>Toplam</span><span className="text-emerald-400">{selectedReservation.price} ₺</span></div>
-                    <div className="flex justify-between"><span className="text-zinc-400">Ödeme</span><Badge variant="outline" className="bg-zinc-800/40">Ödendi</Badge></div>
+                    <div className="flex justify-between"><span className="text-zinc-400">Tarih</span><span className="font-medium text-zinc-100">{selectedReservation.startTime.toLocaleDateString('tr-TR')}</span></div>
+                    <div className="flex justify-between"><span className="text-zinc-400">Başlangıç</span><span className="font-medium text-zinc-100">{selectedReservation.startTime.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</span></div>
+                    <div className="flex justify-between"><span className="text-zinc-400">Süre</span><span className="font-medium text-zinc-100">{selectedReservation.estimatedDuration} dakika</span></div>
+                    <Separator className="bg-zinc-700" />
+                    <div className="flex justify-between font-semibold"><span className="text-zinc-100">Toplam</span><span className="text-emerald-400">{selectedReservation.price} ₺</span></div>
+                    <div className="flex justify-between"><span className="text-zinc-400">Ödeme</span><Badge variant="outline" className="bg-zinc-800/40 border-zinc-600 text-zinc-300">Ödendi</Badge></div>
                   </div>
                 </CardContent>
               </Card>
@@ -549,8 +535,8 @@ export function UserProfile({ onClose }: UserProfileProps) {
         <div className="fixed inset-0 bg-black/50 z-[10000] flex items-end md:items-center justify-center p-0 md:p-4">
           <div className="bg-zinc-900 w-full md:max-w-lg md:rounded-lg overflow-hidden">
             <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
-              <h3 className="font-semibold text-lg">{cardModalMode === 'add' ? 'Yeni Kart Ekle' : 'Kartı Düzenle'}</h3>
-              <Button variant="ghost" size="icon" onClick={() => setShowCardModal(false)}><X className="w-4 h-4" /></Button>
+              <h3 className="font-semibold text-lg text-zinc-100">{cardModalMode === 'add' ? 'Yeni Kart Ekle' : 'Kartı Düzenle'}</h3>
+              <Button variant="ghost" size="icon" className="text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100" onClick={() => setShowCardModal(false)}><X className="w-4 h-4" /></Button>
             </div>
             <div className="p-4 space-y-4">
               <div className="space-y-2"><Label className="text-zinc-300">Kart Numarası</Label><Input placeholder="1234 5678 9012 3456" defaultValue={selectedCard ? `•••• •••• •••• ${selectedCard.cardNumber}` : ''} className="bg-zinc-950 border-zinc-700 text-zinc-100 placeholder:text-zinc-500" /></div>
@@ -572,8 +558,8 @@ export function UserProfile({ onClose }: UserProfileProps) {
         <div className="fixed inset-0 bg-black/50 z-[10000] flex items-end md:items-center justify-center p-0 md:p-4">
           <div className="bg-zinc-900 w-full md:max-w-lg md:rounded-lg max-h-[80vh] overflow-hidden flex flex-col">
             <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
-              <h3 className="font-semibold text-lg">Favori İstasyonlar</h3>
-              <Button variant="ghost" size="icon" onClick={() => setShowFavorites(false)}><X className="w-4 h-4" /></Button>
+              <h3 className="font-semibold text-lg text-zinc-100">Favori İstasyonlar</h3>
+              <Button variant="ghost" size="icon" className="text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100" onClick={() => setShowFavorites(false)}><X className="w-4 h-4" /></Button>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
               {favoriteStations.map(station => (
@@ -587,7 +573,7 @@ export function UserProfile({ onClose }: UserProfileProps) {
                         </div>
                         <div className="text-sm text-zinc-400 mb-2">{station.address}</div>
                         <div className="flex items-center gap-3 text-sm">
-                          <div className="flex items-center gap-1"><Star className="w-3 h-3 fill-yellow-400 text-yellow-400" /><span>{station.rating}</span></div>
+                          <div className="flex items-center gap-1"><Star className="w-3 h-3 fill-yellow-400 text-yellow-400" /><span className="text-zinc-100">{station.rating}</span></div>
                           <span className="text-zinc-400">{station.distance} km</span>
                         </div>
                       </div>
@@ -606,8 +592,8 @@ export function UserProfile({ onClose }: UserProfileProps) {
         <div className="fixed inset-0 bg-black/50 z-[10000] flex items-end md:items-center justify-center p-0 md:p-4">
           <div className="bg-zinc-900 w-full md:max-w-lg md:rounded-lg overflow-hidden">
             <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
-              <h3 className="font-semibold text-lg">Bildirim Ayarları</h3>
-              <Button variant="ghost" size="icon" onClick={() => setShowNotifications(false)}><X className="w-4 h-4" /></Button>
+              <h3 className="font-semibold text-lg text-zinc-100">Bildirim Ayarları</h3>
+              <Button variant="ghost" size="icon" className="text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100" onClick={() => setShowNotifications(false)}><X className="w-4 h-4" /></Button>
             </div>
             <div className="p-4 space-y-4">
               <Card className="bg-zinc-800/50 border-zinc-700">
@@ -621,7 +607,7 @@ export function UserProfile({ onClose }: UserProfileProps) {
                       {idx > 0 && <Separator className="my-3 bg-zinc-700" />}
                       <div className="flex items-center justify-between py-1">
                         <div>
-                          <div className="font-medium">{item.label}</div>
+                          <div className="font-medium text-zinc-100">{item.label}</div>
                           <div className="text-sm text-zinc-400">{item.desc}</div>
                         </div>
                         <Switch
@@ -644,8 +630,8 @@ export function UserProfile({ onClose }: UserProfileProps) {
         <div className="fixed inset-0 bg-black/50 z-[10000] flex items-end md:items-center justify-center p-0 md:p-4">
           <div className="bg-zinc-900 w-full md:max-w-lg md:rounded-lg max-h-[80vh] overflow-hidden flex flex-col">
             <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
-              <h3 className="font-semibold text-lg">Faturalar</h3>
-              <Button variant="ghost" size="icon" onClick={() => setShowInvoices(false)}><X className="w-4 h-4" /></Button>
+              <h3 className="font-semibold text-lg text-zinc-100">Faturalar</h3>
+              <Button variant="ghost" size="icon" className="text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100" onClick={() => setShowInvoices(false)}><X className="w-4 h-4" /></Button>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
               {completedReservations.map(r => (
@@ -653,7 +639,7 @@ export function UserProfile({ onClose }: UserProfileProps) {
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div className="flex-1">
-                        <h4 className="font-semibold mb-1">{r.stationName}</h4>
+                        <h4 className="font-semibold mb-1 text-zinc-100">{r.stationName}</h4>
                         <div className="text-sm text-zinc-400">{r.startTime.toLocaleDateString('tr-TR')}</div>
                       </div>
                       <div className="text-right">
@@ -661,7 +647,7 @@ export function UserProfile({ onClose }: UserProfileProps) {
                         <Badge className="text-xs mt-1 bg-emerald-950/60 border border-emerald-700/40 text-emerald-300">Ödendi</Badge>
                       </div>
                     </div>
-                    <Button variant="outline" size="sm" className="w-full bg-emerald-400 text-zinc-950 hover:bg-emerald-300" onClick={() => toast.info('Fatura indiriliyor...')}>
+                    <Button variant="outline" size="sm" className="w-full border-zinc-700 text-zinc-300 hover:bg-zinc-800" onClick={() => toast.info('Fatura indiriliyor...')}>
                       <Receipt className="w-3 h-3 mr-2" />
                       Faturayı İndir
                     </Button>

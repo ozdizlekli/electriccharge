@@ -250,7 +250,7 @@ export default function App() {
                 <Zap className="w-6 h-6 text-emerald-400" />
               </div>
               <div>
-                <h1 className="font-bold text-xl text-white">EV Hub</h1>
+                <h1 className="font-bold text-xl text-white">EV Home</h1>
                 <p className="text-xs text-zinc-400">Elektrikli Araç Şarj İstasyonları</p>
               </div>
             </div>
