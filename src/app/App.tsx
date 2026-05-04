@@ -225,9 +225,9 @@ export default function App() {
     (filters.maxDistance < 50 ? 1 : 0);
 
   const roleConfig = {
-    driver: { label: 'Sürücü', color: 'bg-blue-100 text-blue-700' },
-    station_owner: { label: 'İstasyon Sahibi', color: 'bg-purple-100 text-purple-700' },
-    admin: { label: 'Admin', color: 'bg-red-100 text-red-700' }
+    driver: { label: 'Sürücü', color: 'bg-zinc-800 text-emerald-300 border border-zinc-700' },
+    station_owner: { label: 'İstasyon Sahibi', color: 'bg-zinc-800 text-emerald-300 border border-zinc-700' },
+    admin: { label: 'Admin', color: 'bg-zinc-800 text-red-400 border border-zinc-700' }
   };
 
   if (!currentUser) {
@@ -240,18 +240,18 @@ export default function App() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="h-screen flex flex-col bg-zinc-950 text-zinc-100">
       <Toaster />
-      <header className="bg-white border-b px-4 py-3 flex-shrink-0">
+      <header className="bg-zinc-900 border-b border-zinc-800 px-4 py-4 flex-shrink-0">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-4 mb-3">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-green-500 rounded-lg flex items-center justify-center shadow-sm">
-                <Zap className="w-6 h-6 text-white" />
+              <div className="w-10 h-10 bg-zinc-950 border border-zinc-700 rounded-xl flex items-center justify-center">
+                <Zap className="w-6 h-6 text-emerald-400" />
               </div>
               <div>
-                <h1 className="font-bold text-xl">eŞarj</h1>
-                <p className="text-xs text-muted-foreground">Elektrikli Araç Şarj İstasyonları</p>
+                <h1 className="font-bold text-xl text-white">EV Hub</h1>
+                <p className="text-xs text-zinc-400">Elektrikli Araç Şarj İstasyonları</p>
               </div>
             </div>
             <div className="ml-auto flex items-center gap-2">
@@ -261,7 +261,7 @@ export default function App() {
               </Badge>
 
               {currentUser.role === 'station_owner' && (
-                <Button variant="outline" size="sm" onClick={() => setShowOwnerDashboard(true)} className="ml-2 hidden md:flex">
+                <Button variant="outline" size="sm" onClick={() => setShowOwnerDashboard(true)} className="ml-2 hidden md:flex border-zinc-700 bg-zinc-900 text-zinc-200 hover:bg-zinc-800">
                   İstasyon Paneli
                 </Button>
               )}
@@ -272,10 +272,10 @@ export default function App() {
                 </Button>
               )}
 
-              <Button variant="ghost" size="icon" onClick={() => setShowProfile(true)}>
+              <Button variant="ghost" size="icon" className="text-zinc-300 hover:text-white hover:bg-zinc-800" onClick={() => setShowProfile(true)}>
                 <User className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" size="icon" onClick={() => { setCurrentUser(null); toast.success('Çıkış yapıldı'); }}>
+              <Button variant="ghost" size="icon" className="text-zinc-300 hover:text-white hover:bg-zinc-800" onClick={() => { setCurrentUser(null); toast.success('Çıkış yapıldı'); }}>
                 <LogOut className="w-4 h-4" />
               </Button>
             </div>
@@ -283,18 +283,18 @@ export default function App() {
 
           <div className="flex gap-2">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
               <Input
                 placeholder="İstasyon, adres veya şehir ara..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-zinc-950 border-zinc-800 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-emerald-400"
               />
             </div>
-            <Button variant="outline" size="icon" onClick={() => setShowFilters(true)} className="relative">
+            <Button variant="outline" size="icon" onClick={() => setShowFilters(true)} className="relative border-zinc-800 bg-zinc-950 text-zinc-200 hover:bg-zinc-800">
               <SlidersHorizontal className="w-4 h-4" />
               {activeFilterCount > 0 && (
-                <Badge className="absolute -top-1 -right-1 w-5 h-5 p-0 flex items-center justify-center text-xs">
+                <Badge className="absolute -top-1 -right-1 w-5 h-5 p-0 flex items-center justify-center text-xs bg-emerald-400 text-zinc-950 border-0">
                   {activeFilterCount}
                 </Badge>
               )}
@@ -303,10 +303,10 @@ export default function App() {
 
           <div className="flex items-center gap-4 mt-3 text-sm">
             <div className="flex items-center gap-1">
-              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="font-medium">{totalAvailable} müsait nokta</span>
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="font-medium text-zinc-100">{totalAvailable} müsait nokta</span>
             </div>
-            <div className="text-muted-foreground hidden sm:block">
+            <div className="text-zinc-400 hidden sm:block">
               {isLoading ? "Aranıyor..." : `${filteredStations.length} istasyon bulundu`}
             </div>
             <div className="ml-auto flex gap-2">
@@ -315,17 +315,17 @@ export default function App() {
                 variant="secondary" 
                 size="sm" 
                 onClick={() => setShowTripPlanner(true)} 
-                className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border-indigo-200 hidden sm:flex"
+                className="bg-zinc-900 text-emerald-300 hover:bg-zinc-800 border border-emerald-400/60 hidden sm:flex"
               >
                 <Route className="w-4 h-4 mr-2" />
                 Rota Planla
               </Button>
               
-              <Button variant={viewMode === 'map' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('map')}>
+              <Button variant={viewMode === 'map' ? 'default' : 'outline'} size="sm" className={viewMode === 'map' ? 'bg-emerald-400 text-zinc-950 hover:bg-emerald-300 border-0' : 'border-zinc-700 bg-zinc-900 text-zinc-200 hover:bg-zinc-800'} onClick={() => setViewMode('map')}>
                 <Map className="w-4 h-4 sm:mr-1" />
                 <span className="hidden sm:inline">Harita</span>
               </Button>
-              <Button variant={viewMode === 'list' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('list')}>
+              <Button variant={viewMode === 'list' ? 'default' : 'outline'} size="sm" className={viewMode === 'list' ? 'bg-emerald-400 text-zinc-950 hover:bg-emerald-300 border-0' : 'border-zinc-700 bg-zinc-900 text-zinc-200 hover:bg-zinc-800'} onClick={() => setViewMode('list')}>
                 <List className="w-4 h-4 sm:mr-1" />
                 <span className="hidden sm:inline">Liste</span>
               </Button>
@@ -339,28 +339,28 @@ export default function App() {
           <div className="h-full flex flex-col md:flex-row">
             <div className="flex-1 p-4 relative">
               {isLoading && (
-                <div className="absolute inset-0 z-[500] flex items-center justify-center bg-white/70 backdrop-blur-sm rounded-lg">
+                <div className="absolute inset-0 z-[500] flex items-center justify-center bg-zinc-950/70 backdrop-blur-sm rounded-lg">
                   <div className="flex flex-col items-center gap-3">
-                    <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-                    <p className="font-medium text-blue-800 text-sm">Çevrenizdeki istasyonlar aranıyor...</p>
+                    <div className="w-10 h-10 border-4 border-emerald-400 border-t-transparent rounded-full animate-spin" />
+                    <p className="font-medium text-emerald-300 text-sm">Çevrenizdeki istasyonlar aranıyor...</p>
                   </div>
                 </div>
               )}
               <MapView stations={filteredStations} selectedStation={selectedStation} onStationSelect={handleMarkerClick} />
             </div>
 
-            <div className="w-full md:w-96 border-l bg-white overflow-y-auto p-4 space-y-3 relative">
-              <div className="sticky top-0 bg-white pb-3 mb-3 border-b z-10">
-                <h3 className="font-semibold">Yakındaki İstasyonlar</h3>
-                <p className="text-sm text-muted-foreground">{filteredStations.length} sonuç</p>
+            <div className="w-full md:w-96 border-l border-zinc-800 bg-zinc-900 overflow-y-auto p-4 space-y-3 relative">
+              <div className="sticky top-0 bg-zinc-900 pb-3 mb-3 border-b border-zinc-800 z-10">
+                <h3 className="font-semibold text-white">Yakındaki İstasyonlar</h3>
+                <p className="text-sm text-zinc-400">{filteredStations.length} sonuç</p>
               </div>
               {filteredStations.map((station) => (
                 <StationCard key={station.id} station={station} onViewDetails={handleViewDetails} onNavigate={handleNavigate} />
               ))}
               {!isLoading && filteredStations.length === 0 && (
-                <div className="text-center py-12 text-muted-foreground">
+                <div className="text-center py-12 text-zinc-500">
                   <p className="text-sm">Bu bölgede istasyon bulunamadı</p>
-                  <Button variant="outline" size="sm" className="mt-4" onClick={() => setFilters({ maxDistance: 50, onlyAvailable: false, brands: [], minPower: 0, connectorTypes: [] })}>
+                  <Button variant="outline" size="sm" className="mt-4 border-zinc-700 bg-zinc-950 text-zinc-200 hover:bg-zinc-800" onClick={() => setFilters({ maxDistance: 50, onlyAvailable: false, brands: [], minPower: 0, connectorTypes: [] })}>
                     Filtreleri Sıfırla
                   </Button>
                 </div>
@@ -370,8 +370,8 @@ export default function App() {
         ) : (
           <div className="h-full overflow-y-auto p-4 relative">
             {isLoading && (
-              <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-sm">
-                <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+              <div className="absolute inset-0 z-50 flex items-center justify-center bg-zinc-950/70 backdrop-blur-sm">
+                <div className="w-8 h-8 border-4 border-emerald-400 border-t-transparent rounded-full animate-spin" />
               </div>
             )}
             <div className="max-w-4xl mx-auto space-y-3">
@@ -379,9 +379,9 @@ export default function App() {
                 <StationCard key={station.id} station={station} onViewDetails={handleViewDetails} onNavigate={handleNavigate} />
               ))}
               {!isLoading && filteredStations.length === 0 && (
-                <div className="text-center py-12 text-muted-foreground">
+                <div className="text-center py-12 text-zinc-500">
                   <p className="mb-4 text-sm">Filtrelerinize uygun istasyon bulunamadı</p>
-                  <Button variant="outline" onClick={() => setFilters({ maxDistance: 50, onlyAvailable: false, brands: [], minPower: 0, connectorTypes: [] })}>
+                  <Button variant="outline" className="border-zinc-700 bg-zinc-900 text-zinc-200 hover:bg-zinc-800" onClick={() => setFilters({ maxDistance: 50, onlyAvailable: false, brands: [], minPower: 0, connectorTypes: [] })}>
                     Filtreleri Sıfırla
                   </Button>
                 </div>
@@ -408,14 +408,14 @@ export default function App() {
         <Button
           size="icon"
           variant="secondary"
-          className="rounded-full shadow-lg bg-indigo-50 text-indigo-700 h-12 w-12"
+          className="rounded-full border border-emerald-400/70 bg-zinc-900 text-emerald-300 h-12 w-12"
           onClick={() => setShowTripPlanner(true)}
         >
           <Route className="w-5 h-5" />
         </Button>
         <Button
           size="icon"
-          className="rounded-full shadow-lg h-12 w-12"
+          className="rounded-full border border-zinc-700 bg-zinc-900 text-zinc-100 h-12 w-12 hover:bg-zinc-800"
           onClick={() => {
             const nearestStation = filteredStations[0];
             if (nearestStation) handleViewDetails(nearestStation.id);
