@@ -14,8 +14,6 @@ import { Separator } from './ui/separator';
 import { toast } from 'sonner';
 import type { AIDamageReport } from './AIDamageSimulation';
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-
 type UserRole = 'driver' | 'station_owner' | 'admin';
 type UserStatus = 'active' | 'suspended' | 'pending';
 type StationStatus = 'active' | 'pending_approval' | 'suspended';
@@ -31,8 +29,6 @@ interface AdminStation {
   status: StationStatus; totalPoints: number; monthlyRevenue: number;
   submittedDate: string; rating: number;
 }
-
-// ── localStorage ──────────────────────────────────────────────────────────────
 
 const LS_USERS     = 'esarj_admin_users';
 const LS_STATIONS  = 'esarj_admin_stations';
@@ -63,46 +59,42 @@ function saveLS<T>(key: string, val: T) {
   try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
 }
 
-// ── Label / colour maps ───────────────────────────────────────────────────────
-
 const roleLabels: Record<UserRole, string> = { driver: 'Sürücü', station_owner: 'İstasyon Sahibi', admin: 'Admin' };
 const roleColors: Record<UserRole, string> = {
-  driver: 'bg-blue-100 text-blue-700',
-  station_owner: 'bg-purple-100 text-purple-700',
-  admin: 'bg-red-100 text-red-700',
+  driver: 'bg-blue-900/60 text-blue-300 border border-blue-700/50',
+  station_owner: 'bg-purple-900/60 text-purple-300 border border-purple-700/50',
+  admin: 'bg-red-900/60 text-red-300 border border-red-700/50',
 };
 const userStatusColors: Record<UserStatus, string> = {
-  active: 'bg-green-100 text-green-700',
-  suspended: 'bg-red-100 text-red-700',
-  pending: 'bg-yellow-100 text-yellow-700',
+  active: 'bg-emerald-900/60 text-emerald-300 border border-emerald-700/50',
+  suspended: 'bg-red-900/60 text-red-300 border border-red-700/50',
+  pending: 'bg-yellow-900/60 text-yellow-300 border border-yellow-700/50',
 };
 const stationStatusColors: Record<StationStatus, string> = {
-  active: 'bg-green-100 text-green-700',
-  suspended: 'bg-red-100 text-red-700',
-  pending_approval: 'bg-orange-100 text-orange-700',
+  active: 'bg-emerald-900/60 text-emerald-300 border border-emerald-700/50',
+  suspended: 'bg-red-900/60 text-red-300 border border-red-700/50',
+  pending_approval: 'bg-orange-900/60 text-orange-300 border border-orange-700/50',
 };
 const stationStatusLabels: Record<StationStatus, string> = {
   active: 'Aktif', suspended: 'Askıya Alındı', pending_approval: 'Onay Bekliyor',
 };
 
 const damageSeverityColors: Record<string, string> = {
-  low:      'bg-blue-100 text-blue-700',
-  medium:   'bg-yellow-100 text-yellow-700',
-  high:     'bg-orange-100 text-orange-700',
-  critical: 'bg-red-100 text-red-700',
+  low:      'bg-blue-900/60 text-blue-300 border border-blue-700/50',
+  medium:   'bg-yellow-900/60 text-yellow-300 border border-yellow-700/50',
+  high:     'bg-orange-900/60 text-orange-300 border border-orange-700/50',
+  critical: 'bg-red-900/60 text-red-300 border border-red-700/50',
 };
 const damageSeverityLabels: Record<string, string> = {
   low: 'Düşük', medium: 'Orta', high: 'Yüksek', critical: 'Kritik',
 };
 
 const kpis = [
-  { label: 'Toplam Kullanıcı',        value: '12,847', change: '+8.2%',    trend: 'up',      icon: Users,     bg: 'bg-zinc-800/40',   iconColor: 'text-emerald-400'   },
-  { label: 'Platform Geliri (Bu Ay)', value: '₺284,600', change: '+14.5%', trend: 'up',      icon: DollarSign,bg: 'bg-green-50',  iconColor: 'text-green-600'  },
-  { label: 'Kayıtlı İstasyonlar',     value: '342',    change: '+3 bekliyor', trend: 'neutral', icon: Building2, bg: 'bg-purple-50', iconColor: 'text-purple-600' },
-  { label: 'Aktif Şarj Oturumu',      value: '1,204',  change: 'Anlık',   trend: 'live',    icon: Activity,  bg: 'bg-orange-50', iconColor: 'text-orange-600' },
+  { label: 'Toplam Kullanıcı',        value: '12,847', change: '+8.2%',    trend: 'up',      icon: Users,      iconColor: 'text-emerald-400', borderColor: 'border-emerald-800/40' },
+  { label: 'Platform Geliri (Bu Ay)', value: '₺284,600', change: '+14.5%', trend: 'up',      icon: DollarSign, iconColor: 'text-green-400',   borderColor: 'border-green-800/40'   },
+  { label: 'Kayıtlı İstasyonlar',     value: '342',    change: '+3 bekliyor', trend: 'neutral', icon: Building2,  iconColor: 'text-purple-400',  borderColor: 'border-purple-800/40'  },
+  { label: 'Aktif Şarj Oturumu',      value: '1,204',  change: 'Anlık',   trend: 'live',    icon: Activity,   iconColor: 'text-orange-400',  borderColor: 'border-orange-800/40'  },
 ];
-
-// ── Component ─────────────────────────────────────────────────────────────────
 
 interface Props { onClose: () => void; }
 
@@ -115,7 +107,6 @@ export function AdminDashboard({ onClose }: Props) {
   const [stationSearch, setStationSearch] = useState('');
   const [userActionMenu, setUserActionMenu] = useState<string | null>(null);
 
-  // ── Persist users to localStorage whenever they change ────────────────────
   useEffect(() => { saveLS(LS_USERS, users); }, [users]);
   useEffect(() => { saveLS(LS_STATIONS, stations); }, [stations]);
 
@@ -130,14 +121,10 @@ export function AdminDashboard({ onClose }: Props) {
     s.name.toLowerCase().includes(stationSearch.toLowerCase()) ||
     s.owner.toLowerCase().includes(stationSearch.toLowerCase()));
 
-  // ── User actions ──────────────────────────────────────────────────────────
-
-  // FIX: use functional updater so the closure always sees fresh state,
-  // and close the menu *after* state is applied.
   const changeUserRole = useCallback((id: string, role: UserRole) => {
     setUsers(prev => {
       const next = prev.map(u => u.id === id ? { ...u, role } : u);
-      saveLS(LS_USERS, next); // immediately persist
+      saveLS(LS_USERS, next);
       return next;
     });
     toast.success(`Kullanıcı rolü "${roleLabels[role]}" olarak güncellendi`);
@@ -158,8 +145,6 @@ export function AdminDashboard({ onClose }: Props) {
     setUserActionMenu(null);
   }, []);
 
-  // ── Station actions ───────────────────────────────────────────────────────
-
   const updateStation = useCallback((id: string, status: StationStatus, msg: string) => {
     setStations(prev => {
       const next = prev.map(s => s.id === id ? { ...s, status } : s);
@@ -169,23 +154,19 @@ export function AdminDashboard({ onClose }: Props) {
     toast.success(msg);
   }, []);
 
-  const approveStation    = (id: string) => updateStation(id, 'active',           'İstasyon onaylandı');
-  const suspendStation    = (id: string) => updateStation(id, 'suspended',        'İstasyon askıya alındı');
-  const reactivateStation = (id: string) => updateStation(id, 'active',           'İstasyon aktif edildi');
-
-  // ── AI report actions ─────────────────────────────────────────────────────
+  const approveStation    = (id: string) => updateStation(id, 'active',    'İstasyon onaylandı');
+  const suspendStation    = (id: string) => updateStation(id, 'suspended', 'İstasyon askıya alındı');
+  const reactivateStation = (id: string) => updateStation(id, 'active',    'İstasyon aktif edildi');
 
   const markReportInProgress = (id: string) => {
     const updated = aiReports.map(r => r.id === id ? { ...r, status: 'in_progress' as const } : r);
-    setAiReports(updated);
-    saveLS(LS_AI_DAMAGE, updated);
+    setAiReports(updated); saveLS(LS_AI_DAMAGE, updated);
     toast.success('Rapor "İşlemde" olarak işaretlendi');
   };
 
   const markReportResolved = (id: string) => {
     const updated = aiReports.map(r => r.id === id ? { ...r, status: 'resolved' as const } : r);
-    setAiReports(updated);
-    saveLS(LS_AI_DAMAGE, updated);
+    setAiReports(updated); saveLS(LS_AI_DAMAGE, updated);
     toast.success('Rapor çözüldü olarak kapatıldı');
   };
 
@@ -195,50 +176,44 @@ export function AdminDashboard({ onClose }: Props) {
   };
 
   const resetAll = () => {
-    const freshUsers    = DEFAULT_USERS;
-    const freshStations = DEFAULT_STATIONS;
-    setUsers(freshUsers);
-    setStations(freshStations);
-    saveLS(LS_USERS,    freshUsers);
-    saveLS(LS_STATIONS, freshStations);
+    setUsers(DEFAULT_USERS); setStations(DEFAULT_STATIONS);
+    saveLS(LS_USERS, DEFAULT_USERS); saveLS(LS_STATIONS, DEFAULT_STATIONS);
     toast.info('Kullanıcı ve istasyon verileri sıfırlandı');
   };
 
-  // ── Render ─────────────────────────────────────────────────────────────────
-
   return (
-    <div className="fixed inset-0 bg-black/60 z-[2000] flex items-end md:items-center justify-center p-0 md:p-4">
-      <div className="bg-zinc-900 w-full md:max-w-5xl md:rounded-2xl max-h-[96vh] overflow-hidden flex flex-col shadow-2xl">
+    <div className="fixed inset-0 bg-black/70 z-[2000] flex items-end md:items-center justify-center p-0 md:p-4">
+      <div className="bg-zinc-900 border border-zinc-800 w-full md:max-w-5xl md:rounded-2xl max-h-[96vh] overflow-hidden flex flex-col shadow-2xl">
 
         {/* Header */}
-        <div className="bg-gradient-to-r from-slate-900 to-slate-700 px-6 py-5 flex items-center justify-between flex-shrink-0">
+        <div className="bg-zinc-950 border-b border-zinc-800 px-6 py-5 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-zinc-800/40 rounded-xl flex items-center justify-center">
-              <Shield className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 bg-emerald-400/10 border border-emerald-400/30 rounded-xl flex items-center justify-center">
+              <Shield className="w-5 h-5 text-emerald-400" />
             </div>
             <div>
-              <h2 className="text-white font-bold text-lg">Admin Paneli</h2>
-              <p className="text-slate-400 text-xs">Platform Yönetim Merkezi</p>
+              <h2 className="text-zinc-100 font-bold text-lg">Admin Paneli</h2>
+              <p className="text-zinc-500 text-xs">Platform Yönetim Merkezi</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             {pendingStations > 0 && (
-              <div className="flex items-center gap-1.5 bg-orange-500/20 border border-orange-500/30 text-orange-300 rounded-lg px-3 py-1.5 text-xs font-medium">
+              <div className="flex items-center gap-1.5 bg-orange-950/60 border border-orange-700/50 text-orange-300 rounded-lg px-3 py-1.5 text-xs font-medium">
                 <AlertTriangle className="w-3.5 h-3.5" />
                 {pendingStations} istasyon onay bekliyor
               </div>
             )}
             {criticalAiReports > 0 && (
-              <div className="flex items-center gap-1.5 bg-red-500/20 border border-red-500/30 text-red-300 rounded-lg px-3 py-1.5 text-xs font-medium">
+              <div className="flex items-center gap-1.5 bg-red-950/60 border border-red-700/50 text-red-300 rounded-lg px-3 py-1.5 text-xs font-medium">
                 <Wrench className="w-3.5 h-3.5" />
                 {criticalAiReports} kritik arıza
               </div>
             )}
-            <Button variant="ghost" size="sm" className="text-white/60 hover:text-white hover:bg-zinc-800/40" onClick={resetAll}>
+            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800" onClick={resetAll}>
               <RefreshCw className="w-3.5 h-3.5 mr-1" />
               <span className="hidden sm:inline text-xs">Sıfırla</span>
             </Button>
-            <Button variant="ghost" size="icon" onClick={onClose} className="text-white hover:bg-zinc-800/40">
+            <Button variant="ghost" size="icon" onClick={onClose} className="text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800">
               <X className="w-4 h-4" />
             </Button>
           </div>
@@ -249,29 +224,29 @@ export function AdminDashboard({ onClose }: Props) {
           {/* KPI Row */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {kpis.map(kpi => (
-              <Card key={kpi.label} className="border-0 shadow-sm">
-                <CardContent className={`p-4 ${kpi.bg} rounded-xl`}>
+              <Card key={kpi.label} className={`bg-zinc-900 border ${kpi.borderColor}`}>
+                <CardContent className="p-4">
                   <div className="flex items-start justify-between mb-3">
-                    <div className="w-9 h-9 bg-zinc-900 rounded-lg border border-zinc-800 flex items-center justify-center shadow-sm">
+                    <div className={`w-9 h-9 bg-zinc-800 rounded-lg border border-zinc-700 flex items-center justify-center`}>
                       <kpi.icon className={`w-4 h-4 ${kpi.iconColor}`} />
                     </div>
                     {kpi.trend === 'live' && (
                       <div className="flex items-center gap-1">
-                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                        <span className="text-xs text-green-600 font-medium">Canlı</span>
+                        <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+                        <span className="text-xs text-emerald-400 font-medium">Canlı</span>
                       </div>
                     )}
                     {kpi.trend === 'up' && (
-                      <span className="text-xs text-green-600 font-semibold flex items-center gap-0.5">
+                      <span className="text-xs text-emerald-400 font-semibold flex items-center gap-0.5">
                         <TrendingUp className="w-3 h-3" />{kpi.change}
                       </span>
                     )}
                     {kpi.trend === 'neutral' && (
-                      <span className="text-xs text-orange-600 font-semibold">{kpi.change}</span>
+                      <span className="text-xs text-orange-400 font-semibold">{kpi.change}</span>
                     )}
                   </div>
                   <div className="text-2xl font-bold text-zinc-100">{kpi.value}</div>
-                  <div className="text-xs text-zinc-400 mt-0.5">{kpi.label}</div>
+                  <div className="text-xs text-zinc-500 mt-0.5">{kpi.label}</div>
                 </CardContent>
               </Card>
             ))}
@@ -279,12 +254,12 @@ export function AdminDashboard({ onClose }: Props) {
 
           {/* Tabs */}
           <Tabs defaultValue="users">
-            <TabsList className="w-full mb-4">
-              <TabsTrigger value="users" className="flex-1">
+            <TabsList className="w-full mb-4 bg-zinc-800 border border-zinc-700">
+              <TabsTrigger value="users" className="flex-1 text-zinc-400 data-[state=active]:bg-zinc-700 data-[state=active]:text-zinc-100">
                 <Users className="w-4 h-4 mr-1.5" />
                 Kullanıcılar ({users.length})
               </TabsTrigger>
-              <TabsTrigger value="stations" className="flex-1">
+              <TabsTrigger value="stations" className="flex-1 text-zinc-400 data-[state=active]:bg-zinc-700 data-[state=active]:text-zinc-100">
                 <Building2 className="w-4 h-4 mr-1.5" />
                 İstasyonlar ({stations.length})
                 {pendingStations > 0 && (
@@ -293,7 +268,7 @@ export function AdminDashboard({ onClose }: Props) {
                   </span>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="maintenance" className="flex-1">
+              <TabsTrigger value="maintenance" className="flex-1 text-zinc-400 data-[state=active]:bg-zinc-700 data-[state=active]:text-zinc-100">
                 <Wrench className="w-4 h-4 mr-1.5" />
                 Bakım
                 {openAiReports > 0 && (
@@ -304,18 +279,23 @@ export function AdminDashboard({ onClose }: Props) {
               </TabsTrigger>
             </TabsList>
 
-            {/* ── USERS ── */}
+            {/* USERS */}
             <TabsContent value="users">
               <div className="flex gap-2 mb-4">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-                  <Input placeholder="Ad veya e-posta ara..." value={userSearch} onChange={e => setUserSearch(e.target.value)} className="pl-9 bg-zinc-950 text-zinc-100 border-zinc-800 placeholder:text-zinc-500" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+                  <Input
+                    placeholder="Ad veya e-posta ara..."
+                    value={userSearch}
+                    onChange={e => setUserSearch(e.target.value)}
+                    className="pl-9 bg-zinc-950 text-zinc-100 border-zinc-700 placeholder:text-zinc-500 focus-visible:ring-emerald-400"
+                  />
                 </div>
               </div>
 
               <div className="space-y-2">
                 {filteredUsers.map(user => (
-                  <Card key={user.id} className={`transition-all duration-200 ${user.status === 'suspended' ? 'opacity-60' : ''}`}>
+                  <Card key={user.id} className={`bg-zinc-800/50 border-zinc-700 transition-all duration-200 ${user.status === 'suspended' ? 'opacity-60' : ''}`}>
                     <CardContent className="p-4">
                       <div className="flex items-center gap-3">
                         <Avatar className="w-10 h-10 flex-shrink-0">
@@ -325,8 +305,7 @@ export function AdminDashboard({ onClose }: Props) {
                         </Avatar>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-semibold text-sm">{user.name}</span>
-                            {/* Role badge — updates immediately when role changes */}
+                            <span className="font-semibold text-sm text-zinc-100">{user.name}</span>
                             <Badge className={`text-xs border-0 transition-colors duration-200 ${roleColors[user.role]}`}>
                               {roleLabels[user.role]}
                             </Badge>
@@ -334,27 +313,31 @@ export function AdminDashboard({ onClose }: Props) {
                               {user.status === 'active' ? 'Aktif' : user.status === 'suspended' ? 'Askıya Alındı' : 'Beklemede'}
                             </Badge>
                           </div>
-                          <div className="text-xs text-zinc-400 mt-0.5">{user.email}</div>
-                          <div className="flex items-center gap-3 mt-1 text-xs text-zinc-400">
+                          <div className="text-xs text-zinc-500 mt-0.5">{user.email}</div>
+                          <div className="flex items-center gap-3 mt-1 text-xs text-zinc-500">
                             <span>{user.totalSessions} oturum</span>
                             <span>₺{user.totalSpent.toLocaleString('tr-TR')} harcama</span>
                           </div>
                         </div>
 
                         <div className="relative flex-shrink-0">
-                          <Button variant="ghost" size="sm" className="gap-1"
-                            onClick={() => setUserActionMenu(p => p === user.id ? null : user.id)}>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="gap-1 text-zinc-300 hover:text-zinc-100 hover:bg-zinc-700"
+                            onClick={() => setUserActionMenu(p => p === user.id ? null : user.id)}
+                          >
                             İşlem <ChevronDown className="w-3 h-3" />
                           </Button>
 
                           {userActionMenu === user.id && (
-                            <div className="absolute right-0 top-full mt-1 bg-zinc-900 border border-zinc-800 rounded-lg shadow-xl z-20 py-1 min-w-[190px]">
-                              <div className="px-3 py-1.5 text-xs font-semibold text-zinc-400 uppercase tracking-wide">Rol Değiştir</div>
+                            <div className="absolute right-0 top-full mt-1 bg-zinc-900 border border-zinc-700 rounded-lg shadow-xl z-20 py-1 min-w-[190px]">
+                              <div className="px-3 py-1.5 text-xs font-semibold text-zinc-500 uppercase tracking-wide">Rol Değiştir</div>
                               {(['driver', 'station_owner', 'admin'] as UserRole[]).map(role => (
                                 <button
                                   key={role}
                                   onClick={() => changeUserRole(user.id, role)}
-                                  className={`w-full text-left px-3 py-2 text-sm hover:bg-zinc-950 flex items-center gap-2 transition-colors ${user.role === role ? 'text-emerald-400 font-semibold bg-zinc-800/40' : 'text-zinc-300'}`}
+                                  className={`w-full text-left px-3 py-2 text-sm hover:bg-zinc-800 flex items-center gap-2 transition-colors ${user.role === role ? 'text-emerald-400 font-semibold bg-zinc-800/60' : 'text-zinc-300'}`}
                                 >
                                   {user.role === role
                                     ? <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
@@ -362,9 +345,11 @@ export function AdminDashboard({ onClose }: Props) {
                                   {roleLabels[role]}
                                 </button>
                               ))}
-                              <Separator className="my-1" />
-                              <button onClick={() => toggleUserStatus(user.id)}
-                                className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-zinc-950 transition-colors ${user.status === 'active' ? 'text-red-600' : 'text-green-600'}`}>
+                              <Separator className="my-1 bg-zinc-700" />
+                              <button
+                                onClick={() => toggleUserStatus(user.id)}
+                                className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-zinc-800 transition-colors ${user.status === 'active' ? 'text-red-400' : 'text-emerald-400'}`}
+                              >
                                 {user.status === 'active'
                                   ? <><UserX className="w-3.5 h-3.5" /> Askıya Al</>
                                   : <><UserCheck className="w-3.5 h-3.5" /> Aktif Et</>}
@@ -377,7 +362,7 @@ export function AdminDashboard({ onClose }: Props) {
                   </Card>
                 ))}
                 {filteredUsers.length === 0 && (
-                  <div className="text-center py-10 text-zinc-400">
+                  <div className="text-center py-10 text-zinc-500">
                     <Users className="w-10 h-10 mx-auto mb-2 opacity-30" />
                     <p className="text-sm">Kullanıcı bulunamadı</p>
                   </div>
@@ -385,20 +370,25 @@ export function AdminDashboard({ onClose }: Props) {
               </div>
             </TabsContent>
 
-            {/* ── STATIONS ── */}
+            {/* STATIONS */}
             <TabsContent value="stations">
               <div className="flex gap-2 mb-4">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-                  <Input placeholder="İstasyon, sahip veya şehir ara..." value={stationSearch} onChange={e => setStationSearch(e.target.value)} className="pl-9 bg-zinc-950 text-zinc-100 border-zinc-800 placeholder:text-zinc-500" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+                  <Input
+                    placeholder="İstasyon, sahip veya şehir ara..."
+                    value={stationSearch}
+                    onChange={e => setStationSearch(e.target.value)}
+                    className="pl-9 bg-zinc-950 text-zinc-100 border-zinc-700 placeholder:text-zinc-500 focus-visible:ring-emerald-400"
+                  />
                 </div>
               </div>
 
               {pendingStations > 0 && (
-                <Card className="bg-orange-50 border-orange-200 mb-4">
+                <Card className="bg-orange-950/30 border-orange-700/50 mb-4">
                   <CardContent className="p-3 flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4 text-orange-600 flex-shrink-0" />
-                    <p className="text-sm text-orange-800">
+                    <AlertTriangle className="w-4 h-4 text-orange-400 flex-shrink-0" />
+                    <p className="text-sm text-orange-300">
                       <strong>{pendingStations} yeni istasyon</strong> onay bekliyor.
                     </p>
                   </CardContent>
@@ -407,46 +397,55 @@ export function AdminDashboard({ onClose }: Props) {
 
               <div className="space-y-2">
                 {filteredStations.map(station => (
-                  <Card key={station.id} className={`transition-all duration-200 ${station.status === 'pending_approval' ? 'border-orange-300 bg-orange-50/30' : station.status === 'suspended' ? 'opacity-60' : ''}`}>
+                  <Card
+                    key={station.id}
+                    className={`bg-zinc-800/50 border-zinc-700 transition-all duration-200 ${station.status === 'pending_approval' ? 'border-orange-700/50' : station.status === 'suspended' ? 'opacity-60' : ''}`}
+                  >
                     <CardContent className="p-4">
                       <div className="flex items-start gap-3">
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${station.status === 'pending_approval' ? 'bg-orange-100' : station.status === 'suspended' ? 'bg-red-100' : 'bg-green-100'}`}>
-                          <Zap className={`w-5 h-5 ${station.status === 'pending_approval' ? 'text-orange-600' : station.status === 'suspended' ? 'text-red-600' : 'text-green-600'}`} />
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                          station.status === 'pending_approval' ? 'bg-orange-950/60' :
+                          station.status === 'suspended' ? 'bg-red-950/60' : 'bg-emerald-950/60'
+                        }`}>
+                          <Zap className={`w-5 h-5 ${
+                            station.status === 'pending_approval' ? 'text-orange-400' :
+                            station.status === 'suspended' ? 'text-red-400' : 'text-emerald-400'
+                          }`} />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap mb-1">
-                            <span className="font-semibold text-sm">{station.name}</span>
+                            <span className="font-semibold text-sm text-zinc-100">{station.name}</span>
                             <Badge className={`text-xs border-0 ${stationStatusColors[station.status]}`}>{stationStatusLabels[station.status]}</Badge>
-                            <Badge variant="outline" className="text-xs">{station.brand}</Badge>
+                            <Badge variant="outline" className="text-xs border-zinc-600 text-zinc-400">{station.brand}</Badge>
                           </div>
-                          <div className="text-xs text-zinc-400">
+                          <div className="text-xs text-zinc-500">
                             Sahip: {station.owner} · {station.city} · {station.totalPoints} şarj noktası
                           </div>
                           {station.status === 'active' && (
-                            <div className="text-xs text-green-600 font-medium mt-1">
+                            <div className="text-xs text-emerald-400 font-medium mt-1">
                               ₺{station.monthlyRevenue.toLocaleString('tr-TR')}/ay
-                              {station.rating > 0 && <span className="ml-2">⭐ {station.rating}</span>}
+                              {station.rating > 0 && <span className="ml-2 text-yellow-400">⭐ {station.rating}</span>}
                             </div>
                           )}
                         </div>
                         <div className="flex items-center gap-1.5 flex-shrink-0">
                           {station.status === 'pending_approval' && (
                             <>
-                              <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white text-xs h-8" onClick={() => approveStation(station.id)}>
+                              <Button size="sm" className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs h-8 border-0" onClick={() => approveStation(station.id)}>
                                 <CheckCircle className="w-3.5 h-3.5 mr-1" /> Onayla
                               </Button>
-                              <Button size="sm" variant="outline" className="border-red-300 text-red-600 hover:bg-red-50 text-xs h-8" onClick={() => suspendStation(station.id)}>
+                              <Button size="sm" variant="outline" className="border-red-700/50 text-red-400 hover:bg-red-950/40 text-xs h-8" onClick={() => suspendStation(station.id)}>
                                 <XCircle className="w-3.5 h-3.5 mr-1" /> Reddet
                               </Button>
                             </>
                           )}
                           {station.status === 'active' && (
-                            <Button size="sm" variant="outline" className="border-red-300 text-red-600 hover:bg-red-50 text-xs h-8" onClick={() => suspendStation(station.id)}>
+                            <Button size="sm" variant="outline" className="border-red-700/50 text-red-400 hover:bg-red-950/40 text-xs h-8" onClick={() => suspendStation(station.id)}>
                               <Ban className="w-3.5 h-3.5 mr-1" /> Askıya Al
                             </Button>
                           )}
                           {station.status === 'suspended' && (
-                            <Button size="sm" variant="outline" className="border-green-300 text-green-600 hover:bg-green-50 text-xs h-8" onClick={() => reactivateStation(station.id)}>
+                            <Button size="sm" variant="outline" className="border-emerald-700/50 text-emerald-400 hover:bg-emerald-950/40 text-xs h-8" onClick={() => reactivateStation(station.id)}>
                               <RefreshCw className="w-3.5 h-3.5 mr-1" /> Aktif Et
                             </Button>
                           )}
@@ -456,7 +455,7 @@ export function AdminDashboard({ onClose }: Props) {
                   </Card>
                 ))}
                 {filteredStations.length === 0 && (
-                  <div className="text-center py-10 text-zinc-400">
+                  <div className="text-center py-10 text-zinc-500">
                     <Building2 className="w-10 h-10 mx-auto mb-2 opacity-30" />
                     <p className="text-sm">İstasyon bulunamadı</p>
                   </div>
@@ -464,40 +463,37 @@ export function AdminDashboard({ onClose }: Props) {
               </div>
             </TabsContent>
 
-            {/* ── MAINTENANCE (AI Damage Reports) ── */}
+            {/* MAINTENANCE */}
             <TabsContent value="maintenance">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h3 className="font-semibold">AI Hasar Raporları</h3>
-                  <p className="text-xs text-zinc-400 mt-0.5">
-                    Sürücüler tarafından bildirilen ve AI tarafından analiz edilen arızalar
-                  </p>
+                  <h3 className="font-semibold text-zinc-100">AI Hasar Raporları</h3>
+                  <p className="text-xs text-zinc-500 mt-0.5">Sürücüler tarafından bildirilen ve AI tarafından analiz edilen arızalar</p>
                 </div>
-                <Button variant="outline" size="sm" onClick={refreshAiReports}>
+                <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800" onClick={refreshAiReports}>
                   <RefreshCw className="w-3.5 h-3.5 mr-1" /> Yenile
                 </Button>
               </div>
 
-              {/* Summary chips */}
               <div className="flex gap-2 mb-4 flex-wrap">
-                <div className="flex items-center gap-1.5 bg-red-50 border border-red-200 rounded-lg px-3 py-1.5 text-xs">
+                <div className="flex items-center gap-1.5 bg-red-950/40 border border-red-800/50 rounded-lg px-3 py-1.5 text-xs">
                   <div className="w-2 h-2 bg-red-500 rounded-full" />
-                  <span className="text-red-700 font-medium">{aiReports.filter(r => r.status === 'open').length} Açık</span>
+                  <span className="text-red-300 font-medium">{aiReports.filter(r => r.status === 'open').length} Açık</span>
                 </div>
-                <div className="flex items-center gap-1.5 bg-yellow-50 border border-yellow-200 rounded-lg px-3 py-1.5 text-xs">
+                <div className="flex items-center gap-1.5 bg-yellow-950/40 border border-yellow-800/50 rounded-lg px-3 py-1.5 text-xs">
                   <div className="w-2 h-2 bg-yellow-500 rounded-full" />
-                  <span className="text-yellow-700 font-medium">{aiReports.filter(r => r.status === 'in_progress').length} İşlemde</span>
+                  <span className="text-yellow-300 font-medium">{aiReports.filter(r => r.status === 'in_progress').length} İşlemde</span>
                 </div>
-                <div className="flex items-center gap-1.5 bg-green-50 border border-green-200 rounded-lg px-3 py-1.5 text-xs">
-                  <div className="w-2 h-2 bg-green-500 rounded-full" />
-                  <span className="text-green-700 font-medium">{aiReports.filter(r => r.status === 'resolved').length} Çözüldü</span>
+                <div className="flex items-center gap-1.5 bg-emerald-950/40 border border-emerald-800/50 rounded-lg px-3 py-1.5 text-xs">
+                  <div className="w-2 h-2 bg-emerald-500 rounded-full" />
+                  <span className="text-emerald-300 font-medium">{aiReports.filter(r => r.status === 'resolved').length} Çözüldü</span>
                 </div>
               </div>
 
               {aiReports.length === 0 ? (
-                <div className="text-center py-12 text-zinc-400">
+                <div className="text-center py-12 text-zinc-500">
                   <Wrench className="w-12 h-12 mx-auto mb-3 opacity-20" />
-                  <p className="text-sm font-medium">Henüz AI hasar raporu yok</p>
+                  <p className="text-sm font-medium text-zinc-400">Henüz AI hasar raporu yok</p>
                   <p className="text-xs mt-1">Sürücüler istasyon detay sayfasından hasar bildirebilir.</p>
                 </div>
               ) : (
@@ -505,42 +501,42 @@ export function AdminDashboard({ onClose }: Props) {
                   {aiReports.map(report => (
                     <Card
                       key={report.id}
-                      className={`transition-all duration-200 ${
-                        report.severity === 'critical' ? 'border-red-300 bg-red-50/20' :
-                        report.severity === 'high'     ? 'border-orange-200' : ''
+                      className={`bg-zinc-800/50 border-zinc-700 transition-all duration-200 ${
+                        report.severity === 'critical' ? 'border-red-700/50' :
+                        report.severity === 'high'     ? 'border-orange-700/50' : ''
                       } ${report.status === 'resolved' ? 'opacity-60' : ''}`}
                     >
                       <CardContent className="p-4">
                         <div className="flex items-start gap-3">
                           <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                            report.severity === 'critical' ? 'bg-red-100' :
-                            report.severity === 'high'     ? 'bg-orange-100' :
-                            report.severity === 'medium'   ? 'bg-yellow-100' : 'bg-blue-100'
+                            report.severity === 'critical' ? 'bg-red-950/60' :
+                            report.severity === 'high'     ? 'bg-orange-950/60' :
+                            report.severity === 'medium'   ? 'bg-yellow-950/60' : 'bg-blue-950/60'
                           }`}>
                             <AlertTriangle className={`w-5 h-5 ${
-                              report.severity === 'critical' ? 'text-red-600' :
-                              report.severity === 'high'     ? 'text-orange-600' :
-                              report.severity === 'medium'   ? 'text-yellow-600' : 'text-emerald-400'
+                              report.severity === 'critical' ? 'text-red-400' :
+                              report.severity === 'high'     ? 'text-orange-400' :
+                              report.severity === 'medium'   ? 'text-yellow-400' : 'text-blue-400'
                             }`} />
                           </div>
 
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap mb-1">
-                              <span className="font-semibold text-sm">{report.damageType}</span>
+                              <span className="font-semibold text-sm text-zinc-100">{report.damageType}</span>
                               <Badge className={`text-xs border-0 ${damageSeverityColors[report.severity] ?? ''}`}>
                                 {damageSeverityLabels[report.severity] ?? report.severity}
                               </Badge>
-                              <Badge variant="outline" className="text-xs font-mono">{report.priorityCode}</Badge>
-                              {report.status === 'open' && <Badge className="text-xs bg-red-100 text-red-700 border-0">Açık</Badge>}
-                              {report.status === 'in_progress' && <Badge className="text-xs bg-yellow-100 text-yellow-700 border-0">İşlemde</Badge>}
-                              {report.status === 'resolved' && <Badge className="text-xs bg-green-100 text-green-700 border-0">Çözüldü</Badge>}
+                              <Badge variant="outline" className="text-xs font-mono border-zinc-600 text-zinc-400">{report.priorityCode}</Badge>
+                              {report.status === 'open' && <Badge className="text-xs bg-red-950/60 text-red-300 border border-red-700/50 border-0">Açık</Badge>}
+                              {report.status === 'in_progress' && <Badge className="text-xs bg-yellow-950/60 text-yellow-300 border-0">İşlemde</Badge>}
+                              {report.status === 'resolved' && <Badge className="text-xs bg-emerald-950/60 text-emerald-300 border-0">Çözüldü</Badge>}
                             </div>
 
                             <p className="text-xs text-zinc-400 mb-1">📍 {report.stationName}</p>
-                            <p className="text-xs text-zinc-300 mb-1 line-clamp-2">{report.description}</p>
-                            <p className="text-xs text-blue-700 italic mb-2 line-clamp-1">{report.recommendation}</p>
+                            <p className="text-xs text-zinc-400 mb-1 line-clamp-2">{report.description}</p>
+                            <p className="text-xs text-blue-400 italic mb-2 line-clamp-1">{report.recommendation}</p>
 
-                            <div className="flex items-center gap-3 text-xs text-zinc-400">
+                            <div className="flex items-center gap-3 text-xs text-zinc-500">
                               <span className="flex items-center gap-1">
                                 <Clock className="w-3 h-3" />
                                 {new Date(report.timestamp).toLocaleString('tr-TR')}
@@ -552,12 +548,12 @@ export function AdminDashboard({ onClose }: Props) {
                           {report.status !== 'resolved' && (
                             <div className="flex flex-col gap-1.5 flex-shrink-0">
                               {report.status === 'open' && (
-                                <Button size="sm" variant="outline" className="text-xs h-7 border-yellow-300 text-yellow-700 hover:bg-yellow-50"
+                                <Button size="sm" variant="outline" className="text-xs h-7 border-yellow-700/50 text-yellow-400 hover:bg-yellow-950/40"
                                   onClick={() => markReportInProgress(report.id)}>
                                   İşleme Al
                                 </Button>
                               )}
-                              <Button size="sm" variant="outline" className="text-xs h-7 border-green-300 text-green-700 hover:bg-green-50"
+                              <Button size="sm" variant="outline" className="text-xs h-7 border-emerald-700/50 text-emerald-400 hover:bg-emerald-950/40"
                                 onClick={() => markReportResolved(report.id)}>
                                 <CheckCircle className="w-3 h-3 mr-1" /> Çözüldü
                               </Button>
@@ -574,9 +570,9 @@ export function AdminDashboard({ onClose }: Props) {
         </div>
 
         {/* Footer */}
-        <div className="border-t px-5 py-3 bg-zinc-950 flex items-center justify-between text-xs text-zinc-400 flex-shrink-0">
+        <div className="border-t border-zinc-800 px-5 py-3 bg-zinc-950 flex items-center justify-between text-xs text-zinc-500 flex-shrink-0">
           <span>eŞarj Admin · Değişiklikler otomatik kaydediliyor</span>
-          <Button variant="ghost" size="sm" className="text-xs h-7 gap-1" onClick={() => {
+          <Button variant="ghost" size="sm" className="text-xs h-7 gap-1 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800" onClick={() => {
             setUsers(loadLS(LS_USERS, DEFAULT_USERS));
             setStations(loadLS(LS_STATIONS, DEFAULT_STATIONS));
             toast.info('Veriler yenilendi');
@@ -586,7 +582,6 @@ export function AdminDashboard({ onClose }: Props) {
         </div>
       </div>
 
-      {/* Close action menu on outside click */}
       {userActionMenu && <div className="fixed inset-0 z-[1999]" onClick={() => setUserActionMenu(null)} />}
     </div>
   );
