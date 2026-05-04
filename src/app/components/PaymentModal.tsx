@@ -48,9 +48,9 @@ export function PaymentModal({
   return (
     /* z-[10005] — absolute topmost layer, above ReservationModal (z-[9999]) and MapView */
     <div className="fixed inset-0 bg-black/60 z-[10005] flex items-end md:items-center justify-center p-0 md:p-4">
-      <div className="bg-white w-full md:max-w-lg md:rounded-lg max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
+      <div className="bg-zinc-900 w-full md:max-w-lg md:rounded-lg max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
         {/* Header */}
-        <div className="p-4 border-b flex items-center justify-between">
+        <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
           <h3 className="font-semibold text-lg flex items-center gap-2">
             <Lock className="w-4 h-4" />
             Güvenli Ödeme
@@ -68,30 +68,30 @@ export function PaymentModal({
               <div className="font-semibold mb-3">Rezervasyon Özeti</div>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">İstasyon</span>
+                  <span className="text-zinc-400">İstasyon</span>
                   <span className="font-medium text-right">{station.name}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Şarj Noktası</span>
+                  <span className="text-zinc-400">Şarj Noktası</span>
                   <span className="font-medium">
                     {reservationDetails.chargingPoint.type} - {reservationDetails.chargingPoint.power} kW
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Tarih</span>
+                  <span className="text-zinc-400">Tarih</span>
                   <span className="font-medium">{formatDate(reservationDetails.date)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Saat</span>
+                  <span className="text-zinc-400">Saat</span>
                   <span className="font-medium">{reservationDetails.time}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Süre</span>
+                  <span className="text-zinc-400">Süre</span>
                   <span className="font-medium">{reservationDetails.duration} dakika</span>
                 </div>
-                <div className="flex justify-between pt-2 border-t">
+                <div className="flex justify-between pt-2 border-t border-zinc-800">
                   <span className="font-semibold">Toplam Tutar</span>
-                  <span className="text-xl font-bold text-green-600">{amount.toFixed(2)} ₺</span>
+                  <span className="text-xl font-bold text-emerald-400">{amount.toFixed(2)} ₺</span>
                 </div>
               </div>
             </CardContent>
@@ -105,7 +105,7 @@ export function PaymentModal({
                 <Card
                   key={method.id}
                   className={`cursor-pointer transition-all ${
-                    selectedPayment === method.id ? 'border-blue-500 bg-blue-50' : 'hover:bg-gray-50'
+                    selectedPayment === method.id ? 'border-emerald-400 bg-zinc-800/40' : 'hover:bg-zinc-950'
                   }`}
                   onClick={() => setSelectedPayment(method.id)}
                 >
@@ -119,20 +119,20 @@ export function PaymentModal({
                             {method.type === 'credit' ? 'Kredi Kartı' : 'Banka Kartı'}
                           </span>
                           {method.isDefault && (
-                            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">
+                            <span className="text-xs bg-blue-100 text-emerald-300 px-2 py-0.5 rounded">
                               Varsayılan
                             </span>
                           )}
                         </div>
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-sm text-zinc-400">
                           •••• •••• •••• {method.cardNumber}
                         </div>
-                        <div className="text-xs text-muted-foreground mt-1">
+                        <div className="text-xs text-zinc-400 mt-1">
                           {method.cardHolder} - {method.expiryDate}
                         </div>
                       </div>
                       {selectedPayment === method.id && (
-                        <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+                        <div className="w-5 h-5 rounded-full bg-emerald-400 flex items-center justify-center">
                           <Check className="w-3 h-3 text-white" />
                         </div>
                       )}
@@ -143,7 +143,7 @@ export function PaymentModal({
             </RadioGroup>
 
             {!showNewCard && (
-              <Button variant="outline" className="w-full" onClick={() => setShowNewCard(true)}>
+              <Button variant="outline" className="w-full bg-emerald-400 text-zinc-950 hover:bg-emerald-300" onClick={() => setShowNewCard(true)}>
                 <CreditCard className="w-4 h-4 mr-2" />
                 Yeni Kart Ekle
               </Button>
@@ -182,9 +182,9 @@ export function PaymentModal({
           </div>
 
           {/* Security Info */}
-          <Card className="bg-green-50 border-green-200">
+          <Card className="bg-zinc-800/40 border-zinc-700">
             <CardContent className="p-3 flex items-start gap-2">
-              <Lock className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+              <Lock className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
               <div className="text-xs text-green-800">
                 Ödeme bilgileriniz 256-bit SSL şifreleme ile korunmaktadır. Kart bilgileriniz güvenli bir
                 şekilde saklanır ve asla üçüncü şahıslarla paylaşılmaz.
@@ -194,11 +194,11 @@ export function PaymentModal({
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t bg-gray-50">
-          <Button className="w-full" size="lg" onClick={handlePayment} disabled={isProcessing}>
+        <div className="p-4 border-t border-zinc-800 bg-zinc-950">
+          <Button className="w-full bg-emerald-400 text-zinc-950 hover:bg-emerald-300" size="lg" onClick={handlePayment} disabled={isProcessing}>
             {isProcessing ? (
               <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                <div className="w-4 h-4 border-2 border-white border-t border-t-transparent rounded-full animate-spin mr-2" />
                 Ödeme İşleniyor...
               </>
             ) : (
