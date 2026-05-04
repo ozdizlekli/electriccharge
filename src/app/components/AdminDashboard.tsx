@@ -252,7 +252,7 @@ export function AdminDashboard({ onClose }: Props) {
               <Card key={kpi.label} className="border-0 shadow-sm">
                 <CardContent className={`p-4 ${kpi.bg} rounded-xl`}>
                   <div className="flex items-start justify-between mb-3">
-                    <div className="w-9 h-9 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                    <div className="w-9 h-9 bg-zinc-900 rounded-lg border border-zinc-800 flex items-center justify-center shadow-sm">
                       <kpi.icon className={`w-4 h-4 ${kpi.iconColor}`} />
                     </div>
                     {kpi.trend === 'live' && (
@@ -271,7 +271,7 @@ export function AdminDashboard({ onClose }: Props) {
                     )}
                   </div>
                   <div className="text-2xl font-bold text-zinc-100">{kpi.value}</div>
-                  <div className="text-xs text-gray-500 mt-0.5">{kpi.label}</div>
+                  <div className="text-xs text-zinc-400 mt-0.5">{kpi.label}</div>
                 </CardContent>
               </Card>
             ))}
@@ -309,7 +309,7 @@ export function AdminDashboard({ onClose }: Props) {
               <div className="flex gap-2 mb-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-                  <Input placeholder="Ad veya e-posta ara..." value={userSearch} onChange={e => setUserSearch(e.target.value)} className="pl-9" />
+                  <Input placeholder="Ad veya e-posta ara..." value={userSearch} onChange={e => setUserSearch(e.target.value)} className="pl-9 bg-zinc-950 text-zinc-100 border-zinc-800 placeholder:text-zinc-500" />
                 </div>
               </div>
 
@@ -390,7 +390,7 @@ export function AdminDashboard({ onClose }: Props) {
               <div className="flex gap-2 mb-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-                  <Input placeholder="İstasyon, sahip veya şehir ara..." value={stationSearch} onChange={e => setStationSearch(e.target.value)} className="pl-9" />
+                  <Input placeholder="İstasyon, sahip veya şehir ara..." value={stationSearch} onChange={e => setStationSearch(e.target.value)} className="pl-9 bg-zinc-950 text-zinc-100 border-zinc-800 placeholder:text-zinc-500" />
                 </div>
               </div>
 

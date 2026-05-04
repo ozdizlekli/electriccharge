@@ -206,7 +206,7 @@ export function StationOwnerDashboard({ onClose }: StationOwnerDashboardProps) {
                   onClick={() => { setActiveNav(id); setSelectedStationId(null); }}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                     activeNav === id
-                      ? 'bg-blue-600 text-white shadow-sm'
+                      ? 'bg-emerald-400 text-zinc-950 shadow-sm'
                       : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
                   }`}
                 >
@@ -253,7 +253,7 @@ export function StationOwnerDashboard({ onClose }: StationOwnerDashboardProps) {
                     </CardContent>
                   </Card>
 
-                  <Card className="border-0 bg-gradient-to-br from-blue-50 to-indigo-50">
+                  <Card className="border-0 bg-gradient-to-br from-zinc-900 to-zinc-800">
                     <CardContent className="p-4">
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-8 h-8 bg-zinc-800/400/15 rounded-lg flex items-center justify-center">
@@ -512,7 +512,7 @@ export function StationOwnerDashboard({ onClose }: StationOwnerDashboardProps) {
                               <span className="text-xs text-slate-500">Birim Fiyat</span>
                               {isEditing ? (
                                 <div className="flex items-center gap-1">
-                                  <Input className="h-7 w-24 text-xs" value={editingPrices[key]}
+                                  <Input className="h-7 w-24 text-xs bg-zinc-950 text-zinc-100 border-zinc-800" value={editingPrices[key]}
                                     onChange={e => setEditingPrices(prev => ({ ...prev, [key]: e.target.value }))} />
                                   <Button size="icon" className="h-7 w-7" onClick={() => updatePrice(selectedStation.id, cp.id)}>
                                     <Check className="w-3 h-3" />

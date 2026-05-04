@@ -120,9 +120,9 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
         {/* Header */}
         <div className={`px-5 py-4 flex items-center justify-between flex-shrink-0 transition-colors ${
           phase === 'charging' ? 'bg-green-600 text-white' :
-          phase === 'completed' ? 'bg-blue-600 text-white' :
+          phase === 'completed' ? 'bg-emerald-400 text-zinc-950' :
           phase === 'error' ? 'bg-red-600 text-white' :
-          'bg-gray-900 text-white'
+          'bg-zinc-900 text-zinc-100'
         }`}>
           <div className="flex items-center gap-2">
             <Zap className="w-5 h-5" />
@@ -164,7 +164,7 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
 
               {/* QR Code visual */}
               <div className="relative">
-                <div className={`w-52 h-52 border-4 rounded-2xl flex items-center justify-center transition-all ${qrScanned ? 'border-green-500 bg-green-50' : 'border-gray-200 bg-zinc-950'}`}>
+                <div className={`w-52 h-52 border-4 rounded-2xl flex items-center justify-center transition-all ${qrScanned ? 'border-emerald-400 bg-zinc-800/40' : 'border-zinc-800 bg-zinc-950'}`}>
                   {!qrScanned ? (
                     <div className="space-y-1 p-2">
                       {/* Fake QR pattern */}
@@ -177,7 +177,7 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
                             return (
                               <div
                                 key={col}
-                                className={`w-5 h-5 rounded-sm ${isCorner || (isFinder && !isCorner) ? 'bg-gray-900' : randomFill ? 'bg-gray-900' : 'bg-white border border-gray-100'}`}
+                                className={`w-5 h-5 rounded-sm ${isCorner || (isFinder && !isCorner) ? 'bg-gray-900' : randomFill ? 'bg-gray-900' : 'bg-zinc-100 border border-zinc-300'}`}
                               />
                             );
                           })}
@@ -231,7 +231,7 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
           {phase === 'connecting' && (
             <div className="p-8 flex flex-col items-center gap-6 text-center">
               <div className="relative w-24 h-24">
-                <div className="absolute inset-0 rounded-full border-4 border-gray-100" />
+                <div className="absolute inset-0 rounded-full border-4 border-zinc-800" />
                 <div className="absolute inset-0 rounded-full border-4 border-t-blue-500 animate-spin" />
                 <Zap className="absolute inset-0 m-auto w-8 h-8 text-blue-500" />
               </div>
@@ -242,7 +242,7 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
               <div className="w-full space-y-2">
                 {['QR doğrulandı ✓', 'Ödeme onaylandı ✓', 'Konnektör kilitleniyor...'].map((step, i) => (
                   <div key={i} className="flex items-center gap-2 text-sm">
-                    <div className={`w-4 h-4 rounded-full flex items-center justify-center ${i < 2 ? 'bg-green-500' : 'bg-blue-100'}`}>
+                    <div className={`w-4 h-4 rounded-full flex items-center justify-center ${i < 2 ? 'bg-green-500' : 'bg-zinc-800'}`}>
                       {i < 2 && <CheckCircle className="w-3 h-3 text-white" />}
                       {i === 2 && <div className="w-2 h-2 rounded-full bg-zinc-800/400 animate-pulse" />}
                     </div>
@@ -336,7 +336,7 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-zinc-400">Kalan (%{Math.round(targetPct - batteryPct)})</div>
-                    <div className="text-sm font-medium text-gray-600">
+                    <div className="text-sm font-medium text-zinc-400">
                       ≈ {((targetPct - batteryPct) * (chargingPoint.power / 100) * chargingPoint.price * 0.8).toFixed(2)} ₺
                     </div>
                   </div>
@@ -349,7 +349,7 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
                   <span>Şarj Hızı</span>
                   <span>{currentKw.toFixed(1)} / {chargingPoint.power} kW</span>
                 </div>
-                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-green-400 to-green-600 rounded-full transition-all duration-1000"
                     style={{ width: `${(currentKw / chargingPoint.power) * 100}%` }}
@@ -396,7 +396,7 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
               </div>
 
               {/* Invoice */}
-              <Card className="border-2 border-dashed border-gray-200">
+              <Card className="border-2 border-dashed border-zinc-800">
                 <CardContent className="p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
