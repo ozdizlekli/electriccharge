@@ -44,50 +44,50 @@ function QRScanner({ station, onScanComplete, onClose }: QRScannerProps) {
 
   return (
     <div className="fixed inset-0 bg-black/70 z-[1050] flex items-end md:items-center justify-center p-0 md:p-4">
-      <div className="bg-white w-full md:max-w-sm md:rounded-2xl overflow-hidden shadow-2xl">
+      <div className="bg-zinc-900 w-full md:max-w-sm md:rounded-2xl overflow-hidden shadow-2xl">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-green-500 px-5 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2 text-white">
             <QrCode className="w-5 h-5" />
             <span className="font-bold">QR Şarj Başlat</span>
           </div>
-          <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={onClose}>
+          <Button variant="ghost" size="icon" className="text-white hover:bg-zinc-900/20" onClick={onClose}>
             <X className="w-4 h-4" />
           </Button>
         </div>
 
         <div className="p-5 space-y-4">
-          <p className="text-sm text-muted-foreground text-center">
+          <p className="text-sm text-zinc-400 text-center">
             Şarj noktası seçin, ardından QR kodu taratın
           </p>
 
           {/* Point selector */}
           {availablePoints.length > 0 && (
             <div className="space-y-2">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Müsait Noktalar</p>
+              <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wide">Müsait Noktalar</p>
               {availablePoints.map(cp => (
                 <button
                   key={cp.id}
                   onClick={() => setSelectedPointId(cp.id)}
                   className={`w-full flex items-center justify-between p-3 rounded-xl border-2 transition-all text-sm ${
                     selectedPointId === cp.id
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 hover:border-gray-300'
+                      ? 'border-emerald-400 bg-zinc-800/40'
+                      : 'border-zinc-800 hover:border-zinc-700'
                   }`}
                 >
                   <div className="flex items-center gap-2">
-                    <Zap className={`w-4 h-4 ${selectedPointId === cp.id ? 'text-blue-600' : 'text-gray-400'}`} />
+                    <Zap className={`w-4 h-4 ${selectedPointId === cp.id ? 'text-emerald-400' : 'text-gray-400'}`} />
                     <span className="font-medium">{cp.type} {cp.power} kW</span>
-                    <span className="text-muted-foreground">— {cp.connector}</span>
+                    <span className="text-zinc-400">— {cp.connector}</span>
                   </div>
-                  <span className="font-semibold text-green-600">{cp.price} ₺/kWh</span>
+                  <span className="font-semibold text-emerald-400">{cp.price} ₺/kWh</span>
                 </button>
               ))}
             </div>
           )}
 
           {availablePoints.length === 0 && (
-            <Card className="bg-red-50 border-red-200">
+            <Card className="bg-zinc-800/40 border-zinc-700">
               <CardContent className="p-3 text-sm text-red-700 text-center">
                 Şu an müsait şarj noktası bulunmuyor.
               </CardContent>
@@ -97,7 +97,7 @@ function QRScanner({ station, onScanComplete, onClose }: QRScannerProps) {
           {/* QR visual */}
           <div
             className={`relative mx-auto w-48 h-48 border-4 rounded-2xl flex items-center justify-center cursor-pointer transition-all ${
-              scanned ? 'border-green-500 bg-green-50' : scanning ? 'border-blue-400 bg-blue-50' : 'border-gray-200 bg-gray-50'
+              scanned ? 'border-green-500 bg-zinc-800/40' : scanning ? 'border-emerald-400 bg-zinc-800/40' : 'border-zinc-800 bg-zinc-950'
             }`}
             onClick={!scanning && !scanned && availablePoints.length > 0 ? handleScan : undefined}
           >
@@ -113,7 +113,7 @@ function QRScanner({ station, onScanComplete, onClose }: QRScannerProps) {
                         <div
                           key={col}
                           className={`w-5 h-5 rounded-sm ${
-                            isCorner || (isFinder && !isCorner) ? 'bg-gray-900' : randomFill ? 'bg-gray-900' : 'bg-white border border-gray-100'
+                            isCorner || (isFinder && !isCorner) ? 'bg-gray-900' : randomFill ? 'bg-gray-900' : 'bg-zinc-900 border border-gray-100'
                           }`}
                         />
                       );
@@ -121,17 +121,17 @@ function QRScanner({ station, onScanComplete, onClose }: QRScannerProps) {
                   </div>
                 ))}
                 {/* Corner guides */}
-                <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-blue-500 rounded-tl-lg" />
-                <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-blue-500 rounded-tr-lg" />
-                <div className="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4 border-blue-500 rounded-bl-lg" />
-                <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-blue-500 rounded-br-lg" />
+                <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-emerald-400 rounded-tl-lg" />
+                <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-emerald-400 rounded-tr-lg" />
+                <div className="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4 border-emerald-400 rounded-bl-lg" />
+                <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-emerald-400 rounded-br-lg" />
               </div>
             )}
 
             {scanning && (
               <div className="flex flex-col items-center gap-3">
-                <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-                <p className="text-xs text-blue-600 font-medium">Taranıyor...</p>
+                <div className="w-10 h-10 border-4 border-emerald-400 border-t border-t-transparent rounded-full animate-spin" />
+                <p className="text-xs text-emerald-400 font-medium">Taranıyor...</p>
                 {/* Scan line animation */}
                 <div className="absolute inset-x-4 h-0.5 bg-blue-400 opacity-80 top-1/2 animate-pulse" />
               </div>
@@ -139,22 +139,22 @@ function QRScanner({ station, onScanComplete, onClose }: QRScannerProps) {
 
             {scanned && (
               <div className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-emerald-400 rounded-full flex items-center justify-center">
                   <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <p className="text-xs text-green-600 font-semibold">QR Doğrulandı!</p>
+                <p className="text-xs text-emerald-400 font-semibold">QR Doğrulandı!</p>
               </div>
             )}
           </div>
 
           {!scanning && !scanned && availablePoints.length > 0 && (
-            <p className="text-xs text-center text-muted-foreground">QR görseline tıklayarak taramayı simüle edin</p>
+            <p className="text-xs text-center text-zinc-400">QR görseline tıklayarak taramayı simüle edin</p>
           )}
 
           <Button
-            className="w-full"
+            className="w-full bg-emerald-400 text-zinc-950 hover:bg-emerald-300"
             size="lg"
             disabled={scanning || scanned || availablePoints.length === 0}
             onClick={handleScan}
@@ -200,7 +200,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
   return (
     <>
       <div className="fixed inset-0 bg-black/50 z-[1000] flex items-end md:items-center justify-center p-0 md:p-4">
-        <div className="bg-white w-full md:max-w-3xl md:rounded-lg max-h-[95vh] overflow-hidden flex flex-col">
+        <div className="bg-zinc-900 w-full md:max-w-3xl md:rounded-lg max-h-[95vh] overflow-hidden flex flex-col">
           {/* Header image */}
           <div className="relative">
             <img
@@ -226,7 +226,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
               <div className="flex items-start justify-between gap-4 mb-2">
                 <div>
                   <h2 className="text-2xl font-semibold mb-1">{station.name}</h2>
-                  <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="flex items-center gap-2 text-zinc-400">
                     <MapPin className="w-4 h-4" />
                     <span className="text-sm">{station.address}</span>
                   </div>
@@ -237,9 +237,9 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                   <span className="font-medium">{station.rating}</span>
-                  <span className="text-sm text-muted-foreground">({station.totalReviews} değerlendirme)</span>
+                  <span className="text-sm text-zinc-400">({station.totalReviews} değerlendirme)</span>
                 </div>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1 text-sm text-zinc-400">
                   <Clock className="w-4 h-4" />
                   <span>{station.isOpen24Hours ? '24 Saat Açık' : station.openingHours}</span>
                 </div>
@@ -251,7 +251,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
               <Button
                 variant="outline"
                 size="sm"
-                className="flex flex-col h-auto py-3 gap-1 border-blue-200 text-blue-700 hover:bg-blue-50"
+                className="flex flex-col h-auto py-3 gap-1 border-zinc-700 text-emerald-300 hover:bg-zinc-800/40"
                 onClick={() => setShowCommunity(true)}
               >
                 <MessageSquare className="w-5 h-5" />
@@ -260,7 +260,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
               <Button
                 variant="outline"
                 size="sm"
-                className="flex flex-col h-auto py-3 gap-1 border-orange-200 text-orange-700 hover:bg-orange-50"
+                className="flex flex-col h-auto py-3 gap-1 border-zinc-700 text-orange-700 hover:bg-zinc-800/40"
                 onClick={() => setShowAIDamage(true)}
               >
                 <AlertTriangle className="w-5 h-5" />
@@ -269,7 +269,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
               <Button
                 variant="outline"
                 size="sm"
-                className="flex flex-col h-auto py-3 gap-1 border-green-200 text-green-700 hover:bg-green-50"
+                className="flex flex-col h-auto py-3 gap-1 border-zinc-700 text-green-700 hover:bg-zinc-800/40"
                 onClick={() => setShowQRScanner(true)}
               >
                 <QrCode className="w-5 h-5" />
@@ -282,18 +282,18 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${availablePoints > 0 ? 'bg-green-500' : 'bg-red-500'}`} />
+                    <div className={`w-3 h-3 rounded-full ${availablePoints > 0 ? 'bg-emerald-400' : 'bg-emerald-400'}`} />
                     <div>
                       <div className="font-semibold">
                         {availablePoints > 0 ? `${availablePoints} Şarj Noktası Müsait` : 'Tüm Noktalar Dolu'}
                       </div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-sm text-zinc-400">
                         Toplam {station.chargingPoints.length} şarj noktası
                       </div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm text-muted-foreground">Mesafe</div>
+                    <div className="text-sm text-zinc-400">Mesafe</div>
                     <div className="font-semibold">{station.distance} km</div>
                   </div>
                 </div>
@@ -301,7 +301,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
             </Card>
 
             {/* Tabs */}
-            <Tabs defaultValue="charging" className="w-full">
+            <Tabs defaultValue="charging" className="w-full bg-emerald-400 text-zinc-950 hover:bg-emerald-300">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="charging">Şarj Noktaları</TabsTrigger>
                 <TabsTrigger value="amenities">Olanaklar</TabsTrigger>
@@ -310,7 +310,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
 
               <TabsContent value="charging" className="space-y-3 mt-4">
                 {station.chargingPoints.map(point => (
-                  <Card key={point.id} className={point.status === 'available' ? 'border-green-200' : ''}>
+                  <Card key={point.id} className={point.status === 'available' ? 'border-zinc-700' : ''}>
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1">
@@ -321,7 +321,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
                               {point.status === 'available' ? 'Müsait' : point.status === 'occupied' ? 'Dolu' : 'Bakımda'}
                             </Badge>
                           </div>
-                          <div className="text-sm text-muted-foreground mb-2">Konnektör: {point.connector}</div>
+                          <div className="text-sm text-zinc-400 mb-2">Konnektör: {point.connector}</div>
                           {point.status === 'occupied' && point.currentUser && (
                             <div className="flex items-center gap-1 text-sm text-orange-600">
                               <Clock className="w-3 h-3" />
@@ -339,7 +339,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
                               <Button
                                 size="sm"
                                 variant="outline"
-                                className="border-green-300 text-green-700 hover:bg-green-50"
+                                className="border-green-300 text-green-700 hover:bg-zinc-800/40"
                                 onClick={() => handleStartCharging(point)}
                               >
                                 <Play className="w-3 h-3 mr-1" />
@@ -365,7 +365,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
                     <Card key={idx}>
                       <CardContent className="p-3 flex items-center gap-2">
                         <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                          <Info className="w-4 h-4 text-blue-600" />
+                          <Info className="w-4 h-4 text-emerald-400" />
                         </div>
                         <span className="text-sm font-medium">{amenity}</span>
                       </CardContent>
@@ -379,7 +379,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
                   <CardContent className="p-4">
                     <h4 className="font-semibold mb-3">Çalışma Saatleri</h4>
                     <div className="flex items-center gap-2 text-sm">
-                      <Clock className="w-4 h-4 text-muted-foreground" />
+                      <Clock className="w-4 h-4 text-zinc-400" />
                       <span>{station.isOpen24Hours ? '24 Saat Hizmet' : station.openingHours}</span>
                     </div>
                   </CardContent>
@@ -390,7 +390,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
                     <div className="space-y-2 text-sm">
                       {station.chargingPoints.map((point, idx) => (
                         <div key={idx} className="flex justify-between">
-                          <span className="text-muted-foreground">{point.type} ({point.power} kW)</span>
+                          <span className="text-zinc-400">{point.type} ({point.power} kW)</span>
                           <span className="font-medium">{point.price} ₺/kWh</span>
                         </div>
                       ))}
@@ -401,7 +401,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
                   <CardContent className="p-4">
                     <h4 className="font-semibold mb-3">Ödeme Yöntemleri</h4>
                     <div className="flex items-center gap-2 text-sm">
-                      <CreditCard className="w-4 h-4 text-muted-foreground" />
+                      <CreditCard className="w-4 h-4 text-zinc-400" />
                       <span>Kredi Kartı, Banka Kartı, Dijital Cüzdan, QR Kod</span>
                     </div>
                   </CardContent>
