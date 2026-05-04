@@ -177,7 +177,7 @@ export function StationOwnerDashboard({ onClose }: StationOwnerDashboardProps) {
         {/* Top Header */}
         <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 px-6 py-4 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-zinc-800/400/20 rounded-xl flex items-center justify-center border border-blue-400/30">
+            <div className="w-9 h-9 bg-zinc-800/40 rounded-xl flex items-center justify-center border border-zinc-700">
               <Zap className="w-5 h-5 text-blue-400" />
             </div>
             <div>
@@ -256,7 +256,7 @@ export function StationOwnerDashboard({ onClose }: StationOwnerDashboardProps) {
                   <Card className="border-0 bg-gradient-to-br from-zinc-900 to-zinc-800">
                     <CardContent className="p-4">
                       <div className="flex items-center gap-2 mb-2">
-                        <div className="w-8 h-8 bg-zinc-800/400/15 rounded-lg flex items-center justify-center">
+                        <div className="w-8 h-8 bg-zinc-800/40 rounded-lg flex items-center justify-center">
                           <Activity className="w-4 h-4 text-emerald-400" />
                         </div>
                         <span className="text-xs text-slate-500 font-medium">Aktif Oturum</span>
@@ -266,7 +266,7 @@ export function StationOwnerDashboard({ onClose }: StationOwnerDashboardProps) {
                     </CardContent>
                   </Card>
 
-                  <Card className="border-0 bg-gradient-to-br from-purple-50 to-pink-50">
+                  <Card className="border border-zinc-800 bg-zinc-900">
                     <CardContent className="p-4">
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-8 h-8 bg-purple-500/15 rounded-lg flex items-center justify-center">

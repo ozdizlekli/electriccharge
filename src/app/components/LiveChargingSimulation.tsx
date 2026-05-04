@@ -244,7 +244,7 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
                   <div key={i} className="flex items-center gap-2 text-sm">
                     <div className={`w-4 h-4 rounded-full flex items-center justify-center ${i < 2 ? 'bg-green-500' : 'bg-zinc-800'}`}>
                       {i < 2 && <CheckCircle className="w-3 h-3 text-white" />}
-                      {i === 2 && <div className="w-2 h-2 rounded-full bg-zinc-800/400 animate-pulse" />}
+                      {i === 2 && <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />}
                     </div>
                     <span className={i < 2 ? 'text-green-700' : 'text-emerald-400 font-medium'}>{step}</span>
                   </div>

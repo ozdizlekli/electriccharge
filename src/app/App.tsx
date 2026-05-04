@@ -227,7 +227,7 @@ export default function App() {
   const roleConfig = {
     driver: { label: 'Sürücü', color: 'bg-zinc-800 text-emerald-300 border border-zinc-700' },
     station_owner: { label: 'İstasyon Sahibi', color: 'bg-zinc-800 text-emerald-300 border border-zinc-700' },
-    admin: { label: 'Admin', color: 'bg-zinc-800 text-red-400 border border-zinc-700' }
+    admin: { label: 'Admin', color: 'bg-zinc-800 text-emerald-300 border border-zinc-700' }
   };
 
   if (!currentUser) {
@@ -267,7 +267,7 @@ export default function App() {
               )}
 
               {currentUser.role === 'admin' && (
-                <Button variant="default" size="sm" onClick={() => setShowAdminDashboard(true)} className="ml-2 hidden md:flex bg-red-600 hover:bg-red-700 text-white border-0">
+                <Button variant="default" size="sm" onClick={() => setShowAdminDashboard(true)} className="ml-2 hidden md:flex bg-emerald-400 hover:bg-emerald-300 text-zinc-950 border-0">
                   Admin Paneli
                 </Button>
               )}

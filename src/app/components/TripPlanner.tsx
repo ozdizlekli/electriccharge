@@ -137,7 +137,7 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
       <div className="bg-zinc-900 w-full md:max-w-xl md:rounded-2xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl">
 
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-5 py-4 flex items-center justify-between flex-shrink-0">
+        <div className="bg-zinc-900 border-b border-zinc-800 px-5 py-4 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-2 text-white">
             <div className="w-8 h-8 bg-zinc-900/20 rounded-lg flex items-center justify-center">
               <Route className="w-4 h-4" />
@@ -276,7 +276,7 @@ export function TripPlanner({ stations, onClose }: TripPlannerProps) {
                     <div className="text-xs text-emerald-400 mt-0.5">Şarj Durağı</div>
                   </CardContent>
                 </Card>
-                <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-0">
+                <Card className="bg-zinc-900 border border-zinc-800">
                   <CardContent className="p-3 text-center">
                     <div className="text-xl font-bold text-purple-700">{totalCost.toFixed(0)} ₺</div>
                     <div className="text-xs text-purple-600 mt-0.5">Tahmini Maliyet</div>
