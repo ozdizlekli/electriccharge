@@ -115,10 +115,10 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
   };
 
   const severityConfig = {
-    low: { color: 'bg-blue-100 text-blue-700 border-blue-200', label: 'Düşük', icon: '🔵' },
-    medium: { color: 'bg-yellow-100 text-yellow-700 border-yellow-200', label: 'Orta', icon: '🟡' },
-    high: { color: 'bg-orange-100 text-orange-700 border-orange-200', label: 'Yüksek', icon: '🟠' },
-    critical: { color: 'bg-red-100 text-red-700 border-red-200', label: 'Kritik', icon: '🔴' }
+    low: { color: 'bg-zinc-800 text-zinc-300 border-zinc-700', label: 'Düşük', icon: '🔵' },
+    medium: { color: 'bg-zinc-800 text-zinc-300 border-zinc-700', label: 'Orta', icon: '🟡' },
+    high: { color: 'bg-zinc-800 text-zinc-300 border-zinc-700', label: 'Yüksek', icon: '🟠' },
+    critical: { color: 'bg-zinc-800 text-zinc-200 border-zinc-700', label: 'Kritik', icon: '🔴' }
   };
 
   return (
@@ -131,7 +131,7 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
               <AlertTriangle className="w-5 h-5" />
               <span className="font-bold text-lg">AI Hasar Bildirimi</span>
             </div>
-            <Button variant="ghost" size="icon" className="text-zinc-300 hover:bg-zinc-800" onClick={onClose}>
+            <Button variant="ghost" size="icon" className="text-zinc-400 hover:bg-zinc-800" onClick={onClose}>
               <X className="w-4 h-4" />
             </Button>
           </div>
@@ -176,7 +176,7 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
                 <Label className="text-sm font-semibold">Hasar Kategorisi</Label>
                 <Select value={damageCategory} onValueChange={setDamageCategory}>
                   <SelectTrigger className="bg-zinc-900 border-zinc-800 text-zinc-100">
-                    <SelectValue placeholder="Hasar türünü seçin" />
+                    <SelectValue placeholder="Hasar türünü seçin" className="placeholder:text-zinc-500" />
                   </SelectTrigger>
                   <SelectContent className="bg-zinc-900 border-zinc-800 text-zinc-100">
                     <SelectItem value="cable">Kablo / Konektör Hasarı</SelectItem>
@@ -196,12 +196,12 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
                   placeholder="Hasarı kısaca açıklayın..."
                   value={description}
                   onChange={e => setDescription(e.target.value)}
-                  className="resize-none bg-zinc-900 border-zinc-800 text-zinc-100"
+                  className="resize-none bg-zinc-900 border-zinc-800 text-zinc-100 placeholder:text-zinc-500"
                   rows={3}
                 />
               </div>
 
-              <Button className="w-full bg-emerald-500 text-zinc-950 hover:bg-emerald-400" onClick={handleAnalyze}>
+              <Button className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-red-900/20" onClick={handleAnalyze}>
                 <Zap className="w-4 h-4 mr-2" />
                 AI ile Analiz Et
               </Button>
@@ -220,14 +220,14 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
                 <h3 className="font-bold text-lg">
                   {phase === 'uploading' ? 'Fotoğraf Yükleniyor...' : 'AI Analiz Ediyor...'}
                 </h3>
-                <p className="text-muted-foreground text-sm mt-1">
+                <p className="text-zinc-400 text-sm mt-1">
                   {phase === 'analyzing' ? 'OpenCV modeliyle hasar sınıflandırılıyor' : 'Lütfen bekleyin'}
                 </p>
               </div>
               {phase === 'analyzing' && (
                 <div className="w-full space-y-2">
                   <Progress value={analysisProgress} className="h-2" />
-                  <div className="flex justify-between text-xs text-muted-foreground">
+                  <div className="flex justify-between text-xs text-zinc-400">
                     <span>Görsel işleniyor...</span>
                     <span>%{analysisProgress}</span>
                   </div>
@@ -265,7 +265,7 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
                       </Badge>
                     </div>
                     <div className="text-right">
-                      <div className="text-xs text-muted-foreground">Öncelik Kodu</div>
+                      <div className="text-xs text-zinc-400">Öncelik Kodu</div>
                       <div className="font-mono font-bold text-sm">{result.priorityCode}</div>
                     </div>
                   </div>
@@ -284,7 +284,7 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
                   {/* Confidence bar */}
                   <div className="space-y-1">
                     <div className="flex justify-between text-xs">
-                      <span className="text-muted-foreground">Model Güveni</span>
+                      <span className="text-zinc-400">Model Güveni</span>
                       <span className="font-medium">%{result.confidence}</span>
                     </div>
                     <Progress value={result.confidence} className="h-1.5" />
@@ -293,7 +293,7 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
               </Card>
 
               {!reportSubmitted ? (
-                <Button className="w-full bg-emerald-500 text-zinc-950 hover:bg-emerald-400" onClick={handleSubmitReport}>
+                <Button className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-red-900/20" onClick={handleSubmitReport}>
                   <Send className="w-4 h-4 mr-2" />
                   Yöneticiye Acil Bildir
                 </Button>
@@ -304,7 +304,7 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
                 </div>
               )}
 
-              <Button variant="outline" className="w-full bg-transparent border-zinc-800 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100" onClick={() => { setPhase('idle'); setResult(null); setSelectedImage(null); }}>
+              <Button variant="outline" className="w-full bg-transparent border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100" onClick={() => { setPhase('idle'); setResult(null); setSelectedImage(null); }}>
                 Yeni Rapor Oluştur
               </Button>
             </div>
