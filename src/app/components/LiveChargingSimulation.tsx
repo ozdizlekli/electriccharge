@@ -118,12 +118,7 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
       <div className="bg-zinc-900 w-full md:max-w-md md:rounded-2xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl">
 
         {/* Header */}
-        <div className={`px-5 py-4 flex items-center justify-between flex-shrink-0 transition-colors ${
-          phase === 'charging' ? 'bg-green-600 text-white' :
-          phase === 'completed' ? 'bg-emerald-400 text-zinc-950' :
-          phase === 'error' ? 'bg-red-600 text-white' :
-          'bg-zinc-900 text-zinc-100'
-        }`}>
+        <div className="px-5 py-4 flex items-center justify-between flex-shrink-0 bg-zinc-950 border-b border-zinc-800 text-zinc-100">
           <div className="flex items-center gap-2">
             <Zap className="w-5 h-5" />
             <div>
@@ -142,7 +137,7 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="text-white hover:bg-zinc-700/50"
+            className="text-zinc-100 hover:bg-zinc-800"
             disabled={phase === 'charging'}
           >
             <X className="w-4 h-4" />
@@ -297,42 +292,42 @@ export function LiveChargingSimulation({ station, chargingPoint, onClose }: Live
 
               {/* Live Stats Grid */}
               <div className="grid grid-cols-2 gap-3">
-                <Card>
+                <Card className="bg-zinc-900 border border-zinc-800">
                   <CardContent className="p-3 text-center">
                     <div className="text-xs text-zinc-400 mb-1">Anlık Güç</div>
-                    <div className="text-xl font-bold text-green-600">{currentKw.toFixed(1)}</div>
+                    <div className="text-xl font-bold text-emerald-400">{currentKw.toFixed(1)}</div>
                     <div className="text-xs text-zinc-400">kW</div>
                   </CardContent>
                 </Card>
-                <Card>
+                <Card className="bg-zinc-900 border border-zinc-800">
                   <CardContent className="p-3 text-center">
                     <div className="text-xs text-zinc-400 mb-1">Toplam Enerji</div>
                     <div className="text-xl font-bold text-emerald-400">{totalKwh.toFixed(2)}</div>
                     <div className="text-xs text-zinc-400">kWh</div>
                   </CardContent>
                 </Card>
-                <Card>
+                <Card className="bg-zinc-900 border border-zinc-800">
                   <CardContent className="p-3 text-center">
                     <div className="text-xs text-zinc-400 mb-1">Geçen Süre</div>
-                    <div className="text-xl font-bold text-zinc-300">{formatTime(elapsedSecs)}</div>
+                    <div className="text-xl font-bold text-emerald-400">{formatTime(elapsedSecs)}</div>
                     <div className="text-xs text-zinc-400">ss:dd</div>
                   </CardContent>
                 </Card>
-                <Card>
+                <Card className="bg-zinc-900 border border-zinc-800">
                   <CardContent className="p-3 text-center">
                     <div className="text-xs text-zinc-400 mb-1">Kalan Süre</div>
-                    <div className="text-xl font-bold text-purple-600">{remainingMins}</div>
+                    <div className="text-xl font-bold text-emerald-400">{remainingMins}</div>
                     <div className="text-xs text-zinc-400">dakika</div>
                   </CardContent>
                 </Card>
               </div>
 
               {/* Current Cost */}
-              <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
+              <Card className="bg-zinc-900 border border-zinc-800">
                 <CardContent className="p-4 flex items-center justify-between">
                   <div>
                     <div className="text-xs text-zinc-400">Anlık Tutar</div>
-                    <div className="text-2xl font-bold text-green-700">{cost.toFixed(2)} ₺</div>
+                    <div className="text-2xl font-bold text-emerald-400">{cost.toFixed(2)} ₺</div>
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-zinc-400">Kalan (%{Math.round(targetPct - batteryPct)})</div>
