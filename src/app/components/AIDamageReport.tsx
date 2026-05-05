@@ -143,7 +143,7 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
             <>
               {/* Image capture */}
               <div>
-                <Label className="text-sm font-semibold mb-2 block">Hasar Fotoğrafı</Label>
+                <Label className="text-sm font-semibold text-zinc-200 mb-2 block">Hasar Fotoğrafı</Label>
                 <div
                   className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
                     selectedImage ? 'border-emerald-500 bg-zinc-900/60' : 'border-zinc-800 bg-zinc-900/50 hover:border-zinc-700'
@@ -173,7 +173,7 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
 
               {/* Category */}
               <div className="space-y-2">
-                <Label className="text-sm font-semibold">Hasar Kategorisi</Label>
+                <Label className="text-sm font-semibold text-zinc-200">Hasar Kategorisi</Label>
                 <Select value={damageCategory} onValueChange={setDamageCategory}>
                   <SelectTrigger className="bg-zinc-900 border-zinc-800 text-zinc-100">
                     <SelectValue placeholder="Hasar türünü seçin" className="placeholder:text-zinc-500" />
@@ -191,7 +191,7 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
 
               {/* Description */}
               <div className="space-y-2">
-                <Label className="text-sm font-semibold">Açıklama (İsteğe bağlı)</Label>
+                <Label className="text-sm font-semibold text-zinc-200">Açıklama (İsteğe bağlı)</Label>
                 <Textarea
                   placeholder="Hasarı kısaca açıklayın..."
                   value={description}
@@ -259,14 +259,14 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
                 <CardContent className="p-4 space-y-3">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <h4 className="font-bold text-lg">{result.type}</h4>
+                      <h4 className="font-bold text-lg text-zinc-100">{result.type}</h4>
                       <Badge className={`mt-1 ${severityConfig[result.severity].color} border`}>
                         {severityConfig[result.severity].icon} {severityConfig[result.severity].label} Öncelik
                       </Badge>
                     </div>
                     <div className="text-right">
                       <div className="text-xs text-zinc-400">Öncelik Kodu</div>
-                      <div className="font-mono font-bold text-sm">{result.priorityCode}</div>
+                      <div className="font-mono font-bold text-sm text-zinc-100">{result.priorityCode}</div>
                     </div>
                   </div>
 
