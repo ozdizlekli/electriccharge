@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { X, Camera, Upload, AlertTriangle, CheckCircle, Loader2, Zap, Send, Image as ImageIcon } from 'lucide-react';
+import { X, Camera, Upload, AlertTriangle, CheckCircle, Loader2, Zap, Send } from 'lucide-react';
 import { Station, ChargingPoint } from '../types/station';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
@@ -123,9 +123,9 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
 
   return (
     <div className="fixed inset-0 bg-black/60 z-[1200] flex items-end md:items-center justify-center p-0 md:p-4">
-      <div className="bg-white w-full md:max-w-lg md:rounded-2xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl">
+      <div className="bg-zinc-950 w-full md:max-w-lg md:rounded-2xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl">
         {/* Header */}
-        <div className="bg-gradient-to-r from-orange-500 to-red-500 p-5 text-white">
+        <div className="bg-zinc-900 border-b border-zinc-800 p-5 text-zinc-100">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-5 h-5" />
@@ -135,7 +135,7 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
               <X className="w-4 h-4" />
             </Button>
           </div>
-          <p className="text-orange-100 text-sm mt-1 truncate">{station.name}</p>
+          <p className="text-zinc-400 text-sm mt-1 truncate">{station.name}</p>
         </div>
 
         <div className="flex-1 overflow-y-auto p-5 space-y-4">
@@ -146,24 +146,24 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
                 <Label className="text-sm font-semibold mb-2 block">Hasar Fotoğrafı</Label>
                 <div
                   className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
-                    selectedImage ? 'border-green-400 bg-green-50' : 'border-gray-300 hover:border-orange-400 hover:bg-orange-50/30'
+                    selectedImage ? 'border-emerald-500 bg-zinc-900/60' : 'border-zinc-800 bg-zinc-900/50 hover:border-zinc-700'
                   }`}
                   onClick={() => fileInputRef.current?.click()}
                 >
                   {selectedImage ? (
                     <div className="space-y-2">
                       <img src={selectedImage} alt="Hasar fotoğrafı" className="w-full h-48 object-cover rounded-lg" />
-                      <p className="text-sm text-green-700 font-medium">✓ Fotoğraf yüklendi</p>
+                      <p className="text-sm text-emerald-400 font-medium">✓ Fotoğraf yüklendi</p>
                     </div>
                   ) : (
                     <div className="space-y-3">
                       <div className="flex justify-center gap-3">
-                        <Camera className="w-8 h-8 text-gray-300" />
-                        <Upload className="w-8 h-8 text-gray-300" />
+                        <Camera className="w-8 h-8 text-zinc-500" />
+                        <Upload className="w-8 h-8 text-zinc-500" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Fotoğraf çek veya yükle</p>
-                        <p className="text-xs text-muted-foreground mt-1">PNG, JPG desteklenir</p>
+                        <p className="text-sm font-medium text-zinc-300">Fotoğraf çek veya yükle</p>
+                        <p className="text-xs text-zinc-500 mt-1">PNG, JPG desteklenir</p>
                       </div>
                     </div>
                   )}
@@ -171,24 +171,14 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
                 <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageSelect} />
               </div>
 
-              {/* Demo shortcut */}
-              <Card className="bg-blue-50 border-blue-200">
-                <CardContent className="p-3 flex items-center gap-2">
-                  <ImageIcon className="w-4 h-4 text-blue-600 flex-shrink-0" />
-                  <p className="text-xs text-blue-800">
-                    <strong>Demo:</strong> Fotoğraf yüklemeseniz bile AI analizi simüle edilecek
-                  </p>
-                </CardContent>
-              </Card>
-
               {/* Category */}
               <div className="space-y-2">
                 <Label className="text-sm font-semibold">Hasar Kategorisi</Label>
                 <Select value={damageCategory} onValueChange={setDamageCategory}>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-zinc-900 border-zinc-800 text-zinc-100">
                     <SelectValue placeholder="Hasar türünü seçin" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-zinc-900 border-zinc-800 text-zinc-100">
                     <SelectItem value="cable">Kablo / Konektör Hasarı</SelectItem>
                     <SelectItem value="screen">Ekran Arızası</SelectItem>
                     <SelectItem value="housing">Kasa / Kapı Hasarı</SelectItem>
@@ -206,7 +196,7 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
                   placeholder="Hasarı kısaca açıklayın..."
                   value={description}
                   onChange={e => setDescription(e.target.value)}
-                  className="resize-none"
+                  className="resize-none bg-zinc-900 border-zinc-800 text-zinc-100"
                   rows={3}
                 />
               </div>
