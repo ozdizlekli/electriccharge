@@ -46,8 +46,8 @@ function QRScanner({ station, onScanComplete, onClose }: QRScannerProps) {
     <div className="fixed inset-0 bg-black/70 z-[1050] flex items-end md:items-center justify-center p-0 md:p-4">
       <div className="bg-zinc-900 w-full md:max-w-sm md:rounded-2xl overflow-hidden shadow-2xl">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-green-500 px-5 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-white">
+        <div className="bg-zinc-950 border-b border-zinc-800 px-5 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-zinc-100">
             <QrCode className="w-5 h-5" />
             <span className="font-bold">QR Şarj Başlat</span>
           </div>
@@ -382,7 +382,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
               <TabsContent value="info" className="mt-4 space-y-4">
                 <Card className="bg-zinc-900 border-zinc-800">
                   <CardContent className="p-4">
-                    <h4 className="font-semibold mb-3 text-zinc-100">Çalışma Saatleri</h4>
+                    <h4 className="font-semibold mb-3 text-zinc-400">Çalışma Saatleri</h4>
                     <div className="flex items-center gap-2 text-sm">
                       <Clock className="w-4 h-4 text-zinc-400" />
                       <span>{station.isOpen24Hours ? '24 Saat Hizmet' : station.openingHours}</span>
@@ -391,7 +391,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
                 </Card>
                 <Card className="bg-zinc-900 border-zinc-800">
                   <CardContent className="p-4">
-                    <h4 className="font-semibold mb-3 text-zinc-100">Fiyatlandırma</h4>
+                    <h4 className="font-semibold mb-3 text-zinc-400">Fiyatlandırma</h4>
                     <div className="space-y-2 text-sm">
                       {station.chargingPoints.map((point, idx) => (
                         <div key={idx} className="flex justify-between">
@@ -404,7 +404,7 @@ export function StationDetail({ station, onClose }: StationDetailProps) {
                 </Card>
                 <Card className="bg-zinc-900 border-zinc-800">
                   <CardContent className="p-4">
-                    <h4 className="font-semibold mb-3 text-zinc-100">Ödeme Yöntemleri</h4>
+                    <h4 className="font-semibold mb-3 text-zinc-400">Ödeme Yöntemleri</h4>
                     <div className="flex items-center gap-2 text-sm">
                       <CreditCard className="w-4 h-4 text-zinc-400" />
                       <span>Kredi Kartı, Banka Kartı, Dijital Cüzdan, QR Kod</span>

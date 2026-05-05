@@ -336,8 +336,8 @@ export default function App() {
 
       <main className="flex-1 overflow-hidden">
         {viewMode === 'map' ? (
-          <div className="h-full flex flex-col md:flex-row">
-            <div className="flex-1 p-4 relative">
+          <div className="h-full grid grid-cols-1 lg:grid-cols-12">
+            <div className="lg:col-span-8 p-4 relative">
               {isLoading && (
                 <div className="absolute inset-0 z-[500] flex items-center justify-center bg-zinc-950/70 backdrop-blur-sm rounded-lg">
                   <div className="flex flex-col items-center gap-3">
@@ -349,7 +349,7 @@ export default function App() {
               <MapView stations={filteredStations} selectedStation={selectedStation} onStationSelect={handleMarkerClick} />
             </div>
 
-            <div className="w-full md:w-96 border-l border-zinc-800 bg-zinc-900 overflow-y-auto p-4 space-y-3 relative">
+            <div className="lg:col-span-4 border-t lg:border-t-0 lg:border-l border-zinc-800 bg-zinc-900 overflow-y-auto p-2 space-y-1.5 relative">
               <div className="sticky top-0 bg-zinc-900 pb-3 mb-3 border-b border-zinc-800 z-10">
                 <h3 className="font-semibold text-white">Yakındaki İstasyonlar</h3>
                 <p className="text-sm text-zinc-400">{filteredStations.length} sonuç</p>

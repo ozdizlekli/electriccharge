@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { X, Camera, Upload, AlertTriangle, CheckCircle, Loader2, Zap, Send, Image as ImageIcon } from 'lucide-react';
+import { X, Camera, Upload, AlertTriangle, CheckCircle, Loader2, Zap, Send } from 'lucide-react';
 import { Station, ChargingPoint } from '../types/station';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
@@ -123,19 +123,19 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
 
   return (
     <div className="fixed inset-0 bg-black/60 z-[1200] flex items-end md:items-center justify-center p-0 md:p-4">
-      <div className="bg-white w-full md:max-w-lg md:rounded-2xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl">
+      <div className="bg-zinc-950 w-full md:max-w-lg md:rounded-2xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl">
         {/* Header */}
-        <div className="bg-gradient-to-r from-orange-500 to-red-500 p-5 text-white">
+        <div className="bg-zinc-900 border-b border-zinc-800 p-5 text-zinc-100">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-5 h-5" />
               <span className="font-bold text-lg">AI Hasar Bildirimi</span>
             </div>
-            <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={onClose}>
+            <Button variant="ghost" size="icon" className="text-zinc-300 hover:bg-zinc-800" onClick={onClose}>
               <X className="w-4 h-4" />
             </Button>
           </div>
-          <p className="text-orange-100 text-sm mt-1 truncate">{station.name}</p>
+          <p className="text-zinc-400 text-sm mt-1 truncate">{station.name}</p>
         </div>
 
         <div className="flex-1 overflow-y-auto p-5 space-y-4">
@@ -146,24 +146,24 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
                 <Label className="text-sm font-semibold mb-2 block">Hasar Fotoğrafı</Label>
                 <div
                   className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
-                    selectedImage ? 'border-green-400 bg-green-50' : 'border-gray-300 hover:border-orange-400 hover:bg-orange-50/30'
+                    selectedImage ? 'border-emerald-500 bg-zinc-900/60' : 'border-zinc-800 bg-zinc-900/50 hover:border-zinc-700'
                   }`}
                   onClick={() => fileInputRef.current?.click()}
                 >
                   {selectedImage ? (
                     <div className="space-y-2">
                       <img src={selectedImage} alt="Hasar fotoğrafı" className="w-full h-48 object-cover rounded-lg" />
-                      <p className="text-sm text-green-700 font-medium">✓ Fotoğraf yüklendi</p>
+                      <p className="text-sm text-emerald-400 font-medium">✓ Fotoğraf yüklendi</p>
                     </div>
                   ) : (
                     <div className="space-y-3">
                       <div className="flex justify-center gap-3">
-                        <Camera className="w-8 h-8 text-gray-300" />
-                        <Upload className="w-8 h-8 text-gray-300" />
+                        <Camera className="w-8 h-8 text-zinc-500" />
+                        <Upload className="w-8 h-8 text-zinc-500" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-600">Fotoğraf çek veya yükle</p>
-                        <p className="text-xs text-muted-foreground mt-1">PNG, JPG desteklenir</p>
+                        <p className="text-sm font-medium text-zinc-300">Fotoğraf çek veya yükle</p>
+                        <p className="text-xs text-zinc-500 mt-1">PNG, JPG desteklenir</p>
                       </div>
                     </div>
                   )}
@@ -171,24 +171,14 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
                 <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageSelect} />
               </div>
 
-              {/* Demo shortcut */}
-              <Card className="bg-blue-50 border-blue-200">
-                <CardContent className="p-3 flex items-center gap-2">
-                  <ImageIcon className="w-4 h-4 text-blue-600 flex-shrink-0" />
-                  <p className="text-xs text-blue-800">
-                    <strong>Demo:</strong> Fotoğraf yüklemeseniz bile AI analizi simüle edilecek
-                  </p>
-                </CardContent>
-              </Card>
-
               {/* Category */}
               <div className="space-y-2">
                 <Label className="text-sm font-semibold">Hasar Kategorisi</Label>
                 <Select value={damageCategory} onValueChange={setDamageCategory}>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-zinc-900 border-zinc-800 text-zinc-100">
                     <SelectValue placeholder="Hasar türünü seçin" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-zinc-900 border-zinc-800 text-zinc-100">
                     <SelectItem value="cable">Kablo / Konektör Hasarı</SelectItem>
                     <SelectItem value="screen">Ekran Arızası</SelectItem>
                     <SelectItem value="housing">Kasa / Kapı Hasarı</SelectItem>
@@ -206,12 +196,12 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
                   placeholder="Hasarı kısaca açıklayın..."
                   value={description}
                   onChange={e => setDescription(e.target.value)}
-                  className="resize-none"
+                  className="resize-none bg-zinc-900 border-zinc-800 text-zinc-100"
                   rows={3}
                 />
               </div>
 
-              <Button className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white" onClick={handleAnalyze}>
+              <Button className="w-full bg-emerald-500 text-zinc-950 hover:bg-emerald-400" onClick={handleAnalyze}>
                 <Zap className="w-4 h-4 mr-2" />
                 AI ile Analiz Et
               </Button>
@@ -222,8 +212,8 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
           {(phase === 'uploading' || phase === 'analyzing') && (
             <div className="py-8 flex flex-col items-center gap-5 text-center">
               <div className="relative">
-                <div className="w-20 h-20 rounded-full border-4 border-orange-100 flex items-center justify-center">
-                  <Loader2 className="w-10 h-10 text-orange-500 animate-spin" />
+                <div className="w-20 h-20 rounded-full border-4 border-zinc-700 flex items-center justify-center">
+                  <Loader2 className="w-10 h-10 text-emerald-400 animate-spin" />
                 </div>
               </div>
               <div>
@@ -243,7 +233,7 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
                   </div>
                   <div className="grid grid-cols-3 gap-2 mt-3 text-xs">
                     {['Nesne Tespiti', 'Hasar Sınıflandırma', 'Öncelik Atama'].map((step, i) => (
-                      <div key={step} className={`p-2 rounded text-center ${analysisProgress > (i + 1) * 30 ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400'}`}>
+                      <div key={step} className={`p-2 rounded text-center ${analysisProgress > (i + 1) * 30 ? 'bg-zinc-800 text-emerald-400' : 'bg-zinc-900 text-zinc-500'}`}>
                         {step}
                       </div>
                     ))}
@@ -256,16 +246,16 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
           {/* Complete phase */}
           {phase === 'complete' && result && (
             <div className="space-y-4">
-              <div className="flex items-center gap-3 p-4 bg-green-50 rounded-xl border border-green-200">
-                <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0" />
+              <div className="flex items-center gap-3 p-4 bg-zinc-900 rounded-xl border border-zinc-800">
+                <CheckCircle className="w-6 h-6 text-emerald-400 flex-shrink-0" />
                 <div>
-                  <p className="font-semibold text-green-800">AI Analizi Tamamlandı</p>
-                  <p className="text-xs text-green-700">Güven skoru: %{result.confidence}</p>
+                  <p className="font-semibold text-zinc-100">AI Analizi Tamamlandı</p>
+                  <p className="text-xs text-zinc-400">Güven skoru: %{result.confidence}</p>
                 </div>
               </div>
 
               {/* Result card */}
-              <Card>
+              <Card className="bg-zinc-900 border-zinc-800">
                 <CardContent className="p-4 space-y-3">
                   <div className="flex items-start justify-between gap-2">
                     <div>
@@ -281,13 +271,13 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
                   </div>
 
                   <div className="space-y-2 text-sm">
-                    <div className="p-3 bg-gray-50 rounded-lg">
-                      <p className="text-xs font-semibold text-muted-foreground mb-1">AI TESPİTİ</p>
+                    <div className="p-3 bg-zinc-950 rounded-lg border border-zinc-800">
+                      <p className="text-xs font-semibold text-zinc-400 mb-1">AI TESPİTİ</p>
                       <p>{result.description}</p>
                     </div>
-                    <div className="p-3 bg-blue-50 rounded-lg">
-                      <p className="text-xs font-semibold text-blue-600 mb-1">ÖNERİ</p>
-                      <p className="text-blue-800">{result.recommendation}</p>
+                    <div className="p-3 bg-zinc-950 rounded-lg border border-zinc-800">
+                      <p className="text-xs font-semibold text-zinc-400 mb-1">ÖNERİ</p>
+                      <p className="text-zinc-100">{result.recommendation}</p>
                     </div>
                   </div>
 
@@ -303,18 +293,18 @@ export function AIDamageReport({ station, onClose }: AIDamageReportProps) {
               </Card>
 
               {!reportSubmitted ? (
-                <Button className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white" onClick={handleSubmitReport}>
+                <Button className="w-full bg-emerald-500 text-zinc-950 hover:bg-emerald-400" onClick={handleSubmitReport}>
                   <Send className="w-4 h-4 mr-2" />
                   Yöneticiye Acil Bildir
                 </Button>
               ) : (
-                <div className="flex items-center justify-center gap-2 p-4 bg-green-50 rounded-xl text-green-700">
+                <div className="flex items-center justify-center gap-2 p-4 bg-zinc-900 rounded-xl text-zinc-100">
                   <CheckCircle className="w-5 h-5" />
                   <span className="font-medium">Rapor başarıyla iletildi</span>
                 </div>
               )}
 
-              <Button variant="outline" className="w-full" onClick={() => { setPhase('idle'); setResult(null); setSelectedImage(null); }}>
+              <Button variant="outline" className="w-full bg-transparent border-zinc-800 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100" onClick={() => { setPhase('idle'); setResult(null); setSelectedImage(null); }}>
                 Yeni Rapor Oluştur
               </Button>
             </div>
